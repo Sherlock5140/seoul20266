@@ -28,7 +28,8 @@
         
         .app-height { height: 100dvh; }
         
-        #map-container { height: 40%; }
+        /* Mobile Layout Adjustment: Map smaller (30%), List taller (70%) */
+        #map-container { height: 30%; } 
         @media (min-width: 768px) {
             #map-container { height: 100%; }
             .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -43,13 +44,14 @@
     <div id="app" class="flex flex-col md:flex-row app-height w-full">
         
         <!-- Left Panel: Itinerary Book -->
-        <div class="order-2 md:order-1 w-full md:w-[45%] flex flex-col h-[60%] md:h-full bg-white shadow-xl z-20 border-r border-gray-200">
+        <!-- Mobile: Order 2 (Bottom), Height 70% (Increased space) -->
+        <div class="order-2 md:order-1 w-full md:w-[45%] flex flex-col h-[70%] md:h-full bg-white shadow-xl z-20 border-r border-gray-200">
             
             <!-- Header -->
-            <div class="p-4 bg-slate-900 text-white shadow-md z-10 shrink-0">
+            <div class="p-3 md:p-4 bg-slate-900 text-white shadow-md z-10 shrink-0">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h1 class="text-lg font-bold"><i class="fa-solid fa-book-open mr-2"></i>2026 首爾完全體行程</h1>
+                        <h1 class="text-base md:text-lg font-bold"><i class="fa-solid fa-book-open mr-2"></i>2026 首爾完全體行程</h1>
                     </div>
                     <div class="text-right text-xs text-slate-400 hidden md:block">
                         <div>06/01 - 06/08</div>
@@ -77,9 +79,10 @@
             <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50 relative scroll-smooth" id="timeline-container">
                 
                 <!-- Day Summary Card -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 mb-6 sticky top-0 z-10">
-                    <h2 class="text-xl font-black text-slate-800 mb-1">{{ currentDay.date }}</h2>
-                    <h3 class="text-md font-bold text-slate-600 mb-3">{{ currentDay.title }}</h3>
+                <!-- Removed 'sticky top-0' on mobile to free up viewing space. Only sticky on md (desktop). -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 md:sticky md:top-0 z-10">
+                    <h2 class="text-lg md:text-xl font-black text-slate-800 mb-1">{{ currentDay.date }}</h2>
+                    <h3 class="text-sm md:text-md font-bold text-slate-600 mb-3">{{ currentDay.title }}</h3>
                     <div class="flex flex-wrap gap-2 text-xs">
                         <span class="px-2 py-1 bg-orange-50 text-orange-700 rounded border border-orange-100">🍽️ 午: {{ currentDay.lunch }}</span>
                         <span class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded border border-indigo-100">🍽️ 晚: {{ currentDay.dinner }}</span>
@@ -135,6 +138,7 @@
         </div>
 
         <!-- Right Panel: Map -->
+        <!-- Mobile: Order 1 (Top), Height 30% (Reduced) -->
         <div id="map-container" class="order-1 md:order-2 w-full md:w-[55%] bg-slate-200 relative z-10">
             <div id="map" class="w-full h-full outline-none"></div>
             <!-- Legend -->
@@ -201,7 +205,7 @@
                         dinner: "漢南洞 24H 馬鈴薯湯",
                         events: [
                             { time: "09:30", location: "交通：飯店 ➔ 龍理團路", category: "transport", note: "💡 策略：名店位於「三角地站」，建議搭車\n🚇 地鐵：4號線 [新龍山] ➔ [三角地] (搭1站)\n🚌 公車：藍色巴士 100/150 等 (搭2站)", coords: [37.5312, 126.9705] },
-                            { time: "上午", location: "早午餐名店【三選一】", category: "food", note: "❶ Dotori (橡實)：特色優格\n❷ SAM SAM SAM：美式復古家常菜\n❸ Teddy Beurre House：法式可頌", coords: [37.5312, 126.9705] },
+                            { time: "上午", location: "早午餐名店【三選一】", category: "food", note: "❶ Dotori (橡實)：特色優格 (步行約 20-23 分鐘 / 1.1km)\n❷ SAM SAM SAM：美式復古家常菜 (步行約 20 分鐘 / 1.0km)\n❸ Teddy Beurre House：法式可頌 (步行約 16-18 分鐘 / 0.9km)", coords: [37.5312, 126.9705] },
                             { time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況)\n💳 備案：地鐵轉乘約 40 分鐘", coords: [37.5273, 127.0392] },
                             { time: "下午", location: "狎鷗亭 / 羅德奧", category: "shopping", note: "島山公園周邊：逛精品與潮牌\n預估停留：約 3.5 - 4 小時", coords: [37.5273, 127.0392] },
                             { time: "16:00", location: "交通：狎鷗亭 ➔ 漢南洞", category: "transport", note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行", coords: [37.5348, 127.0012] },

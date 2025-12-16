@@ -28,7 +28,7 @@
         
         .app-height { height: 100dvh; }
         
-        /* Mobile Layout Adjustment: Map smaller (30%), List taller (70%) */
+        /* Mobile Layout: Map 30%, List 70% */
         #map-container { height: 30%; } 
         @media (min-width: 768px) {
             #map-container { height: 100%; }
@@ -44,59 +44,65 @@
     <div id="app" class="flex flex-col md:flex-row app-height w-full">
         
         <!-- Left Panel: Itinerary Book -->
-        <!-- Mobile: Order 2 (Bottom), Height 70% (Increased space) -->
+        <!-- Mobile: Order 2 (Bottom), Height 70% -->
         <div class="order-2 md:order-1 w-full md:w-[45%] flex flex-col h-[70%] md:h-full bg-white shadow-xl z-20 border-r border-gray-200">
             
-            <!-- Header -->
-            <div class="p-3 md:p-4 bg-slate-900 text-white shadow-md z-10 shrink-0">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-base md:text-lg font-bold"><i class="fa-solid fa-book-open mr-2"></i>2026 首爾完全體行程</h1>
+            <!-- Sticky Header Wrapper (Freeze Top) -->
+            <div class="sticky top-0 z-30 bg-white shadow-sm shrink-0">
+                
+                <!-- Ultra Compact Header -->
+                <div class="px-3 py-2 bg-slate-900 text-white flex justify-between items-center shadow-inner">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-plane-departure text-indigo-400 text-sm"></i>
+                        <h1 class="text-sm font-bold tracking-wide">2026 首爾行</h1>
                     </div>
-                    <div class="text-right text-xs text-slate-400 hidden md:block">
-                        <div>06/01 - 06/08</div>
-                        <div>九樹 ROKAUS 龍山</div>
+                    <div class="text-[10px] text-slate-300 bg-slate-800 px-2 py-0.5 rounded-full">
+                        06/01-08 (8天)
                     </div>
+                </div>
+
+                <!-- Ultra Compact Day Tabs (Height Reduced 50%) -->
+                <div id="day-tabs" class="flex overflow-x-auto whitespace-nowrap bg-slate-50 border-b border-slate-200 p-1 shrink-0 no-scrollbar">
+                    <button 
+                        v-for="(day, index) in schedule" 
+                        :key="index"
+                        :id="'day-btn-' + index"
+                        @click="selectDay(index)"
+                        :class="['flex-none px-3 py-1 rounded-md text-xs font-bold mr-1.5 transition-all border', 
+                                 currentDayIndex === index ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100']"
+                    >
+                        Day {{ index + 1 }}
+                    </button>
+                    <div class="w-2 flex-none"></div>
                 </div>
             </div>
 
-            <!-- Day Tabs -->
-            <div id="day-tabs" class="flex overflow-x-auto whitespace-nowrap bg-slate-50 border-b border-slate-200 p-2 shrink-0 no-scrollbar">
-                <button 
-                    v-for="(day, index) in schedule" 
-                    :key="index"
-                    :id="'day-btn-' + index"
-                    @click="selectDay(index)"
-                    :class="['flex-none px-4 py-2 rounded-lg text-sm font-bold mr-2 transition-all border', 
-                             currentDayIndex === index ? 'bg-slate-800 text-white border-slate-800 shadow' : 'bg-white text-slate-600 border-slate-200']"
-                >
-                    Day {{ index + 1 }}
-                </button>
-                <div class="w-4 flex-none"></div>
-            </div>
-
             <!-- Content Area -->
-            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50 relative scroll-smooth" id="timeline-container">
+            <div class="flex-1 overflow-y-auto p-3 custom-scrollbar bg-slate-50 relative scroll-smooth" id="timeline-container">
                 
-                <!-- Day Summary Card -->
-                <!-- Removed 'sticky top-0' on mobile to free up viewing space. Only sticky on md (desktop). -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 md:sticky md:top-0 z-10">
-                    <h2 class="text-lg md:text-xl font-black text-slate-800 mb-1">{{ currentDay.date }}</h2>
-                    <h3 class="text-sm md:text-md font-bold text-slate-600 mb-3">{{ currentDay.title }}</h3>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-2 py-1 bg-orange-50 text-orange-700 rounded border border-orange-100">🍽️ 午: {{ currentDay.lunch }}</span>
-                        <span class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded border border-indigo-100">🍽️ 晚: {{ currentDay.dinner }}</span>
+                <!-- Day Summary (Scrolls with content now, header is sticky) -->
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 mb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-base font-black text-slate-800 leading-tight">{{ currentDay.date.split(' ')[0] }}</h2>
+                            <h3 class="text-xs font-bold text-slate-500 mt-0.5">{{ currentDay.title }}</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-[10px] bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded border border-orange-100 mb-1">午: {{ currentDay.lunch }}</span>
+                            <span class="block text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded border border-indigo-100">晚: {{ currentDay.dinner }}</span>
+                        </div>
                     </div>
-                    <!-- Special Notice Box if exists -->
-                    <div v-if="currentDay.notice" class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800 leading-relaxed whitespace-pre-line">
-                        <strong>⚠️ 特別須知：</strong><br>{{ currentDay.notice }}
+                    
+                    <!-- Special Notice -->
+                    <div v-if="currentDay.notice" class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-[10px] text-yellow-800 leading-relaxed whitespace-pre-line">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i><strong>須知：</strong>{{ currentDay.notice }}
                     </div>
                 </div>
 
                 <!-- Timeline Events -->
-                <div class="space-y-4 pb-20 relative px-2">
+                <div class="space-y-3 pb-16 relative px-1">
                     <!-- Vertical Line -->
-                    <div class="absolute left-[19px] top-2 bottom-10 w-0.5 bg-slate-200 -z-0"></div>
+                    <div class="absolute left-[15px] top-2 bottom-10 w-0.5 bg-slate-200 -z-0"></div>
 
                     <div 
                         v-for="(event, eIndex) in currentDay.events" 
@@ -106,26 +112,26 @@
                                  activeEvent === event ? 'scale-[1.01]' : '']"
                     >
                         <!-- Dot -->
-                        <div :class="['absolute left-[11px] top-4 w-4 h-4 rounded-full border-2 border-white shadow z-10', 
+                        <div :class="['absolute left-[8px] top-3.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow z-10', 
                                      getCategoryColor(event.category)]">
                         </div>
 
                         <!-- Card -->
-                        <div :class="['p-4 rounded-lg border shadow-sm transition-colors text-sm',
-                                      activeEvent === event ? 'bg-white border-slate-400 ring-1 ring-slate-400' : 'bg-white border-slate-200 hover:border-slate-300']">
+                        <div :class="['p-3 rounded-lg border shadow-sm transition-colors text-sm bg-white',
+                                      activeEvent === event ? 'border-indigo-400 ring-1 ring-indigo-100' : 'border-slate-200 active:bg-slate-50']">
                             
                             <!-- Time & Loc -->
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-xs">{{ event.time }}</span>
-                                <i :class="['fa-solid text-slate-400', getCategoryIcon(event.category)]"></i>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="font-mono font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded text-[10px]">{{ event.time }}</span>
+                                <i :class="['fa-solid text-slate-400 text-xs', getCategoryIcon(event.category)]"></i>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-base mb-2">{{ event.location }}</h4>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1.5 leading-snug">{{ event.location }}</h4>
                             
-                            <!-- Detailed Note (Word for word) -->
-                            <div v-if="event.note" class="text-slate-600 text-xs leading-relaxed note-content" v-html="formatNote(event.note)"></div>
+                            <!-- Note -->
+                            <div v-if="event.note" class="text-slate-600 text-[11px] leading-relaxed note-content border-t border-slate-100 pt-1.5 mt-1" v-html="formatNote(event.note)"></div>
 
                             <!-- Tags -->
-                            <div v-if="event.tags" class="mt-3 flex flex-wrap gap-1">
+                            <div v-if="event.tags" class="mt-2 flex flex-wrap gap-1">
                                 <span v-for="tag in event.tags" :class="['text-[10px] px-1.5 py-0.5 rounded border', getTagStyle(tag)]">
                                     {{ tag }}
                                 </span>
@@ -138,19 +144,17 @@
         </div>
 
         <!-- Right Panel: Map -->
-        <!-- Mobile: Order 1 (Top), Height 30% (Reduced) -->
+        <!-- Mobile: Order 1 (Top), Height 30% -->
         <div id="map-container" class="order-1 md:order-2 w-full md:w-[55%] bg-slate-200 relative z-10">
             <div id="map" class="w-full h-full outline-none"></div>
-            <!-- Legend -->
-            <div class="absolute bottom-6 right-4 bg-white/95 backdrop-blur p-3 rounded-lg shadow-lg text-xs z-[1000] hidden md:block border border-slate-200">
-                <div class="font-bold mb-2 text-slate-700">圖例 Legend</div>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>景點</div>
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-500 mr-2"></span>美食</div>
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>購物</div>
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>交通</div>
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-gray-600 mr-2"></span>住宿</div>
-                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-sky-500 mr-2"></span>航班</div>
+            <!-- Legend (Desktop Only to save mobile space) -->
+            <div class="absolute bottom-6 right-4 bg-white/95 backdrop-blur p-2 rounded shadow-lg text-[10px] z-[1000] hidden md:block border border-slate-200">
+                <div class="font-bold mb-1 text-slate-700">圖例</div>
+                <div class="grid grid-cols-2 gap-x-3 gap-y-1">
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-1.5"></span>景點</div>
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-500 mr-1.5"></span>美食</div>
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-purple-500 mr-1.5"></span>購物</div>
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-green-500 mr-1.5"></span>交通</div>
                 </div>
             </div>
         </div>

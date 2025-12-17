@@ -43,6 +43,11 @@
                     boxShadow: {
                         'float': '0 20px 40px -10px rgba(0, 0, 0, 0.08)',
                         'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                        'sheet': '0 -10px 40px rgba(0, 0, 0, 0.1)',
+                    },
+                    spacing: {
+                        'safe-top': 'env(safe-area-inset-top)',
+                        'safe-bottom': 'env(safe-area-inset-bottom)',
                     }
                 }
             }
@@ -51,25 +56,70 @@
 
     <style>
         /* Global Styles */
-        body { background-color: #F5F5F7; color: #1D1D1F; -webkit-font-smoothing: antialiased; user-select: none; }
+        body { 
+            background-color: #F5F5F7; 
+            color: #1D1D1F; 
+            -webkit-font-smoothing: antialiased; 
+            user-select: none; 
+            overscroll-behavior: none; 
+        }
+        
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         
-        /* Map Markers */
+        /* Map Markers Styling */
         .custom-marker-pin {
-            width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
-            background: #8FA39D; position: absolute; transform: rotate(-45deg);
-            left: 50%; top: 50%; margin: -16px 0 0 -16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid white;
+            width: 32px; height: 32px; 
+            border-radius: 50% 50% 50% 0;
+            background: #8FA39D; 
+            position: absolute; 
+            transform: rotate(-45deg);
+            left: 50%; top: 50%;
+            margin: -15px 0 0 -15px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            border: 2px solid white;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Notebook Styles */
+        .custom-marker-pin::after {
+            content: '';
+            width: 10px; height: 10px;
+            margin: 9px 0 0 9px;
+            background: rgba(255,255,255,0.8);
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .leaflet-marker-icon.active .custom-marker-pin {
+            transform: rotate(-45deg) scale(1.2);
+            background: #4A5568 !important;
+            z-index: 1000;
+        }
+
+        .marker-icon-inner {
+            transform: rotate(45deg);
+            position: absolute;
+            top: 5px; left: 8px;
+            font-size: 14px;
+            color: white;
+            width: 100%; height: 100%;
+            text-align: center;
+        }
+
+        /* Animation */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fade-in-up 0.4s ease-out forwards; }
+        
+        /* Notebook Modal */
         .notebook-modal {
             background-color: #FDFBF7;
             background-image: linear-gradient(#E1E1E1 1px, transparent 1px);
@@ -81,111 +131,114 @@
             resize: none; line-height: 2rem; font-family: 'Noto Sans TC', sans-serif;
             font-size: 1.05rem; color: #4A5568; padding-top: 0.1rem;
         }
-        .notebook-textarea::placeholder { color: #CBD5E0; }
-
-        /* Mobile specific adjustments */
-        @media (max-width: 768px) {
-            .mobile-map-overlay {
-                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-        }
     </style>
 </head>
 <body class="h-[100dvh] w-full overflow-hidden bg-ios-bg">
 
-    <div id="app" class="w-full h-full flex flex-col md:flex-row relative">
+    <div id="app" class="w-full h-full flex flex-col-reverse md:flex-row relative">
         
-        <!-- Left Panel: Itinerary (Mobile: Full Screen) -->
-        <div class="w-full md:w-[480px] lg:w-[550px] flex flex-col h-full bg-[#F9FAFB] relative z-10 md:shadow-2xl">
+        <!-- Left Panel: Itinerary -->
+        <div class="w-full h-[55%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-[#F9FAFB] relative z-20 shadow-sheet md:shadow-2xl rounded-t-[2rem] md:rounded-none overflow-hidden transition-all duration-300">
             
+            <!-- Mobile Drag Handle -->
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-white/95 backdrop-blur-sm z-50">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+            </div>
+
             <!-- Header -->
-            <div class="glass-panel pt-safe-top pb-2 px-6 flex-none z-50">
-                <div class="pt-8 md:pt-4 flex justify-between items-center mb-4">
+            <div class="glass-panel px-6 flex-none z-40 md:pt-safe-top">
+                <div class="pt-2 md:pt-6 flex justify-between items-center mb-3">
                     <div>
                         <div class="text-[10px] font-bold tracking-[0.2em] text-morandi-blue uppercase mb-1">Seoul Travel Guide</div>
-                        <h1 class="text-2xl font-black text-ios-text tracking-tight">Seoul <span class="text-morandi-rose">2026</span></h1>
+                        <h1 class="text-2xl font-black text-ios-text tracking-tight flex items-baseline gap-2">Seoul <span class="text-morandi-rose font-hand text-3xl">2026</span></h1>
                     </div>
                     
                     <div class="flex gap-2">
-                         <!-- Map Toggle (Mobile Only) -->
-                        <button @click="toggleMap" class="md:hidden w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-morandi-charcoal active:scale-95 transition-transform">
-                            <i class="fa-solid fa-map"></i>
+                        <button @click="resetMap" class="w-9 h-9 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-morandi-charcoal active:scale-95 transition-transform" title="Reset Map">
+                            <i class="fa-solid fa-location-crosshairs"></i>
                         </button>
-                        
-                        <!-- Notebook Button -->
-                        <button @click="openNotebook" class="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                            <i class="fa-solid fa-book-open text-morandi-charcoal"></i>
-                            <span class="text-xs font-bold text-morandi-charcoal hidden sm:block">Notes</span>
+                        <button @click="openNotebook" class="flex items-center gap-2 bg-morandi-charcoal px-4 py-2 rounded-full shadow-lg shadow-morandi-charcoal/30 active:scale-95 transition-transform">
+                            <i class="fa-solid fa-pen text-white text-xs"></i>
+                            <span class="text-xs font-bold text-white hidden sm:block">Notes</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Date Pills -->
-                <div class="flex overflow-x-auto hide-scroll gap-2 pb-2 snap-x">
+                <div class="flex overflow-x-auto hide-scroll gap-2 pb-3 snap-x -mx-6 px-6">
                     <button v-for="(day, index) in schedule" :key="index"
                         @click="selectDay(index)" :id="'day-btn-' + index"
-                        class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 border"
-                        :class="currentDayIndex === index ? 'bg-morandi-charcoal text-white border-transparent shadow-md' : 'bg-white text-gray-400 border-transparent'">
+                        class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 border whitespace-nowrap"
+                        :class="currentDayIndex === index ? 'bg-morandi-charcoal text-white border-transparent shadow-md transform scale-105' : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'">
                         Day {{ index + 1 }}
                     </button>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div id="timeline-container" class="flex-1 overflow-y-auto hide-scroll p-6 pb-24">
+            <div id="timeline-container" class="flex-1 overflow-y-auto hide-scroll p-6 pb-24 bg-[#F9FAFB]">
                 
-                <!-- Day Info -->
+                <!-- Day Info Header -->
                 <div class="mb-8 animate-fade-in">
-                    <h2 class="text-3xl font-black text-ios-text mb-1 tracking-tight">{{ currentDay.date.split(' ')[0] }}</h2>
-                    <p class="text-lg font-bold text-morandi-blue mb-6">{{ currentDay.title }}</p>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <h2 class="text-3xl font-black text-ios-text tracking-tight">{{ currentDay.date.split(' ')[0] }}</h2>
+                        <span class="text-sm font-bold text-gray-400">{{ currentDay.date.split(' ').slice(1).join(' ') }}</span>
+                    </div>
+                    <p class="text-lg font-bold text-morandi-blue mb-6 leading-relaxed">{{ currentDay.title }}</p>
                     
+                    <!-- Meals Grid -->
                     <div class="grid grid-cols-2 gap-3 mb-6">
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-morandi-sand/20 text-morandi-sand flex items-center justify-center text-sm"><i class="fa-solid fa-utensils"></i></div>
-                            <div class="overflow-hidden">
+                            <div class="w-8 h-8 rounded-full bg-morandi-sand/20 text-morandi-sand flex items-center justify-center text-sm flex-none"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="overflow-hidden min-w-0">
                                 <div class="text-[10px] text-gray-400 uppercase font-bold">Lunch</div>
                                 <div class="text-xs font-bold text-gray-700 truncate">{{ currentDay.lunch }}</div>
                             </div>
                         </div>
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-morandi-blue/20 text-morandi-blue flex items-center justify-center text-sm"><i class="fa-solid fa-moon"></i></div>
-                            <div class="overflow-hidden">
+                            <div class="w-8 h-8 rounded-full bg-morandi-blue/20 text-morandi-blue flex items-center justify-center text-sm flex-none"><i class="fa-solid fa-moon"></i></div>
+                            <div class="overflow-hidden min-w-0">
                                 <div class="text-[10px] text-gray-400 uppercase font-bold">Dinner</div>
                                 <div class="text-xs font-bold text-gray-700 truncate">{{ currentDay.dinner }}</div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Notice Banner -->
                     <div v-if="currentDay.notice" class="p-4 rounded-2xl bg-red-50 border border-red-100 flex gap-3 items-start">
-                        <i class="fa-solid fa-circle-exclamation text-red-400 mt-0.5 text-sm"></i>
-                        <div class="text-xs text-gray-600 leading-relaxed font-medium whitespace-pre-line">{{ currentDay.notice }}</div>
+                        <i class="fa-solid fa-circle-exclamation text-red-400 mt-0.5 text-sm flex-none"></i>
+                        <div class="text-xs text-gray-600 leading-relaxed font-medium whitespace-pre-line" v-html="formatNote(currentDay.notice)"></div>
                     </div>
                 </div>
 
-                <!-- Timeline -->
+                <!-- Vertical Timeline -->
                 <div class="relative pl-3 space-y-8">
-                    <div class="absolute left-[19px] top-2 bottom-0 w-px bg-gray-200"></div>
+                    <!-- Line -->
+                    <div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200/60 rounded-full"></div>
                     
                     <div v-for="(event, eIndex) in currentDay.events" :key="eIndex"
                         @click="focusEvent(event)"
-                        class="relative pl-8 group cursor-pointer active:scale-[0.99] transition-transform">
+                        class="relative pl-8 group cursor-pointer active:scale-[0.99] transition-transform duration-200">
                         
                         <!-- Timeline Dot -->
-                        <div class="absolute left-0 top-6 w-[13px] h-[13px] rounded-full border-[3px] border-white shadow-sm z-10" :class="getDotColor(event.category)"></div>
+                        <div class="absolute left-0 top-6 w-[14px] h-[14px] rounded-full border-[3px] border-[#F9FAFB] shadow-sm z-10 transition-colors duration-300" 
+                             :class="[getDotColor(event.category), activeEvent === event ? 'scale-125 ring-2 ring-offset-1 ring-gray-300' : '']"></div>
 
-                        <!-- Card -->
-                        <div class="bg-white p-5 rounded-3xl shadow-float border border-white relative overflow-hidden transition-all duration-300"
-                             :class="activeEvent === event ? 'ring-2 ring-morandi-blue ring-offset-2' : ''">
+                        <!-- Event Card -->
+                        <div class="bg-white p-5 rounded-3xl shadow-float border border-white/60 relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+                             :class="activeEvent === event ? 'ring-2 ring-morandi-blue ring-offset-2 bg-blue-50/30' : ''">
                             
                             <div class="flex justify-between items-start mb-3">
-                                <span class="font-mono text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{{ event.time }}</span>
-                                <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase text-white" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
+                                <span class="font-mono text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md tracking-tight">{{ event.time }}</span>
+                                <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase text-white shadow-sm" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
                             </div>
 
                             <h3 class="text-lg font-bold text-gray-800 mb-2 leading-tight">{{ event.location }}</h3>
                             
-                            <div v-if="event.note" class="text-sm text-gray-500 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100 note-content" v-html="formatNote(event.note)"></div>
+                            <!-- Notes Render -->
+                            <div v-if="event.note" class="text-sm text-gray-500 leading-relaxed bg-gray-50/80 p-3 rounded-xl border border-gray-100/50" v-html="formatNote(event.note)"></div>
                             
+                            <!-- Tags -->
                             <div v-if="event.tags" class="mt-3 flex flex-wrap gap-2">
                                 <span v-for="tag in event.tags" class="text-[10px] px-2 py-1 rounded-md font-bold" :class="getTagStyle(tag)">#{{ tag }}</span>
                             </div>
@@ -195,20 +248,16 @@
             </div>
         </div>
 
-        <!-- Right Panel: Map (Desktop: Fixed, Mobile: Overlay) -->
-        <div class="mobile-map-overlay absolute inset-0 md:relative md:inset-auto flex-1 bg-gray-200 z-[60] md:z-auto transform md:transform-none transition-transform duration-300"
-             :class="isMapOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'">
-            
-            <div id="map" class="w-full h-full outline-none"></div>
+        <!-- Right Panel: Map -->
+        <div class="w-full flex-1 relative z-0 md:z-auto bg-gray-200 overflow-hidden">
+            <div id="map" class="w-full h-full outline-none z-0"></div>
 
-            <!-- Mobile Map Close Button -->
-            <button @click="toggleMap" class="md:hidden absolute top-6 left-6 z-[1000] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            
-            <!-- Legend -->
-            <div class="absolute bottom-8 right-8 z-[500] glass-panel px-4 py-3 rounded-2xl shadow-glass hidden md:block">
-                <div class="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Map Legend</div>
+            <!-- Gradient Overlay for Mobile -->
+            <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-black/10 to-transparent pointer-events-none md:hidden z-10"></div>
+
+            <!-- Desktop Legend -->
+            <div class="absolute bottom-8 right-8 z-[500] glass-panel px-4 py-3 rounded-2xl shadow-glass hidden md:block backdrop-blur-md">
+                <div class="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Legend</div>
                 <div class="space-y-2">
                     <div class="flex items-center gap-2 text-xs font-bold text-gray-600"><span class="w-3 h-3 rounded-full bg-[#8FA39D]"></span> Transport</div>
                     <div class="flex items-center gap-2 text-xs font-bold text-gray-600"><span class="w-3 h-3 rounded-full bg-[#D6C0B3]"></span> Food</div>
@@ -219,32 +268,23 @@
 
         <!-- Notebook Modal -->
         <transition name="slide-up">
-            <div v-if="showNotebook" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center bg-black/30 backdrop-blur-sm" @click.self="showNotebook = false">
-                <div class="bg-morandi-paper w-full md:w-[600px] h-[90vh] md:h-[70vh] rounded-t-[2rem] md:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-slide-up">
-                    
+            <div v-if="showNotebook" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showNotebook = false">
+                <div class="bg-morandi-paper w-full md:w-[600px] h-[85vh] md:h-[70vh] rounded-t-[2rem] md:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-slide-up transform transition-all">
                     <div class="px-6 py-4 bg-[#F5F2EA] border-b border-[#E8E4D9] flex justify-between items-center flex-none">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-pen-nib text-morandi-charcoal"></i>
-                            <span class="font-bold text-morandi-charcoal">My Trip Notes</span>
+                            <span class="font-bold text-morandi-charcoal">My Notes</span>
                         </div>
-                        <button @click="showNotebook = false" class="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center text-gray-500 active:bg-white">
+                        <button @click="showNotebook = false" class="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-gray-500 transition-colors">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
-
                     <div class="flex-1 notebook-modal p-6 overflow-y-auto">
-                        <textarea 
-                            v-model="userNotes" 
-                            @input="saveNotes"
-                            class="notebook-textarea" 
-                            placeholder="Type anything here... It saves automatically.">
-                        </textarea>
+                        <textarea v-model="userNotes" @input="saveNotes" class="notebook-textarea" placeholder="Type anything here..."></textarea>
                     </div>
-
-                    <div class="px-6 py-3 bg-white/80 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-gray-400 flex-none">
-                        <span class="flex items-center gap-1">
-                            <i class="fa-solid fa-cloud-arrow-up" :class="saveStatus === 'Saved!' ? 'text-green-500' : ''"></i> 
-                            {{ saveStatus }}
+                    <div class="px-6 py-3 bg-white/90 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-gray-400 flex-none pb-safe-bottom">
+                        <span class="flex items-center gap-1 transition-colors" :class="saveStatus === 'Saved!' ? 'text-green-600' : ''">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> {{ saveStatus }}
                         </span>
                         <span>LocalStorage</span>
                     </div>
@@ -259,19 +299,16 @@
 
         createApp({
             setup() {
-                // State
                 const showNotebook = ref(false);
-                const isMapOpen = ref(false);
                 const userNotes = ref("");
                 const saveStatus = ref("Ready");
                 const currentDayIndex = ref(0);
                 const activeEvent = ref(null);
-                
-                // Map Objects
                 let map = null;
                 let markers = [];
+                let resizeObserver = null;
 
-                // Data: 2026 首爾 8 天 7 夜｜最終定案完全體行程
+                // --- 完整行程數據 ---
                 const schedule = ref([
                     {
                         date: "06/01 (一) Day 1",
@@ -286,7 +323,7 @@
                             { time: "19:40", location: "抵達金浦機場 (GMP)", category: "transport", note: "", coords: [37.5587, 126.8028] },
                             { time: "20:30", location: "交通：金浦機場 ➔ 九樹 ROKAUS 龍山 (計程車)", category: "transport", note: "🕒 時間：修正估 45-60 分鐘 (納入週一晚間塞車風險)\n💰 車資：約 25,000 韓元起 (依路況浮動)", coords: [37.5587, 126.8028] },
                             { time: "20:50", location: "【關鍵動作】叫外送決策", category: "alert", note: "A. 順利上車：在計程車上叫 (預估 21:10 抵達)\nB. 延誤/塞車：抵達飯店再叫 (改點橋村炸雞，較耐放)", coords: null },
-                            { time: "21:10", location: "抵達飯店 Check-in (已過 15:00 可直接入房)", category: "hotel", note: "九樹 ROKAUS 精品飯店首爾龍山", coords: [37.5293, 126.9654] },
+                            { time: "21:10", location: "抵達飯店 Check-in (已過 15:00 可直接入房)", category: "hotel", note: "九樹 ROKAUS 精品飯店首爾龍山\n主出口龍山站 1 號出口 (步行約 3 分鐘/230m)", coords: [37.5293, 126.9654] },
                             { time: "21:30", location: "大廳取餐吃宵夜", category: "food", note: "【Plan A】獵奇辣炒年糕 (需 21:20 前下單)\n【Plan B】橋村炸雞 (若趕不上年糕改吃這個)", coords: [37.5293, 126.9654] }
                         ]
                     },
@@ -296,13 +333,13 @@
                         lunch: "夢碳 (燒肉)",
                         dinner: "Outlet 自理",
                         events: [
-                            { time: "10:00", location: "交通：飯店 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50 (서울 용산구 백범로99길 50)\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km / Naver Map 驗證)", coords: [37.5372, 126.9698] },
+                            { time: "10:00", location: "交通：飯店 ➔ 夢碳 (Mongtan)", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km / Naver Map 驗證)", coords: [37.5372, 126.9698] },
                             { time: "10:40", location: "【排隊關鍵】抵達現場準備候位", category: "food", note: "⚠️ 規則：11:00 開放現場機台登記 (不可指定時間/無預約)\n📋 動作：10:40 前抵達周邊 ➔ 11:00 準時操作機台\n🛑 風險控管：若號碼過於靠後 (需等 3hr+)，直接啟動備案午餐", tags: ["排隊關鍵"], coords: [37.5372, 126.9698] },
                             { time: "上午", location: "附近咖啡廳等待 (如: Approach Coffee)", category: "food", note: "如: Approach Coffee", coords: [37.5288, 126.9715] },
                             { time: "12:00", location: "午餐：夢碳 (燒肉)", category: "food", note: "🕒 營業：12:00 開始叫號入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
                             { time: "14:30", location: "【空窗期決策：14:30-16:00】(KPI 導向)", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
                             { time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 地鐵：1號線 [龍山] ➔ [加山數碼園區] (往仁川/水原方向)\n🕒 時間：全程約 35-40 分鐘 (含步行與候車)\n*註：飯店步行至車站約5分(主出口)+乘車19分+出站步行約10分", coords: [37.4815, 126.8826] },
-                            { time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n   • 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n   • 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n   • 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (3館美食街/速食)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
+                            { time: "16:40", location: "【Mario Outlet】1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n• 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n• 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n• 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (3館美食街/速食)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
                             { time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 地鐵：1號線直達 [龍山站] (約 35-40 分鐘)", coords: [37.5293, 126.9654] },
                             { time: "21:15", location: "抵達飯店 (整理大量戰利品)", category: "hotel", note: "", coords: [37.5293, 126.9654] }
                         ]
@@ -314,19 +351,19 @@
                         dinner: "漢南洞 24H 馬鈴薯湯",
                         events: [
                             { time: "09:30", location: "交通：飯店 ➔ 龍理團路 (早午餐戰區)", category: "transport", note: "💡 策略：名店位於「三角地站」附近，離飯店約 1.2km，建議搭車省力\n🚇 地鐵：4號線 [新龍山站] ➔ [三角地站] (搭 1 站 / 3號出口)\n🚌 公車：藍色巴士 100/150/151 等 (搭 2 站) ➔ [三角地站]\n🚶 步行：沿大馬路直走約 20-25 分鐘 (6月天氣熱，不建議)", coords: [37.5312, 126.9705] },
-                            { time: "上午", location: "早午餐名店【三選一】(皆位於三角地站周邊)", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
-                            { time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧 (單次最遠距離)", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)", coords: [37.5273, 127.0392] },
+                            { time: "上午", location: "早午餐名店【三選一】", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
+                            { time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)", coords: [37.5273, 127.0392] },
                             { time: "下午", location: "狎鷗亭 / 羅德奧 (島山公園周邊)", category: "shopping", note: "逛精品與潮牌\n🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)", coords: [37.5273, 127.0392] },
                             { time: "16:00", location: "交通：狎鷗亭 ➔ 漢南洞 (線性回程)", category: "transport", note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行至商圈約 10 分鐘\n🚕 備案：計程車約 10-15 分鐘 (約 10,000 韓元)", coords: [37.5348, 127.0012] },
                             { time: "下午", location: "漢南洞逛街 (設計師品牌、咖啡廳)", category: "shopping", note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)", coords: [37.5348, 127.0012] },
-                            { time: "19:30", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯 (或周邊晚餐)", category: "transport", note: "", coords: [37.5332, 127.0028] },
+                            { time: "19:30", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯", category: "transport", note: "", coords: [37.5332, 127.0028] },
                             { time: "20:00", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", category: "food", note: "", coords: [37.5332, 127.0028] },
-                            { time: "21:30", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山 (短程收尾)", category: "transport", note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)", coords: [37.5293, 126.9654] }
+                            { time: "21:30", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/04 (四) Day 4",
-                        title: "春川一日遊 (牧場1.5h＋午餐1h＋鐵道1.5h)",
+                        title: "春川一日遊 (牧場＋午餐＋鐵道)",
                         lunch: "明洞辣炒雞排",
                         dinner: "車站附近自理",
                         notice: "====== ⚠️ 行前準備確認 ======\n1. [火車] 5/4 早上 07:00 準時開搶 ITX (去:龍山09:17 / 回:南春川18:56左右)。\n2. [預約] 出發前完成「春川外國人觀光計程車」線上預約。\n3. [體驗] 出發前 2 週預約江村鐵路自行車 (16:30 場次)。\n4. [現金] 錢包準備 80,000 韓元現金 (專付計程車費)。\n5. [證件] 務必攜帶護照。",
@@ -342,7 +379,7 @@
                             { time: "16:30", location: "江村鐵路自行車 (夕陽場)", category: "activity", note: "🕒 體驗：約 1.5 小時 (騎行50分 + 火車20分 + 接駁車)\n⚠️ 時間推算：約 18:00 回到金裕貞站。", coords: [37.8164, 127.7135] },
                             { time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 動作：搭乘京春線地鐵 (往春川方向) 坐 1 站。", coords: [37.8164, 127.7135] },
                             { time: "18:25", location: "抵達南春川站 (Namchuncheon)", category: "transport", note: "☕ 動作：出站休息、買零食候車。", coords: [37.8638, 127.7239] },
-                            { time: "18:56", location: "回程首爾 (ITX-青春號 雙班次備案)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n   *(平日晚間為 1 小時一班，這是銜接最完美的班次)*\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山\n   *(若錯過 Plan A 需等 1 小時，建議在車站附近吃晚餐)*\n💰 票價：單程約 9,800 韓元。", coords: [37.5298, 126.9647] }
+                            { time: "18:56", location: "回程首爾 (ITX-青春號 雙班次備案)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n*(平日晚間為 1 小時一班，這是銜接最完美的班次)*\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山\n*(若錯過 Plan A 需等 1 小時，建議在車站附近吃晚餐)*\n💰 票價：單程約 9,800 韓元。", coords: [37.5298, 126.9647] }
                         ]
                     },
                     {
@@ -356,15 +393,15 @@
                             { time: "14:30", location: "療程結束，準備移動", category: "alert", note: "", coords: null },
                             { time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
                             { time: "15:20", location: "午晚餐：烤黨 (聖水店)", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
-                            { time: "下午", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
-                            { time: "晚餐", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", category: "food", note: "", coords: [37.5445, 127.0560] },
+                            { time: "下午", location: "聖水洞逛街", category: "shopping", note: "步行範圍大，建議穿好走的鞋\n🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
+                            { time: "晚餐", location: "聖水馬鈴薯排骨湯", category: "food", note: "或 咖啡廳甜點", coords: [37.5445, 127.0560] },
                             { time: "20:30", location: "交通：聖水 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚕 建議：計程車 (術後建議舒適移動)\n🕒 時間：修正估 45-50 分鐘 (週五晚間塞車風險加權)\n💳 氣候卡：地鐵轉乘約 45 分鐘 (較累但時間穩)", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/06 (六) Day 6",
                         title: "點心(1h)＋午餐(1.5h)＋益善洞(1.5h)＋彈性行程",
-                        lunch: "益善翠響 / 無招牌店 (義式二選一)",
+                        lunch: "益善翠響 / 無招牌店",
                         dinner: "雞林食堂 (備案:乙支精肉)",
                         events: [
                             { time: "09:00", location: "Catchtable 遠端取號 (Artist Bakery)", category: "alert", note: "", coords: null },
@@ -372,9 +409,9 @@
                             { time: "10:30", location: "【Artist Bakery】(鹽麵包外帶/點心)", category: "food", note: "🕒 預估停留：約 1 小時 (取號/購買/簡單吃點心)\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
                             { time: "12:00", location: "午餐：人氣義式料理【二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時 (含排隊與用餐)\n❶ Ikseon Chwihyang (益善翠響)：益善洞內，韓式復古洋食(蛋包飯/義大利麵)\n❷ Ganpan Eopneun Gage (無招牌店)：益善洞內，知名義大利麵/燉飯(明太子/牛排)", coords: [37.5744, 126.9905] },
                             { time: "13:30", location: "【益善洞韓屋村】(氛圍咖啡廳/文創小物)", category: "activity", note: "🕒 預估停留：約 1.5 小時 (逛街與拍照)\n☕ 推薦：清水堂 / 樂園驛", coords: [37.5744, 126.9905] },
-                            { time: "15:15", location: "【下午行程二選一】(依體力與購物需求決定)", category: "activity", note: "▼ 選項 A：主攻免稅品 (原定計劃)\n🚕 交通：計程車前往新羅免稅店 (約 20-25 分鐘)\n🛍️ 行程：新羅免稅店 首爾店 (預估停留 2 小時)\n\n▼ 選項 B：彈性自由時間 (備案購物/補逛/休息)\n💡 建議：續逛益善洞、安國站周邊，或前往明洞/乙支路\n☕ 行程：找間韓屋咖啡廳休息，或提早前往晚餐區域", coords: [37.5562, 127.0084] },
+                            { time: "15:15", location: "【下午行程二選一】", category: "activity", note: "▼ 選項 A：主攻免稅品 (原定計劃)\n🚕 交通：計程車前往新羅免稅店 (約 20-25 分鐘)\n🛍️ 行程：新羅免稅店 首爾店 (預估停留 2 小時)\n\n▼ 選項 B：彈性自由時間 (備案購物/補逛/休息)\n💡 建議：續逛益善洞、安國站周邊，或前往明洞/乙支路\n☕ 行程：找間韓屋咖啡廳休息，或提早前往晚餐區域", coords: [37.5562, 127.0084] },
                             { time: "17:40", location: "交通：前往鐘路3街 (晚餐)", category: "transport", note: "🚕 建議：從新羅出發約 15-20 分鐘；或從備案地點步行前往", coords: [37.5714, 126.9915] },
-                            { time: "18:00", location: "晚餐：雞林食堂 本店 (계림식당)", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk)\n   *位置：乙支路3街站附近 (步行約 5-8 分鐘)\n   *特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
+                            { time: "18:00", location: "晚餐：雞林食堂 本店 (계림식당)", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk)\n*位置：乙支路3街站附近 (步行約 5-8 分鐘)\n*特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
                             { time: "20:00", location: "交通：鐘路3街 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "💳 氣候卡：地鐵 1號線 [鐘路3街] ➔ [龍山站] (直達)\n🕒 時間：乘車約 12 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
                         ]
                     },
@@ -406,7 +443,7 @@
                             { time: "11:15", location: "【空窗期：11:15-16:30】(最後掃貨)", category: "shopping", note: "🕒 可用時間：約 4 - 5 小時\n💡 建議 A：Emart 龍山店 (步行可達)\n💡 建議 B：iPark Mall (Gundam Base / Living Park)", coords: [37.5286, 126.9640] },
                             { time: "16:30", location: "回到飯店領取行李", category: "hotel", note: "", coords: [37.5293, 126.9654] },
                             { time: "17:00", location: "交通：九樹 ROKAUS 龍山 ➔ 金浦機場 (GMP)", category: "transport", note: "🚕 建議：計程車 (務必預留塞車緩衝)\n🕒 時間：修正估 50-60 分鐘 (下班尖峰時段風險)\n💰 車資：約 25,000-30,000 韓元", coords: [37.5587, 126.8028] },
-                            { time: "17:50", location: "抵達金浦機場 & 辦理登機", category: "flight", note: "1. 航空公司櫃檯：託運行李 (Check-in)\n2. 辦理退稅 (Tax Refund)：\n   • 海關蓋章：2樓 1 Gate 附近\n   • 現金/櫃台：3樓 36 Gate 附近 (或自助機)\n*⚠️ 註：金浦退稅機通常在安檢前 (2樓)，若需人工查驗亦同", coords: [37.5587, 126.8028] },
+                            { time: "17:50", location: "抵達金浦機場 & 辦理登機", category: "flight", note: "1. 航空公司櫃檯：託運行李 (Check-in)\n2. 辦理退稅 (Tax Refund)：\n• 海關蓋章：2樓 1 Gate 附近\n• 現金/櫃台：3樓 36 Gate 附近 (或自助機)\n*⚠️ 註：金浦退稅機通常在安檢前 (2樓)，若需人工查驗亦同", coords: [37.5587, 126.8028] },
                             { time: "18:30", location: "通過安全檢查 & 證照查驗 (Immigration)", category: "alert", note: "🕒 預估時間：約 20-30 分鐘 (視現場排隊狀況)", coords: null },
                             { time: "19:00", location: "領取線上免稅品 & 領取退稅金", category: "shopping", note: "🕒 預估停留：約 50 分鐘 (包含排隊與整理免稅品)\n📍 提貨位置：通過安檢後 (Airside) 3樓，34號登機門附近\n*註：所有免稅店 (新羅/樂天等) 皆在同一處綜合提貨", coords: null },
                             { time: "19:55", location: "【登機時間 Boarding】(起飛前 40 分鐘)", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 提醒：請確保已領完免稅品，避免壓線被廣播", coords: null },
@@ -418,54 +455,27 @@
 
                 const currentDay = ref(schedule.value[0]);
 
-                // --- Methods ---
-
                 const selectDay = (index) => {
                     currentDayIndex.value = index;
                     currentDay.value = schedule.value[index];
                     activeEvent.value = null;
-                    
-                    // Reset scroll
                     const container = document.getElementById('timeline-container');
                     if(container) container.scrollTop = 0;
-
-                    // Mobile: close map when changing days to focus on timeline
-                    if (window.innerWidth < 768) {
-                        isMapOpen.value = false;
-                    }
-
                     nextTick(() => {
-                        // Scroll pill into view
                         document.getElementById('day-btn-' + index)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                         renderMarkers();
                     });
                 };
 
-                const toggleMap = () => {
-                    isMapOpen.value = !isMapOpen.value;
-                    if (isMapOpen.value) {
-                        nextTick(() => {
-                            if (map) {
-                                map.invalidateSize(); // Critical for map rendering correctly after hidden
-                                fitBounds();
-                            }
-                        });
-                    }
-                };
-
-                const openNotebook = () => {
-                    showNotebook.value = true;
-                };
-
+                const openNotebook = () => { showNotebook.value = true; };
                 const saveNotes = () => {
                     localStorage.setItem('seoul2026_notes', userNotes.value);
                     saveStatus.value = 'Saved!';
-                    setTimeout(() => {
-                        saveStatus.value = 'Ready';
-                    }, 2000);
+                    setTimeout(() => { saveStatus.value = 'Ready'; }, 2000);
                 };
 
-                // Styling Helpers
+                const resetMap = () => { fitBounds(); };
+
                 const getDotColor = (cat) => {
                     const map = { activity: 'bg-morandi-rose border-[#D6BCC0]', food: 'bg-morandi-sand border-[#D6C0B3]', shopping: 'bg-morandi-blue border-[#8E9AAF]', transport: 'bg-morandi-green border-[#8FA39D]', hotel: 'bg-morandi-charcoal border-[#5D6D7E]', flight: 'bg-morandi-clay border-[#BCAAA4]', alert: 'bg-red-400 border-red-300' };
                     return map[cat] || 'bg-gray-400';
@@ -477,116 +487,82 @@
                 };
 
                 const getTagStyle = (tag) => {
-                    if (tag.includes("死線") || tag.includes("風險") || tag.includes("關鍵") || tag.includes("Queue")) return 'bg-red-50 text-red-600 border border-red-100';
+                    if (tag.includes("死線") || tag.includes("風險") || tag.includes("關鍵") || tag.includes("現金")) return 'bg-red-50 text-red-600 border border-red-100';
                     return 'bg-gray-100 text-gray-500 border border-gray-200';
                 };
 
                 const formatNote = (text) => {
                     if (!text) return "";
-                    // Enhance formatting for specific keywords and emojis
                     let formatted = text.replace(/\n/g, '<br>');
-                    formatted = formatted.replace(/(⚠️|💡|📍|🕒|💰|🚇|🚕|🚌|🚶|🧳|🛑|✈️|🚄|☕|🛍️)/g, '<span class="mr-1">$1</span>');
-                    formatted = formatted.replace(/(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g, '<b>$1</b>');
+                    formatted = formatted.replace(/(⚠️|💡|📍|🕒|💰|🚇|🚕|🚌|🚶|🧳|🛑|✈️|🚄|☕|🛍️)/g, '<span class="mr-1 inline-block">$1</span>');
+                    formatted = formatted.replace(/(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g, '<b class="text-gray-700">$1</b>');
                     return formatted;
                 };
 
-                // Map Logic
                 const initMap = () => {
-                    if (typeof L === 'undefined') {
-                        setTimeout(initMap, 500);
-                        return;
-                    }
+                    if (typeof L === 'undefined') { setTimeout(initMap, 500); return; }
                     if (map) return;
-                    
-                    map = L.map('map', { zoomControl: false }).setView([37.5665, 126.9780], 13);
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                        attribution: '&copy; OpenStreetMap &copy; CARTO',
-                        maxZoom: 20
-                    }).addTo(map);
-                    
+                    map = L.map('map', { zoomControl: false, zoomAnimation: true }).setView([37.5665, 126.9780], 13);
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 20 }).addTo(map);
                     renderMarkers();
+                    const mapDiv = document.getElementById('map');
+                    resizeObserver = new ResizeObserver(() => { map.invalidateSize(); });
+                    resizeObserver.observe(mapDiv);
                 };
 
                 const renderMarkers = () => {
                     if (!map) return;
                     markers.forEach(m => map.removeLayer(m));
                     markers = [];
-                    
                     const colorMap = { activity: '#D6BCC0', food: '#D6C0B3', shopping: '#8E9AAF', transport: '#8FA39D', hotel: '#5D6D7E', flight: '#BCAAA4', alert: '#EF4444' };
 
                     currentDay.value.events.forEach((event) => {
                         if (event.coords) {
                             const color = colorMap[event.category] || '#9CA3AF';
-                            const iconHtml = `<div style="background-color: ${color};" class="custom-marker-pin"></div><i class="fa-solid fa-location-dot text-white absolute top-[-9px] left-[1px] text-[13px] z-10 w-[32px] text-center"></i>`;
-                            const icon = L.divIcon({
-                                className: 'custom-marker',
-                                html: iconHtml,
-                                iconSize: [32, 42],
-                                iconAnchor: [16, 42],
-                                popupAnchor: [0, -45]
-                            });
-                            
+                            const iconHtml = `<div class="custom-marker-pin" style="background-color: ${color};"><div class="marker-icon-inner"></div></div>`;
+                            const icon = L.divIcon({ className: 'custom-marker', html: iconHtml, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -36] });
                             const marker = L.marker(event.coords, { icon: icon }).addTo(map);
-                            marker.bindPopup(`<div class="font-sans font-bold text-gray-700 p-1 text-sm">${event.location}</div>`, { closeButton: false });
-                            
-                            marker.on('click', () => {
-                                focusEvent(event);
-                            });
-                            
+                            const popupContent = `<div class="font-sans text-gray-700 p-1"><div class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">${event.category}</div><div class="font-bold text-sm leading-tight">${event.location}</div></div>`;
+                            marker.bindPopup(popupContent, { closeButton: false, className: 'rounded-xl shadow-lg', offset: [0, -5] });
+                            marker.on('click', () => { focusEvent(event); });
                             marker.eventData = event;
                             markers.push(marker);
                         }
                     });
-                    
                     fitBounds();
                 };
 
                 const fitBounds = () => {
                     if (markers.length > 0 && map) {
                         const group = L.featureGroup(markers);
-                        map.fitBounds(group.getBounds(), { padding: [50, 50], maxZoom: 15 });
+                        const isMobile = window.innerWidth < 768;
+                        const paddingBottom = isMobile ? 20 : 50; 
+                        map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 15, animate: true });
                     }
                 };
 
                 const focusEvent = (event) => {
                     activeEvent.value = event;
-                    
-                    if (event.coords) {
-                        if (window.innerWidth < 768) {
-                            isMapOpen.value = true;
-                            nextTick(() => {
-                                map.invalidateSize();
-                                map.flyTo(event.coords, 16, { animate: true, duration: 1 });
-                            });
-                        } else if (map) {
-                            map.flyTo(event.coords, 16, { animate: true, duration: 1.2 });
-                        }
-                        
+                    if (event.coords && map) {
                         markers.forEach(m => {
-                            if (m.eventData === event) m.openPopup();
-                            else m.closePopup();
+                            const icon = m.getElement();
+                            if (m.eventData === event) { if(icon) icon.classList.add('active'); m.openPopup(); }
+                            else { if(icon) icon.classList.remove('active'); m.closePopup(); }
                         });
+                        map.flyTo(event.coords, 16, { animate: true, duration: 1.2, easeLinearity: 0.25 });
                     }
                 };
 
-                // Lifecycle
                 onMounted(() => {
-                    // Load notes
                     const saved = localStorage.getItem('seoul2026_notes');
                     if (saved) userNotes.value = saved;
-                    
-                    // Init Map
                     initMap();
-                    
-                    // Handle resize
-                    window.addEventListener('resize', () => {
-                        if (map) map.invalidateSize();
-                    });
+                    window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
                 });
 
                 return {
-                    schedule, currentDay, currentDayIndex, activeEvent, showNotebook, isMapOpen, userNotes, saveStatus,
-                    selectDay, focusEvent, toggleMap, openNotebook, saveNotes,
+                    schedule, currentDay, currentDayIndex, activeEvent, showNotebook, userNotes, saveStatus,
+                    selectDay, focusEvent, openNotebook, saveNotes, resetMap,
                     getDotColor, getCategoryBadge, getTagStyle, formatNote
                 };
             }

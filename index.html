@@ -4,62 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- APP 名稱設定 -->
+    <!-- PWA / APP 設定 -->
     <meta name="apple-mobile-web-app-title" content="Seoul 2026">
     <meta name="application-name" content="Seoul 2026">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Seoul 2026 (Day 3 Updated)</title>
+    <meta name="theme-color" content="#F5F5F7">
+    <title>Seoul 2026 Travel Guide</title>
 
-    <!-- APP Icon 2 (Base64 SVG) - 首爾塔幾何設計版 -->
+    <!-- APP Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOEZBMzlEO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzhFOUFBRjtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOEZBMzlEO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzhFOUFBRjtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
     
-    <!-- Tailwind CSS -->
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Vue 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    
-    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts: Inter & Noto Sans TC -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                        hand: ['Nanum Pen Script', 'cursive'],
                     },
                     colors: {
-                        ios: {
-                            bg: '#F5F5F7',
-                            card: '#FFFFFF',
-                            text: '#1D1D1F',
-                            subtext: '#86868B',
-                        },
+                        ios: { bg: '#F5F5F7', card: '#FFFFFF', text: '#1D1D1F', subtext: '#86868B' },
                         morandi: {
-                            green: '#8FA39D',  // 鼠尾草綠
-                            blue: '#8E9AAF',   // 霧霾藍
-                            sand: '#D6C0B3',   // 暖沙色
-                            rose: '#D6BCC0',   // 乾燥玫瑰
-                            charcoal: '#5D6D7E', // 鐵灰
-                            clay: '#BCAAA4',   // 陶土
-                            bg: '#F9FAFB',
+                            green: '#8FA39D', blue: '#8E9AAF', sand: '#D6C0B3', rose: '#D6BCC0',
+                            charcoal: '#5D6D7E', clay: '#BCAAA4', bg: '#F9FAFB', paper: '#FDFBF7'
                         }
                     },
                     boxShadow: {
-                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                         'float': '0 20px 40px -10px rgba(0, 0, 0, 0.08)',
-                        'inner-light': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.5)',
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -67,256 +50,228 @@
     </script>
 
     <style>
-        body {
-            background-color: #F5F5F7;
-            color: #1D1D1F;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* 隱藏捲軸但保留功能 */
+        /* Global Styles */
+        body { background-color: #F5F5F7; color: #1D1D1F; -webkit-font-smoothing: antialiased; user-select: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 玻璃擬態 */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-
-        /* 時間軸線條 (虛線風格) */
-        .timeline-line {
-            border-left: 2px dashed #E5E5EA;
-        }
-
-        /* 莫蘭迪地圖標記樣式 */
+        
+        /* Map Markers */
         .custom-marker-pin {
-            width: 30px;
-            height: 30px;
-            border-radius: 50% 50% 50% 0;
-            background: #8FA39D;
-            position: absolute;
-            transform: rotate(-45deg);
-            left: 50%;
-            top: 50%;
-            margin: -15px 0 0 -15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            border: 2px solid white;
-        }
-        .custom-marker-icon {
-            transform: rotate(45deg);
+            width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
+            background: #8FA39D; position: absolute; transform: rotate(-45deg);
+            left: 50%; top: 50%; margin: -16px 0 0 -16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid white;
         }
 
-        /* App Icon Preview Animation */
-        .app-icon-preview {
-            background: linear-gradient(135deg, #8FA39D 0%, #8E9AAF 100%);
-            box-shadow: 0 10px 25px rgba(142, 154, 175, 0.4);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* Notebook Styles */
+        .notebook-modal {
+            background-color: #FDFBF7;
+            background-image: linear-gradient(#E1E1E1 1px, transparent 1px);
+            background-size: 100% 2rem;
+            line-height: 2rem;
         }
-        .app-icon-preview:active {
-            transform: scale(0.92);
+        .notebook-textarea {
+            background: transparent; width: 100%; height: 100%; border: none; outline: none;
+            resize: none; line-height: 2rem; font-family: 'Noto Sans TC', sans-serif;
+            font-size: 1.05rem; color: #4A5568; padding-top: 0.1rem;
+        }
+        .notebook-textarea::placeholder { color: #CBD5E0; }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .mobile-map-overlay {
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
         }
     </style>
 </head>
-<body class="h-[100dvh] w-full overflow-hidden flex flex-col md:flex-row bg-ios-bg">
+<body class="h-[100dvh] w-full overflow-hidden bg-ios-bg">
 
-    <div id="app" class="flex flex-col md:flex-row w-full h-full">
+    <div id="app" class="w-full h-full flex flex-col md:flex-row relative">
         
-        <!-- 左側：行程雜誌 (Timeline Magazine) -->
-        <div class="order-2 md:order-1 w-full md:w-[480px] lg:w-[550px] flex flex-col h-[65%] md:h-full relative z-20 shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
+        <!-- Left Panel: Itinerary (Mobile: Full Screen) -->
+        <div class="w-full md:w-[480px] lg:w-[550px] flex flex-col h-full bg-[#F9FAFB] relative z-10 md:shadow-2xl">
             
-            <!-- 頂部導航 (Glassmorphism) -->
-            <div class="absolute top-0 left-0 right-0 z-40 px-6 py-4 glass-panel rounded-b-[2rem] shadow-sm">
-                <div class="flex justify-between items-center mb-4">
+            <!-- Header -->
+            <div class="glass-panel pt-safe-top pb-2 px-6 flex-none z-50">
+                <div class="pt-8 md:pt-4 flex justify-between items-center mb-4">
                     <div>
-                        <div class="text-[10px] font-bold tracking-[0.2em] text-morandi-blue uppercase mb-1">Travel Guide</div>
-                        <h1 class="text-xl font-black text-ios-text tracking-tight">Seoul <span class="text-morandi-rose">2026</span></h1>
+                        <div class="text-[10px] font-bold tracking-[0.2em] text-morandi-blue uppercase mb-1">Seoul Travel Guide</div>
+                        <h1 class="text-2xl font-black text-ios-text tracking-tight">Seoul <span class="text-morandi-rose">2026</span></h1>
                     </div>
-                    <!-- 天氣小組件 (點擊開啟 APP 資訊/圖示預覽) -->
-                    <div @click="showInfo = true" class="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-white/60 cursor-pointer active:scale-95 transition-transform">
-                        <i class="fa-solid fa-cloud-sun text-morandi-sand"></i>
-                        <span class="text-xs font-bold text-gray-500">24°C</span>
+                    
+                    <div class="flex gap-2">
+                         <!-- Map Toggle (Mobile Only) -->
+                        <button @click="toggleMap" class="md:hidden w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-morandi-charcoal active:scale-95 transition-transform">
+                            <i class="fa-solid fa-map"></i>
+                        </button>
+                        
+                        <!-- Notebook Button -->
+                        <button @click="openNotebook" class="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 active:scale-95 transition-transform">
+                            <i class="fa-solid fa-book-open text-morandi-charcoal"></i>
+                            <span class="text-xs font-bold text-morandi-charcoal hidden sm:block">Notes</span>
+                        </button>
                     </div>
                 </div>
 
-                <!-- 日期選擇器 (Pill Style) -->
-                <div class="flex overflow-x-auto hide-scroll gap-2 pb-1 snap-x">
+                <!-- Date Pills -->
+                <div class="flex overflow-x-auto hide-scroll gap-2 pb-2 snap-x">
                     <button v-for="(day, index) in schedule" :key="index"
-                        @click="selectDay(index)"
-                        :id="'day-btn-' + index"
-                        class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 border border-transparent"
-                        :class="currentDayIndex === index 
-                            ? 'bg-morandi-charcoal text-white shadow-lg transform scale-105' 
-                            : 'bg-white/60 text-ios-subtext hover:bg-white'">
+                        @click="selectDay(index)" :id="'day-btn-' + index"
+                        class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 border"
+                        :class="currentDayIndex === index ? 'bg-morandi-charcoal text-white border-transparent shadow-md' : 'bg-white text-gray-400 border-transparent'">
                         Day {{ index + 1 }}
                     </button>
                 </div>
             </div>
 
-            <!-- 內容捲動區 -->
-            <div id="timeline-container" class="flex-1 overflow-y-auto hide-scroll pt-36 pb-24 px-6 bg-[#F9FAFB]">
+            <!-- Content Area -->
+            <div id="timeline-container" class="flex-1 overflow-y-auto hide-scroll p-6 pb-24">
                 
-                <!-- 當日標題卡 -->
-                <div class="mb-8">
-                    <h2 class="text-3xl font-black text-ios-text mb-2 tracking-tight">{{ currentDay.date.split(' ')[1] }}</h2>
-                    <p class="text-lg font-medium text-morandi-blue mb-4">{{ currentDay.title }}</p>
+                <!-- Day Info -->
+                <div class="mb-8 animate-fade-in">
+                    <h2 class="text-3xl font-black text-ios-text mb-1 tracking-tight">{{ currentDay.date.split(' ')[0] }}</h2>
+                    <p class="text-lg font-bold text-morandi-blue mb-6">{{ currentDay.title }}</p>
                     
-                    <div class="flex gap-3">
-                        <div class="flex-1 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-morandi-sand/20 text-morandi-sand flex items-center justify-center">
-                                <i class="fa-solid fa-utensils"></i>
-                            </div>
-                            <div>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-morandi-sand/20 text-morandi-sand flex items-center justify-center text-sm"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="overflow-hidden">
                                 <div class="text-[10px] text-gray-400 uppercase font-bold">Lunch</div>
                                 <div class="text-xs font-bold text-gray-700 truncate">{{ currentDay.lunch }}</div>
                             </div>
                         </div>
-                        <div class="flex-1 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-morandi-blue/20 text-morandi-blue flex items-center justify-center">
-                                <i class="fa-solid fa-moon"></i>
-                            </div>
-                            <div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-morandi-blue/20 text-morandi-blue flex items-center justify-center text-sm"><i class="fa-solid fa-moon"></i></div>
+                            <div class="overflow-hidden">
                                 <div class="text-[10px] text-gray-400 uppercase font-bold">Dinner</div>
                                 <div class="text-xs font-bold text-gray-700 truncate">{{ currentDay.dinner }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 風險提示 (Alert Style) -->
-                    <div v-if="currentDay.notice" class="mt-4 p-4 rounded-3xl bg-morandi-rose/10 border border-morandi-rose/20 flex gap-3 items-start">
-                        <i class="fa-solid fa-circle-exclamation text-morandi-rose mt-0.5"></i>
-                        <div class="text-xs text-gray-600 leading-relaxed font-medium whitespace-pre-line">
-                            {{ currentDay.notice }}
-                        </div>
+                    <div v-if="currentDay.notice" class="p-4 rounded-2xl bg-red-50 border border-red-100 flex gap-3 items-start">
+                        <i class="fa-solid fa-circle-exclamation text-red-400 mt-0.5 text-sm"></i>
+                        <div class="text-xs text-gray-600 leading-relaxed font-medium whitespace-pre-line">{{ currentDay.notice }}</div>
                     </div>
                 </div>
 
-                <!-- 時間軸列表 -->
-                <div class="relative pl-4 space-y-6">
-                    <!-- 線條 -->
-                    <div class="absolute left-[27px] top-4 bottom-10 w-px bg-gradient-to-b from-gray-200 via-gray-200 to-transparent"></div>
-
+                <!-- Timeline -->
+                <div class="relative pl-3 space-y-8">
+                    <div class="absolute left-[19px] top-2 bottom-0 w-px bg-gray-200"></div>
+                    
                     <div v-for="(event, eIndex) in currentDay.events" :key="eIndex"
                         @click="focusEvent(event)"
-                        class="relative pl-8 group cursor-pointer transition-transform duration-200 active:scale-[0.98]">
+                        class="relative pl-8 group cursor-pointer active:scale-[0.99] transition-transform">
                         
-                        <!-- 裝飾節點 (Custom Dot) -->
-                        <div class="absolute left-0 top-6 w-[14px] h-[14px] rounded-full border-[3px] border-white shadow-md z-10 transition-colors duration-300"
-                             :class="getDotColor(event.category)">
-                        </div>
+                        <!-- Timeline Dot -->
+                        <div class="absolute left-0 top-6 w-[13px] h-[13px] rounded-full border-[3px] border-white shadow-sm z-10" :class="getDotColor(event.category)"></div>
 
-                        <!-- 卡片本體 -->
-                        <div class="bg-white p-5 rounded-[1.5rem] shadow-float border border-white/50 relative overflow-hidden transition-all duration-300"
-                             :class="activeEvent === event ? 'ring-2 ring-morandi-blue ring-offset-2' : 'hover:shadow-lg'">
+                        <!-- Card -->
+                        <div class="bg-white p-5 rounded-3xl shadow-float border border-white relative overflow-hidden transition-all duration-300"
+                             :class="activeEvent === event ? 'ring-2 ring-morandi-blue ring-offset-2' : ''">
                             
-                            <!-- 頂部資訊 -->
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-mono text-xs font-bold text-morandi-charcoal bg-gray-100 px-2 py-1 rounded-lg">{{ event.time }}</span>
-                                    <span class="text-[10px] font-bold px-2 py-1 rounded-lg uppercase tracking-wider text-white"
-                                          :class="getCategoryBadge(event.category)">
-                                        {{ event.category }}
-                                    </span>
-                                </div>
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="font-mono text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{{ event.time }}</span>
+                                <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase text-white" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
                             </div>
 
-                            <!-- 標題與內容 -->
-                            <h3 class="text-base font-bold text-gray-800 mb-2">{{ event.location }}</h3>
+                            <h3 class="text-lg font-bold text-gray-800 mb-2 leading-tight">{{ event.location }}</h3>
                             
-                            <div v-if="event.note" 
-                                 class="text-sm text-gray-500 leading-relaxed bg-gray-50/80 p-3 rounded-xl border border-gray-100 note-content"
-                                 v-html="formatNote(event.note)">
+                            <div v-if="event.note" class="text-sm text-gray-500 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100 note-content" v-html="formatNote(event.note)"></div>
+                            
+                            <div v-if="event.tags" class="mt-3 flex flex-wrap gap-2">
+                                <span v-for="tag in event.tags" class="text-[10px] px-2 py-1 rounded-md font-bold" :class="getTagStyle(tag)">#{{ tag }}</span>
                             </div>
-
-                            <!-- Tags -->
-                            <div v-if="event.tags && event.tags.length" class="mt-3 flex flex-wrap gap-2">
-                                <span v-for="tag in event.tags" 
-                                      class="text-[10px] px-2 py-1 rounded-md font-medium"
-                                      :class="tag.includes('風險') || tag.includes('死線') ? 'bg-morandi-rose/20 text-red-700' : 'bg-gray-100 text-gray-500'">
-                                    #{{ tag }}
-                                </span>
-                            </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 右側：沉浸式地圖 (Immersive Map) -->
-        <div id="map-container" class="order-1 md:order-2 flex-1 relative bg-[#E5E5EA]">
-            <div id="map" class="w-full h-full outline-none z-0"></div>
+        <!-- Right Panel: Map (Desktop: Fixed, Mobile: Overlay) -->
+        <div class="mobile-map-overlay absolute inset-0 md:relative md:inset-auto flex-1 bg-gray-200 z-40 md:z-auto transform md:transform-none transition-transform duration-300"
+             :class="isMapOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'">
             
-            <!-- 浮動圖例 -->
-            <div class="absolute bottom-8 right-8 z-[400] glass-panel px-4 py-3 rounded-2xl shadow-glass hidden md:block">
-                <div class="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Legend</div>
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 text-xs font-medium text-gray-600">
-                        <span class="w-3 h-3 rounded-full bg-[#8FA39D]"></span> Transport
-                    </div>
-                    <div class="flex items-center gap-2 text-xs font-medium text-gray-600">
-                        <span class="w-3 h-3 rounded-full bg-[#D6C0B3]"></span> Food
-                    </div>
-                    <div class="flex items-center gap-2 text-xs font-medium text-gray-600">
-                        <span class="w-3 h-3 rounded-full bg-[#8E9AAF]"></span> Shopping
-                    </div>
-                    <div class="flex items-center gap-2 text-xs font-medium text-gray-600">
-                        <span class="w-3 h-3 rounded-full bg-[#D6BCC0]"></span> Activity
-                    </div>
-                </div>
-            </div>
+            <div id="map" class="w-full h-full outline-none"></div>
 
-            <!-- iOS 風格浮動按鈕 (Mobile Only) -->
-            <button class="md:hidden absolute bottom-6 right-6 z-[400] w-12 h-12 bg-morandi-charcoal text-white rounded-full shadow-lg flex items-center justify-center text-lg active:scale-90 transition-transform"
-                @click="scrollToCurrent">
-                <i class="fa-solid fa-location-arrow"></i>
+            <!-- Mobile Map Close Button -->
+            <button @click="toggleMap" class="md:hidden absolute top-6 left-6 z-[1000] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700">
+                <i class="fa-solid fa-arrow-left"></i>
             </button>
-        </div>
-
-        <!-- APP 資訊與圖示預覽 Modal -->
-        <div v-if="showInfo" class="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm" @click.self="showInfo = false">
-            <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl relative overflow-hidden text-center transform transition-all">
-                
-                <!-- App Icon Preview (Updated to Icon 2: Tower) -->
-                <div class="mx-auto w-32 h-32 rounded-[2rem] app-icon-preview mb-6 flex flex-col items-center justify-center text-white relative border-[4px] border-white/20">
-                    <!-- Icon Graphic: Tower -->
-                    <div class="flex flex-col items-center gap-1 mt-2">
-                        <div class="w-1 h-8 bg-white/90 rounded-full"></div>
-                        <div class="w-8 h-1 bg-white/90 rounded-full"></div>
-                        <div class="w-3 h-3 rounded-full border-[3px] border-white bg-transparent"></div>
-                        <div class="w-6 h-8 border-x-[3px] border-white/90"></div>
-                    </div>
-                    <!-- Text -->
-                    <span class="font-extrabold text-xl drop-shadow-sm mt-1">SEOUL</span>
-                    <span class="font-light text-xs tracking-[0.2em] drop-shadow-sm opacity-80">2026</span>
-                    
-                    <!-- Shine Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent rounded-[1.8rem]"></div>
+            
+            <!-- Legend -->
+            <div class="absolute bottom-8 right-8 z-[500] glass-panel px-4 py-3 rounded-2xl shadow-glass hidden md:block">
+                <div class="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Map Legend</div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-xs font-bold text-gray-600"><span class="w-3 h-3 rounded-full bg-[#8FA39D]"></span> Transport</div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-gray-600"><span class="w-3 h-3 rounded-full bg-[#D6C0B3]"></span> Food</div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-gray-600"><span class="w-3 h-3 rounded-full bg-[#8E9AAF]"></span> Shopping</div>
                 </div>
-
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Seoul 2026</h3>
-                <p class="text-sm text-gray-500 mb-6 px-4">
-                    此 APP 圖示已更新為「首爾塔」設計。<br>
-                    iOS 用戶請點擊 Safari 底部 <i class="fa-solid fa-arrow-up-from-bracket mx-1"></i> 分享按鈕，<br>選擇「加入主畫面」即可使用。
-                </p>
-
-                <button @click="showInfo = false" class="w-full py-3 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-800 font-bold transition-colors">
-                    關閉
-                </button>
             </div>
         </div>
+
+        <!-- Notebook Modal -->
+        <transition name="slide-up">
+            <div v-if="showNotebook" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center bg-black/30 backdrop-blur-sm" @click.self="showNotebook = false">
+                <div class="bg-morandi-paper w-full md:w-[600px] h-[90vh] md:h-[70vh] rounded-t-[2rem] md:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-slide-up">
+                    
+                    <div class="px-6 py-4 bg-[#F5F2EA] border-b border-[#E8E4D9] flex justify-between items-center flex-none">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-pen-nib text-morandi-charcoal"></i>
+                            <span class="font-bold text-morandi-charcoal">My Trip Notes</span>
+                        </div>
+                        <button @click="showNotebook = false" class="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center text-gray-500 active:bg-white">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 notebook-modal p-6 overflow-y-auto">
+                        <textarea 
+                            v-model="userNotes" 
+                            @input="saveNotes"
+                            class="notebook-textarea" 
+                            placeholder="Type anything here... It saves automatically.">
+                        </textarea>
+                    </div>
+
+                    <div class="px-6 py-3 bg-white/80 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-gray-400 flex-none">
+                        <span class="flex items-center gap-1">
+                            <i class="fa-solid fa-cloud-arrow-up" :class="saveStatus === 'Saved!' ? 'text-green-500' : ''"></i> 
+                            {{ saveStatus }}
+                        </span>
+                        <span>LocalStorage</span>
+                    </div>
+                </div>
+            </div>
+        </transition>
 
     </div>
 
     <script>
-        const { createApp, ref, onMounted, nextTick } = Vue;
+        const { createApp, ref, onMounted, nextTick, watch } = Vue;
 
         createApp({
             setup() {
-                const showInfo = ref(false); // 控制圖示預覽 Modal
+                // State
+                const showNotebook = ref(false);
+                const isMapOpen = ref(false);
+                const userNotes = ref("");
+                const saveStatus = ref("Ready");
+                const currentDayIndex = ref(0);
+                const activeEvent = ref(null);
+                
+                // Map Objects
+                let map = null;
+                let markers = [];
 
-                // 資料更新：完全置入您提供的詳細行程，並補上地圖座標
+                // Data: 2026 首爾 8 天 7 夜｜最終定案完全體行程
                 const schedule = ref([
                     {
                         date: "06/01 (一) Day 1",
@@ -324,32 +279,32 @@
                         lunch: "機上/機場",
                         dinner: "外送 (獵奇年糕/橋村炸雞)",
                         events: [
-                            { time: "12:00", location: "家裡出發", category: "transport", note: "🕒 時間：預計 12:00-12:30 出門 (保留緩衝)\n目標：高雄小港機場 (KHH)", coords: [22.5768, 120.3478] },
-                            { time: "13:30", location: "抵達機場 & 辦理登機", category: "flight", note: "✈️ 航班：台灣虎航 IT662\n⚠️ 動作：托運行李、領登機證、過安檢", coords: [22.5768, 120.3478] },
-                            { time: "15:15", location: "【登機時間 Boarding】", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 死線：登機門通常於 15:35 關閉，請勿遲到", tags: ["死線"], coords: null },
-                            { time: "15:55", location: "起飛 (前往首爾金浦)", category: "flight", note: "預計飛行時間約 2小時45分", coords: null },
-                            { time: "19:40", location: "抵達金浦機場 (GMP)", category: "transport", note: "入境、提領行李", coords: [37.5587, 126.8028] },
-                            { time: "20:30", location: "交通：金浦機場 ➔ 飯店", category: "transport", note: "🚕 方式：計程車\n🕒 時間：估 45-60 分鐘 (含排隊/塞車緩衝)\n💰 車資：約 25,000 韓元起 (依路況浮動)", coords: [37.5587, 126.8028] },
+                            { time: "12:00", location: "家裡出發 ➔ 高雄小港機場 (KHH)", category: "transport", note: "🕒 時間：預計 12:00-12:30 出門 (保留緩衝)", coords: [22.5768, 120.3478] },
+                            { time: "13:30", location: "抵達機場 & 辦理登機 (Check-in)", category: "flight", note: "✈️ 航班：台灣虎航 (Tigerair Taiwan) IT662\n⚠️ 動作：托運行李、領登機證、過安檢", coords: [22.5768, 120.3478] },
+                            { time: "15:15", location: "【登機時間 Boarding】(起飛前 40 分鐘)", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 死線：登機門通常於 15:35 關閉，請勿遲到", tags: ["死線"], coords: null },
+                            { time: "15:55", location: "起飛 (前往首爾金浦)", category: "flight", note: "前往首爾金浦 (GMP)", coords: null },
+                            { time: "19:40", location: "抵達金浦機場 (GMP)", category: "transport", note: "", coords: [37.5587, 126.8028] },
+                            { time: "20:30", location: "交通：金浦機場 ➔ 九樹 ROKAUS 龍山 (計程車)", category: "transport", note: "🕒 時間：修正估 45-60 分鐘 (納入週一晚間塞車風險)\n💰 車資：約 25,000 韓元起 (依路況浮動)", coords: [37.5587, 126.8028] },
                             { time: "20:50", location: "【關鍵動作】叫外送決策", category: "alert", note: "A. 順利上車：在計程車上叫 (預估 21:10 抵達)\nB. 延誤/塞車：抵達飯店再叫 (改點橋村炸雞，較耐放)", coords: null },
-                            { time: "21:10", location: "九樹 ROKAUS 龍山 Check-in", category: "hotel", note: "抵達 Check-in (已過 15:00 可直接入房)", coords: [37.5293, 126.9654] },
+                            { time: "21:10", location: "抵達飯店 Check-in (已過 15:00 可直接入房)", category: "hotel", note: "九樹 ROKAUS 精品飯店首爾龍山", coords: [37.5293, 126.9654] },
                             { time: "21:30", location: "大廳取餐吃宵夜", category: "food", note: "【Plan A】獵奇辣炒年糕 (需 21:20 前下單)\n【Plan B】橋村炸雞 (若趕不上年糕改吃這個)", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/02 (二) Day 2",
-                        title: "夢碳(SOP)＋加山Outlet",
+                        title: "夢碳(2h)＋加山Outlet(4h)",
                         lunch: "夢碳 (燒肉)",
                         dinner: "Outlet 自理",
                         events: [
-                            { time: "10:00", location: "交通：飯店 ➔ 夢碳", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km)", coords: [37.5372, 126.9698] },
-                            { time: "10:40", location: "夢碳：抵達現場準備候位", category: "food", note: "⚠️ 規則：11:00 開放現場機台登記 (不可指定時間/無預約)\n📋 動作：10:40 前抵達周邊 ➔ 11:00 準時操作機台\n🛑 風險控管：若需等 3hr+，直接啟動備案午餐", tags: ["排隊關鍵"], coords: [37.5372, 126.9698] },
-                            { time: "上午", location: "附近咖啡廳等待", category: "food", note: "如: Approach Coffee", coords: [37.5288, 126.9715] },
+                            { time: "10:00", location: "交通：飯店 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50 (서울 용산구 백범로99길 50)\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km / Naver Map 驗證)", coords: [37.5372, 126.9698] },
+                            { time: "10:40", location: "【排隊關鍵】抵達現場準備候位", category: "food", note: "⚠️ 規則：11:00 開放現場機台登記 (不可指定時間/無預約)\n📋 動作：10:40 前抵達周邊 ➔ 11:00 準時操作機台\n🛑 風險控管：若號碼過於靠後 (需等 3hr+)，直接啟動備案午餐", tags: ["排隊關鍵"], coords: [37.5372, 126.9698] },
+                            { time: "上午", location: "附近咖啡廳等待 (如: Approach Coffee)", category: "food", note: "如: Approach Coffee", coords: [37.5288, 126.9715] },
                             { time: "12:00", location: "午餐：夢碳 (燒肉)", category: "food", note: "🕒 營業：12:00 開始叫號入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
-                            { time: "14:30", location: "【空窗期決策】", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
-                            { time: "16:00", location: "交通：龍山 ➔ 加山數碼園區", category: "transport", note: "🚇 地鐵：1號線 [龍山] ➔ [加山數碼園區] (往仁川/水原方向)\n🕒 時間：全程約 35-40 分鐘 (含步行與候車)\n*註：飯店步行至車站約5分+乘車19分+出站步行約10分", coords: [37.4815, 126.8826] },
-                            { time: "16:40", location: "Mario Outlet 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能 (North Face, K2)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流 (MLB, Discovery)\n❸ [19:20-20:00] 決策與複驗\n❹ [20:00-20:30] 晚餐 (3館美食街)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
-                            { time: "20:30", location: "交通：加山 ➔ 龍山", category: "transport", note: "🚇 地鐵：1號線直達 [龍山站] (約 35-40 分鐘)", coords: [37.5293, 126.9654] },
-                            { time: "21:15", location: "抵達飯店", category: "hotel", note: "整理大量戰利品", coords: [37.5293, 126.9654] }
+                            { time: "14:30", location: "【空窗期決策：14:30-16:00】(KPI 導向)", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
+                            { time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 地鐵：1號線 [龍山] ➔ [加山數碼園區] (往仁川/水原方向)\n🕒 時間：全程約 35-40 分鐘 (含步行與候車)\n*註：飯店步行至車站約5分(主出口)+乘車19分+出站步行約10分", coords: [37.4815, 126.8826] },
+                            { time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n   • 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n   • 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n   • 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (3館美食街/速食)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
+                            { time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 地鐵：1號線直達 [龍山站] (約 35-40 分鐘)", coords: [37.5293, 126.9654] },
+                            { time: "21:15", location: "抵達飯店 (整理大量戰利品)", category: "hotel", note: "", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
@@ -358,284 +313,282 @@
                         lunch: "龍理團路早午餐 (三選一)",
                         dinner: "漢南洞 24H 馬鈴薯湯",
                         events: [
-                            {
-                                time: "09:30",
-                                location: "交通：飯店 ➔ 龍理團路 (早午餐戰區)",
-                                category: "transport",
-                                note: "💡 策略：名店位於「三角地站」附近，離飯店約 1.2km，建議搭車省力\n🚇 地鐵：4號線 [新龍山站] ➔ [三角地站] (搭 1 站 / 3號出口)\n🚌 公車：藍色巴士 100/150/151 等 (搭 2 站) ➔ [三角地站]\n🚶 步行：沿大馬路直走約 20-25 分鐘 (6月天氣熱，強烈不建議)",
-                                coords: [37.5312, 126.9705]
-                            },
-                            {
-                                time: "上午",
-                                location: "早午餐名店【三選一】(皆位於三角地站周邊)",
-                                category: "food",
-                                note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)",
-                                coords: [37.5312, 126.9705]
-                            },
-                            {
-                                time: "12:00",
-                                location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧 (單次最遠距離)",
-                                category: "transport",
-                                note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)",
-                                coords: [37.5273, 127.0392]
-                            },
-                            {
-                                time: "下午",
-                                location: "狎鷗亭 / 羅德奧 (島山公園周邊)",
-                                category: "shopping",
-                                note: "逛精品與潮牌\n🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)",
-                                coords: [37.5273, 127.0392]
-                            },
-                            {
-                                time: "16:00",
-                                location: "交通：狎鷗亭 ➔ 漢南洞 (線性回程)",
-                                category: "transport",
-                                note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行至商圈約 10 分鐘\n🚕 備案：計程車約 10-15 分鐘 (約 10,000 韓元)",
-                                coords: [37.5348, 127.0012]
-                            },
-                            {
-                                time: "下午",
-                                location: "漢南洞逛街 (設計師品牌、咖啡廳)",
-                                category: "shopping",
-                                note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)",
-                                coords: [37.5348, 127.0012]
-                            },
-                            {
-                                time: "19:30",
-                                location: "步行前往：漢南洞 24小時馬鈴薯排骨湯",
-                                category: "transport",
-                                note: "或周邊晚餐",
-                                coords: [37.5332, 127.0028]
-                            },
-                            {
-                                time: "20:00",
-                                location: "晚餐：漢南洞 24小時馬鈴薯排骨湯",
-                                category: "food",
-                                note: "",
-                                coords: [37.5332, 127.0028]
-                            },
-                            {
-                                time: "21:30",
-                                location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山 (短程收尾)",
-                                category: "transport",
-                                note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)",
-                                coords: [37.5293, 126.9654]
-                            }
+                            { time: "09:30", location: "交通：飯店 ➔ 龍理團路 (早午餐戰區)", category: "transport", note: "💡 策略：名店位於「三角地站」附近，離飯店約 1.2km，建議搭車省力\n🚇 地鐵：4號線 [新龍山站] ➔ [三角地站] (搭 1 站 / 3號出口)\n🚌 公車：藍色巴士 100/150/151 等 (搭 2 站) ➔ [三角地站]\n🚶 步行：沿大馬路直走約 20-25 分鐘 (6月天氣熱，不建議)", coords: [37.5312, 126.9705] },
+                            { time: "上午", location: "早午餐名店【三選一】(皆位於三角地站周邊)", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
+                            { time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧 (單次最遠距離)", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)", coords: [37.5273, 127.0392] },
+                            { time: "下午", location: "狎鷗亭 / 羅德奧 (島山公園周邊)", category: "shopping", note: "逛精品與潮牌\n🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)", coords: [37.5273, 127.0392] },
+                            { time: "16:00", location: "交通：狎鷗亭 ➔ 漢南洞 (線性回程)", category: "transport", note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行至商圈約 10 分鐘\n🚕 備案：計程車約 10-15 分鐘 (約 10,000 韓元)", coords: [37.5348, 127.0012] },
+                            { time: "下午", location: "漢南洞逛街 (設計師品牌、咖啡廳)", category: "shopping", note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)", coords: [37.5348, 127.0012] },
+                            { time: "19:30", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯 (或周邊晚餐)", category: "transport", note: "", coords: [37.5332, 127.0028] },
+                            { time: "20:00", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", category: "food", note: "", coords: [37.5332, 127.0028] },
+                            { time: "21:30", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山 (短程收尾)", category: "transport", note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/04 (四) Day 4",
-                        title: "春川一日遊 (牧場＋鐵道)",
+                        title: "春川一日遊 (牧場1.5h＋午餐1h＋鐵道1.5h)",
                         lunch: "明洞辣炒雞排",
-                        dinner: "車站自理",
-                        notice: "1. [火車] 5/4 07:00 搶 ITX (去09:17/回18:56)\n2. [預約] 春川外國人觀光計程車 & 江村鐵路自行車 16:30場\n3. [現金] 準備 8萬韓元付計程車\n4. [證件] 務必帶護照",
+                        dinner: "車站附近自理",
+                        notice: "====== ⚠️ 行前準備確認 ======\n1. [火車] 5/4 早上 07:00 準時開搶 ITX (去:龍山09:17 / 回:南春川18:56左右)。\n2. [預約] 出發前完成「春川外國人觀光計程車」線上預約。\n3. [體驗] 出發前 2 週預約江村鐵路自行車 (16:30 場次)。\n4. [現金] 錢包準備 80,000 韓元現金 (專付計程車費)。\n5. [證件] 務必攜帶護照。",
                         events: [
-                            { time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 搭乘 ITX-青春號出發 (建議車上吃早餐)\n💰 票價：單程約 9,800 韓元", coords: [37.5298, 126.9647] },
-                            { time: "10:40", location: "抵達春川站", category: "activity", note: "📍 動作：前往 1 號出口「Travel Island」櫃檯\n📋 任務：出示護照、核對預約資料", coords: [37.8844, 127.7171] },
-                            { time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 指令：準時上車 (目標 5hr / 預算 7萬韓元)", coords: [37.8844, 127.7171] },
-                            { time: "11:40", location: "幸福草原牧場", category: "activity", note: "🕒 停留：1.5 小時 (爬坡拍小瑞士絕景、下山餵綿羊)", coords: [37.9472, 127.6703] },
-                            { time: "13:35", location: "馬鈴薯麵包", category: "food", note: "🥡 指令：外帶模式 (Takeout Only)\n⚠️ 重點：只拍照＋買麵包外帶，不內用 (省時關鍵)", coords: [37.9255, 127.7812] },
-                            { time: "14:20", location: "明洞辣炒雞排街", category: "food", note: "🕒 停留：1 小時 (從容享用午餐)\n⚠️ 死線 (GATE)：15:25 必須上車離開", tags: ["死線"], coords: [37.8797, 127.7283] },
-                            { time: "15:45", location: "抵達金裕貞站", category: "transport", note: "🛑 動作：計程車任務結束\n💰 付款：支付現金約 70,000 韓元給司機 (含超時費)", tags: ["現金"], coords: [37.8164, 127.7135] },
-                            { time: "15:45", location: "報到緩衝", category: "alert", note: "🚻 動作：上廁所、換實體票、16:10 前抵達搭乘區集合", coords: [37.8164, 127.7135] },
-                            { time: "16:30", location: "江村鐵路自行車", category: "activity", note: "🕒 體驗：約 1.5 小時 (騎行50分 + 火車20分 + 接駁車)\n⚠️ 時間推算：約 18:00 回到金裕貞站", coords: [37.8164, 127.7135] },
-                            { time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 動作：搭乘京春線地鐵 (往春川方向) 坐 1 站", coords: [37.8164, 127.7135] },
-                            { time: "18:25", location: "南春川站 (Namchuncheon)", category: "transport", note: "☕ 動作：出站休息、買零食候車", coords: [37.8638, 127.7239] },
-                            { time: "18:56", location: "回程首爾 (ITX-青春號)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山", coords: [37.5298, 126.9647] }
+                            { time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 動作：搭乘 ITX-青春號出發 (建議車上吃早餐)。\n🕒 時間：乘車約 1 小時 23 分鐘\n💰 票價：單程約 9,800 韓元 (來回約 20,000 韓元)。", coords: [37.5298, 126.9647] },
+                            { time: "10:40", location: "抵達春川站 (Chuncheon)", category: "activity", note: "📍 動作：前往 1 號出口「Travel Island」櫃檯。\n📋 任務：出示護照、核對預約資料。", coords: [37.8844, 127.7171] },
+                            { time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 指令：準時上車。(目標控制 5 小時，預算 7 萬韓元)", coords: [37.8844, 127.7171] },
+                            { time: "11:40", location: "幸福草原牧場 (90分鐘)", category: "activity", note: "🕒 停留：1.5 小時 (爬坡拍小瑞士絕景、下山餵綿羊)", coords: [37.9472, 127.6703] },
+                            { time: "13:35", location: "馬鈴薯麵包 (25分鐘)", category: "food", note: "🥡 指令：外帶模式 (Takeout Only)。\n⚠️ 重點：只拍照＋買麵包外帶，不內用。(省時關鍵)", coords: [37.9255, 127.7812] },
+                            { time: "14:20", location: "明洞辣炒雞排街 (60分鐘)", category: "food", note: "🕒 停留：1 小時 (從容享用午餐)\n⚠️ 死線 (GATE)：15:25 必須上車離開，前往車站。", tags: ["死線"], coords: [37.8797, 127.7283] },
+                            { time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", category: "transport", note: "🛑 動作：計程車任務結束。\n💰 付款：支付現金約 70,000 韓元給司機 (含超時費)。", tags: ["現金"], coords: [37.8164, 127.7135] },
+                            { time: "15:45", location: "報到緩衝 (45分鐘)", category: "alert", note: "🚻 動作：上廁所、換實體票、16:10 前抵達搭乘區集合。", coords: [37.8164, 127.7135] },
+                            { time: "16:30", location: "江村鐵路自行車 (夕陽場)", category: "activity", note: "🕒 體驗：約 1.5 小時 (騎行50分 + 火車20分 + 接駁車)\n⚠️ 時間推算：約 18:00 回到金裕貞站。", coords: [37.8164, 127.7135] },
+                            { time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 動作：搭乘京春線地鐵 (往春川方向) 坐 1 站。", coords: [37.8164, 127.7135] },
+                            { time: "18:25", location: "抵達南春川站 (Namchuncheon)", category: "transport", note: "☕ 動作：出站休息、買零食候車。", coords: [37.8638, 127.7239] },
+                            { time: "18:56", location: "回程首爾 (ITX-青春號 雙班次備案)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n   *(平日晚間為 1 小時一班，這是銜接最完美的班次)*\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山\n   *(若錯過 Plan A 需等 1 小時，建議在車站附近吃晚餐)*\n💰 票價：單程約 9,800 韓元。", coords: [37.5298, 126.9647] }
                         ]
                     },
                     {
                         date: "06/05 (五) Day 5",
-                        title: "醫美(3.5h)＋聖水洞(5h)",
+                        title: "醫美療程(3.5h)＋聖水洞逛街(5h)",
                         lunch: "烤黨 (聖水店)",
                         dinner: "聖水馬鈴薯排骨湯",
                         events: [
-                            { time: "10:15", location: "交通：龍山 ➔ 舍堂", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [舍堂]\n🕒 時間：乘車約 13 分鐘 + 步行約 5 分鐘 (總計 20 分鐘)", coords: [37.4765, 126.9816] },
+                            { time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [舍堂]\n🕒 時間：乘車約 13 分鐘 + 步行約 5 分鐘 (總計 20 分鐘)", coords: [37.4765, 126.9816] },
                             { time: "11:00", location: "舍堂醫美療程", category: "activity", note: "🕒 預估停留：3 ~ 3.5 小時 (含諮詢、麻醉、施作、修復)", coords: [37.4765, 126.9816] },
                             { time: "14:30", location: "療程結束，準備移動", category: "alert", note: "", coords: null },
-                            { time: "14:40", location: "交通：舍堂 ➔ 聖水", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
-                            { time: "15:20", location: "午晚餐：烤黨 (聖水店)", category: "food", note: "⚠️ 提醒：網紅名店，雖剛開門但週五仍可能需候位\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
-                            { time: "下午", location: "聖水洞逛街", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
-                            { time: "晚餐", location: "聖水馬鈴薯排骨湯", category: "food", note: "或 咖啡廳甜點", coords: [37.5445, 127.0560] },
-                            { time: "20:30", location: "交通：聖水 ➔ 飯店", category: "transport", note: "🚕 建議：計程車 (術後建議舒適移動)\n🕒 時間：車程約 30-40 分鐘 (約 20,000 韓元)\n💳 氣候卡：地鐵轉乘約 45 分鐘 (較累)", coords: [37.5293, 126.9654] }
+                            { time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
+                            { time: "15:20", location: "午晚餐：烤黨 (聖水店)", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
+                            { time: "下午", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
+                            { time: "晚餐", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", category: "food", note: "", coords: [37.5445, 127.0560] },
+                            { time: "20:30", location: "交通：聖水 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚕 建議：計程車 (術後建議舒適移動)\n🕒 時間：修正估 45-50 分鐘 (週五晚間塞車風險加權)\n💳 氣候卡：地鐵轉乘約 45 分鐘 (較累但時間穩)", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/06 (六) Day 6",
-                        title: "益善洞＋新羅免稅",
-                        lunch: "益善翠響 / 無招牌店",
+                        title: "點心(1h)＋午餐(1.5h)＋益善洞(1.5h)＋彈性行程",
+                        lunch: "益善翠響 / 無招牌店 (義式二選一)",
                         dinner: "雞林食堂 (備案:乙支精肉)",
                         events: [
-                            { time: "09:00", location: "Catchtable 取號", category: "alert", note: "遠端取號：Artist Bakery", coords: null },
-                            { time: "10:00", location: "交通：龍山 ➔ 安國站", category: "transport", note: "💳 地鐵 4號線 [新龍山] ➔ [忠武路] 轉 3號線 ➔ [安國]\n🕒 時間：乘車+轉乘約 25 分鐘 (假日地鐵最穩)", coords: [37.5766, 126.9854] },
-                            { time: "10:30", location: "Artist Bakery", category: "food", note: "鹽麵包外帶/點心\n🕒 預估停留：約 1 小時\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
-                            { time: "12:00", location: "午餐：義式料理【二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時\n❶ Ikseon Chwihyang (益善翠響)\n❷ Ganpan Eopneun Gage (無招牌店)", coords: [37.5744, 126.9905] },
-                            { time: "13:30", location: "益善洞韓屋村", category: "activity", note: "氛圍咖啡廳/文創小物 (清水堂 / 樂園驛)\n🕒 預估停留：約 1.5 小時", coords: [37.5744, 126.9905] },
-                            { time: "15:15", location: "交通：益善洞 ➔ 新羅免稅", category: "transport", note: "🚕 強烈建議：計程車 (省力且快速)\n🕒 時間：車程約 15 分鐘 (約 8,000 韓元)", coords: [37.5562, 127.0084] },
-                            { time: "15:40", location: "新羅免稅店 首爾店", category: "shopping", note: "🕒 預估停留：約 2 小時 (含辦卡、試色、結帳)", coords: [37.5562, 127.0084] },
-                            { time: "17:40", location: "交通：免稅店 ➔ 鐘路3街", category: "transport", note: "🚕 建議：計程車 (約 10-15 分鐘 / 8,000-10,000 韓元)", coords: [37.5714, 126.9915] },
-                            { time: "18:00", location: "晚餐：雞林食堂 本店", category: "food", note: "📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (步行約 5-8 分鐘)", coords: [37.5714, 126.9915] },
-                            { time: "20:00", location: "交通：鐘路3街 ➔ 飯店", category: "transport", note: "💳 地鐵 1號線 [鐘路3街] ➔ [龍山站] (直達)\n🕒 時間：乘車約 12 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
+                            { time: "09:00", location: "Catchtable 遠端取號 (Artist Bakery)", category: "alert", note: "", coords: null },
+                            { time: "10:00", location: "交通：龍山 ➔ 安國站 (顯忠日地鐵為佳)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [忠武路] 轉 3號線 ➔ [安國]\n🕒 時間：乘車+轉乘約 25 分鐘 (假日地鐵最穩)", coords: [37.5766, 126.9854] },
+                            { time: "10:30", location: "【Artist Bakery】(鹽麵包外帶/點心)", category: "food", note: "🕒 預估停留：約 1 小時 (取號/購買/簡單吃點心)\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
+                            { time: "12:00", location: "午餐：人氣義式料理【二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時 (含排隊與用餐)\n❶ Ikseon Chwihyang (益善翠響)：益善洞內，韓式復古洋食(蛋包飯/義大利麵)\n❷ Ganpan Eopneun Gage (無招牌店)：益善洞內，知名義大利麵/燉飯(明太子/牛排)", coords: [37.5744, 126.9905] },
+                            { time: "13:30", location: "【益善洞韓屋村】(氛圍咖啡廳/文創小物)", category: "activity", note: "🕒 預估停留：約 1.5 小時 (逛街與拍照)\n☕ 推薦：清水堂 / 樂園驛", coords: [37.5744, 126.9905] },
+                            { time: "15:15", location: "【下午行程二選一】(依體力與購物需求決定)", category: "activity", note: "▼ 選項 A：主攻免稅品 (原定計劃)\n🚕 交通：計程車前往新羅免稅店 (約 20-25 分鐘)\n🛍️ 行程：新羅免稅店 首爾店 (預估停留 2 小時)\n\n▼ 選項 B：彈性自由時間 (備案購物/補逛/休息)\n💡 建議：續逛益善洞、安國站周邊，或前往明洞/乙支路\n☕ 行程：找間韓屋咖啡廳休息，或提早前往晚餐區域", coords: [37.5562, 127.0084] },
+                            { time: "17:40", location: "交通：前往鐘路3街 (晚餐)", category: "transport", note: "🚕 建議：從新羅出發約 15-20 分鐘；或從備案地點步行前往", coords: [37.5714, 126.9915] },
+                            { time: "18:00", location: "晚餐：雞林食堂 本店 (계림식당)", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk)\n   *位置：乙支路3街站附近 (步行約 5-8 分鐘)\n   *特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
+                            { time: "20:00", location: "交通：鐘路3街 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "💳 氣候卡：地鐵 1號線 [鐘路3街] ➔ [龍山站] (直達)\n🕒 時間：乘車約 12 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/07 (日) Day 7",
-                        title: "剪髮＋望遠＋弘大＋新村",
+                        title: "剪髮(4h)＋望遠(1.5h)＋弘大(1.5h)＋新村(1.5h)",
                         lunch: "望遠市場小吃",
                         dinner: "新村 奶辣燉排骨",
                         events: [
-                            { time: "10:20", location: "交通：龍山 ➔ 合井", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [三角地] 轉 6號線 ➔ [合井]\n🕒 時間：乘車+轉乘約 20-25 分鐘 (轉乘最省力)\n🚕 備案：計程車直達合井 (約 15-20 分鐘 / 10,000 韓元)", coords: [37.5488, 126.9133] },
+                            { time: "10:20", location: "交通：龍山 ➔ 合井 (地鐵轉乘最順)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [三角地] 轉 6號線 ➔ [合井]\n🕒 時間：乘車+轉乘約 20-25 分鐘 (飯店門口進站，轉乘1站，最省力)\n🚕 備案：計程車直達合井 (約 15-20 分鐘 / 10,000 韓元)", coords: [37.5488, 126.9133] },
                             { time: "11:00", location: "合井站髮廊", category: "activity", note: "🕒 預估停留：約 4 小時 (剪+染/燙，含溝通時間)", coords: [37.5488, 126.9133] },
                             { time: "15:00", location: "交通：合井 ➔ 望遠", category: "transport", note: "💳 氣候卡：地鐵 6號線 (僅 1 站)\n🕒 時間：乘車 2 分鐘 + 步行至市場約 5-8 分鐘", coords: [37.5561, 126.9064] },
-                            { time: "15:20", location: "望遠市場", category: "food", note: "吃雨耳樂炸辣椒、可樂餅\n🕒 預估停留：約 1.5 小時", coords: [37.5561, 126.9064] },
+                            { time: "15:20", location: "望遠市場 (吃雨耳樂炸辣椒、可樂餅)", category: "food", note: "🕒 預估停留：約 1.5 小時 (吃小吃 + 逛市場)", coords: [37.5561, 126.9064] },
                             { time: "16:40", location: "交通：望遠 ➔ 弘大", category: "transport", note: "💳 氣候卡：地鐵 6號線轉 2號線\n🕒 時間：乘車+轉乘約 15 分鐘", coords: [37.5575, 126.9245] },
-                            { time: "17:00", location: "弘大入口站 8 號出口", category: "shopping", note: "藥局/美妝 快速補貨\n🕒 預估停留：約 1.5 小時", coords: [37.5575, 126.9245] },
-                            { time: "19:00", location: "交通：弘大 ➔ 新村", category: "transport", note: "🚶 步行：沿京義線書街散步約 15-20 分鐘\n💳 地鐵：2號線 (1 站) 約 5 分鐘", coords: [37.5551, 126.9369] },
+                            { time: "17:00", location: "弘大入口站 8 號出口 (藥局/美妝)", category: "shopping", note: "🕒 預估停留：約 1.5 小時 (快速補貨)", coords: [37.5575, 126.9245] },
+                            { time: "19:00", location: "交通：弘大 ➔ 新村 (晚餐)", category: "transport", note: "🚶 步行：沿京義線書街散步約 15-20 分鐘\n💳 地鐵：2號線 (1 站) 約 5 分鐘", coords: [37.5551, 126.9369] },
                             { time: "19:30", location: "晚餐：新村 奶辣燉排骨", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5551, 126.9369] },
-                            { time: "21:00", location: "交通：新村 ➔ 飯店", category: "transport", note: "🚕 建議：計程車\n🕒 時間：車程約 15-20 分鐘 (約 9,000 韓元)", coords: [37.5293, 126.9654] }
+                            { time: "21:00", location: "交通：新村 ➔ 九樹 ROKAUS 龍山 (回程)", category: "transport", note: "💡 策略：週日晚間弘大/新村區易塞車，建議優先搭地鐵\n🚇 地鐵：2號線 [新村] ➔ [市廳] 轉 1號線 ➔ [龍山]\n🕒 時間：全程約 25-30 分鐘 (時間最穩，免塞車)\n🚌 公車：藍色巴士 750A / 750B / 752 (直達新龍山站)\n🚕 備案：計程車 (若太累不想走) 約 20-25 分鐘 / 12,000 韓元", coords: [37.5293, 126.9654] }
                         ]
                     },
                     {
                         date: "06/08 (一) Day 8",
-                        title: "退房空檔(4h)＋機場報到",
+                        title: "退房空檔(4h)＋機場報到與退稅(3h)",
                         lunch: "I-Park Mall/超市",
-                        dinner: "機上/機場",
+                        dinner: "機場/機上",
                         events: [
                             { time: "10:00", location: "整理行李 & 準備 Check-out", category: "hotel", note: "", coords: [37.5293, 126.9654] },
-                            { time: "11:00", location: "辦理退房", category: "hotel", note: "🧳 動作：將行李寄放在飯店櫃台", coords: [37.5293, 126.9654] },
-                            { time: "11:15", location: "【空窗期】最後掃貨", category: "shopping", note: "🕒 可用時間：約 4 - 5 小時\n💡 建議 A：Emart 龍山店 (步行可達)\n💡 建議 B：iPark Mall (Gundam Base / Living Park)", coords: [37.5286, 126.9640] },
+                            { time: "11:00", location: "辦理退房 (Check-out)", category: "hotel", note: "🧳 動作：將行李寄放在飯店櫃台", coords: [37.5293, 126.9654] },
+                            { time: "11:15", location: "【空窗期：11:15-16:30】(最後掃貨)", category: "shopping", note: "🕒 可用時間：約 4 - 5 小時\n💡 建議 A：Emart 龍山店 (步行可達)\n💡 建議 B：iPark Mall (Gundam Base / Living Park)", coords: [37.5286, 126.9640] },
                             { time: "16:30", location: "回到飯店領取行李", category: "hotel", note: "", coords: [37.5293, 126.9654] },
-                            { time: "17:00", location: "交通：飯店 ➔ 金浦機場", category: "transport", note: "🚕 建議：計程車 (避開下班人潮)\n🕒 時間：車程估 40-50 分鐘 (約 25,000 韓元)", coords: [37.5587, 126.8028] },
-                            { time: "17:50", location: "抵達金浦機場 & 報到", category: "flight", note: "1. 託運行李 (Check-in)\n2. 辦理退稅：2樓海關蓋章 -> 3樓退稅櫃台\n*⚠️ 註：金浦退稅機通常在安檢前", coords: [37.5587, 126.8028] },
-                            { time: "18:30", location: "通過安檢 & 證照查驗", category: "alert", note: "🕒 預估時間：約 20-30 分鐘", coords: null },
-                            { time: "19:00", location: "領取免稅品 & 退稅金", category: "shopping", note: "📍 位置：通過安檢後 3樓 34號登機門附近\n*註：所有免稅店皆在同一處提貨", coords: null },
-                            { time: "19:55", location: "【登機時間 Boarding】", category: "alert", note: "起飛前 40 分鐘\n⚠️ 提醒：請確保已領完免稅品，避免壓線", coords: null },
-                            { time: "20:35", location: "起飛返程 (回高雄)", category: "flight", note: "✈️ 台灣虎航 IT663", coords: null },
-                            { time: "22:40", location: "抵達高雄小港機場", category: "transport", note: "平安回家", coords: [22.5768, 120.3478] }
+                            { time: "17:00", location: "交通：九樹 ROKAUS 龍山 ➔ 金浦機場 (GMP)", category: "transport", note: "🚕 建議：計程車 (務必預留塞車緩衝)\n🕒 時間：修正估 50-60 分鐘 (下班尖峰時段風險)\n💰 車資：約 25,000-30,000 韓元", coords: [37.5587, 126.8028] },
+                            { time: "17:50", location: "抵達金浦機場 & 辦理登機", category: "flight", note: "1. 航空公司櫃檯：託運行李 (Check-in)\n2. 辦理退稅 (Tax Refund)：\n   • 海關蓋章：2樓 1 Gate 附近\n   • 現金/櫃台：3樓 36 Gate 附近 (或自助機)\n*⚠️ 註：金浦退稅機通常在安檢前 (2樓)，若需人工查驗亦同", coords: [37.5587, 126.8028] },
+                            { time: "18:30", location: "通過安全檢查 & 證照查驗 (Immigration)", category: "alert", note: "🕒 預估時間：約 20-30 分鐘 (視現場排隊狀況)", coords: null },
+                            { time: "19:00", location: "領取線上免稅品 & 領取退稅金", category: "shopping", note: "🕒 預估停留：約 50 分鐘 (包含排隊與整理免稅品)\n📍 提貨位置：通過安檢後 (Airside) 3樓，34號登機門附近\n*註：所有免稅店 (新羅/樂天等) 皆在同一處綜合提貨", coords: null },
+                            { time: "19:55", location: "【登機時間 Boarding】(起飛前 40 分鐘)", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 提醒：請確保已領完免稅品，避免壓線被廣播", coords: null },
+                            { time: "20:35", location: "起飛返程 (回高雄小港)", category: "flight", note: "Tigerair to KHH", coords: null },
+                            { time: "22:40", location: "抵達高雄小港機場 (KHH)", category: "transport", note: "", coords: [22.5768, 120.3478] }
                         ]
                     }
                 ]);
 
-                // --- 莫蘭迪配色邏輯 ---
-                const getDotColor = (cat) => {
-                    const map = { 
-                        activity: 'bg-morandi-rose border-[#D6BCC0]', 
-                        food: 'bg-morandi-sand border-[#D6C0B3]', 
-                        shopping: 'bg-morandi-blue border-[#8E9AAF]', 
-                        transport: 'bg-morandi-green border-[#8FA39D]', 
-                        hotel: 'bg-morandi-charcoal border-[#5D6D7E]', 
-                        flight: 'bg-morandi-clay border-[#BCAAA4]', 
-                        alert: 'bg-red-400 border-red-300' 
-                    };
-                    return map[cat] || 'bg-gray-400';
-                };
-
-                const getCategoryBadge = (cat) => {
-                    const map = { 
-                        activity: 'bg-morandi-rose', 
-                        food: 'bg-morandi-sand', 
-                        shopping: 'bg-morandi-blue', 
-                        transport: 'bg-morandi-green', 
-                        hotel: 'bg-morandi-charcoal', 
-                        flight: 'bg-morandi-clay', 
-                        alert: 'bg-red-500' 
-                    };
-                    return map[cat] || 'bg-gray-400';
-                };
-
-                const formatNote = (text) => {
-                    return text.replace(/(⚠️|🛑|【|】)/g, '<span class="text-morandi-charcoal font-bold">$1</span>')
-                               .replace(/\n/g, '<br>');
-                };
-
-                // --- 互動與地圖 ---
-                const currentDayIndex = ref(0);
                 const currentDay = ref(schedule.value[0]);
-                const activeEvent = ref(null);
-                let map = null;
-                let markers = [];
 
-                const initMap = () => {
-                    map = L.map('map', { zoomControl: false }).setView([37.5665, 126.9780], 13);
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                        attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 20
-                    }).addTo(map);
-                    renderMarkers();
-                };
-
-                const renderMarkers = () => {
-                    markers.forEach(m => map.removeLayer(m));
-                    markers = [];
-                    const bounds = L.latLngBounds();
-                    let hasCoords = false;
-
-                    const colorMap = {
-                        activity: '#D6BCC0', food: '#D6C0B3', shopping: '#8E9AAF',
-                        transport: '#8FA39D', hotel: '#5D6D7E', flight: '#BCAAA4', alert: '#EF4444'
-                    };
-
-                    currentDay.value.events.forEach((event) => {
-                        if (event.coords) {
-                            hasCoords = true;
-                            const color = colorMap[event.category] || '#9CA3AF';
-                            
-                            const iconHtml = `
-                                <div style="background-color: ${color};" class="custom-marker-pin"></div>
-                                <i class="fa-solid ${getIconClass(event.category)} text-white absolute top-[-8px] left-[1px] text-[12px] z-10 w-[30px] text-center"></i>
-                            `;
-                            
-                            const icon = L.divIcon({
-                                className: 'custom-marker',
-                                html: iconHtml,
-                                iconSize: [30, 42],
-                                iconAnchor: [15, 42],
-                                popupAnchor: [0, -45]
-                            });
-
-                            const marker = L.marker(event.coords, { icon: icon }).addTo(map);
-                            marker.bindPopup(`<div class="font-sans font-bold text-gray-700 p-1">${event.location}</div>`, { closeButton: false });
-                            marker.on('click', () => focusEvent(event));
-                            marker.eventData = event;
-                            markers.push(marker);
-                            bounds.extend(event.coords);
-                        }
-                    });
-
-                    if (hasCoords) map.fitBounds(bounds, { padding: [100, 100], maxZoom: 15 });
-                };
-
-                const getIconClass = (cat) => {
-                     const map = { activity: 'fa-camera', food: 'fa-utensils', shopping: 'fa-bag-shopping', transport: 'fa-train-subway', hotel: 'fa-bed', flight: 'fa-plane', alert: 'fa-exclamation' };
-                    return map[cat] || 'fa-location-dot';
-                }
+                // --- Methods ---
 
                 const selectDay = (index) => {
                     currentDayIndex.value = index;
                     currentDay.value = schedule.value[index];
                     activeEvent.value = null;
-                    document.getElementById('timeline-container').scrollTop = 0;
+                    
+                    // Reset scroll
+                    const container = document.getElementById('timeline-container');
+                    if(container) container.scrollTop = 0;
+
+                    // Mobile: close map when changing days to focus on timeline
+                    if (window.innerWidth < 768) {
+                        isMapOpen.value = false;
+                    }
+
                     nextTick(() => {
+                        // Scroll pill into view
                         document.getElementById('day-btn-' + index)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                         renderMarkers();
                     });
                 };
 
-                const focusEvent = (event) => {
-                    activeEvent.value = event;
-                    if (event.coords && map) {
-                        map.flyTo(event.coords, 16, { animate: true, duration: 1.2 });
-                        markers.forEach(m => m.eventData === event ? m.openPopup() : m.closePopup());
+                const toggleMap = () => {
+                    isMapOpen.value = !isMapOpen.value;
+                    if (isMapOpen.value) {
+                        nextTick(() => {
+                            if (map) {
+                                map.invalidateSize(); // Critical for map rendering correctly after hidden
+                                fitBounds();
+                            }
+                        });
                     }
                 };
-                
-                const scrollToCurrent = () => {
-                   const container = document.getElementById('timeline-container');
-                   if(container) container.scrollTop = 0;
-                }
 
-                onMounted(() => initMap());
+                const openNotebook = () => {
+                    showNotebook.value = true;
+                };
 
-                return { schedule, currentDay, currentDayIndex, activeEvent, selectDay, focusEvent, getDotColor, getCategoryBadge, formatNote, scrollToCurrent, showInfo };
+                const saveNotes = () => {
+                    localStorage.setItem('seoul2026_notes', userNotes.value);
+                    saveStatus.value = 'Saved!';
+                    setTimeout(() => {
+                        saveStatus.value = 'Ready';
+                    }, 2000);
+                };
+
+                // Styling Helpers
+                const getDotColor = (cat) => {
+                    const map = { activity: 'bg-morandi-rose border-[#D6BCC0]', food: 'bg-morandi-sand border-[#D6C0B3]', shopping: 'bg-morandi-blue border-[#8E9AAF]', transport: 'bg-morandi-green border-[#8FA39D]', hotel: 'bg-morandi-charcoal border-[#5D6D7E]', flight: 'bg-morandi-clay border-[#BCAAA4]', alert: 'bg-red-400 border-red-300' };
+                    return map[cat] || 'bg-gray-400';
+                };
+
+                const getCategoryBadge = (cat) => {
+                    const map = { activity: 'bg-morandi-rose', food: 'bg-morandi-sand', shopping: 'bg-morandi-blue', transport: 'bg-morandi-green', hotel: 'bg-morandi-charcoal', flight: 'bg-morandi-clay', alert: 'bg-red-500' };
+                    return map[cat] || 'bg-gray-400';
+                };
+
+                const getTagStyle = (tag) => {
+                    if (tag.includes("死線") || tag.includes("風險") || tag.includes("關鍵") || tag.includes("Queue")) return 'bg-red-50 text-red-600 border border-red-100';
+                    return 'bg-gray-100 text-gray-500 border border-gray-200';
+                };
+
+                const formatNote = (text) => {
+                    if (!text) return "";
+                    // Enhance formatting for specific keywords and emojis
+                    let formatted = text.replace(/\n/g, '<br>');
+                    formatted = formatted.replace(/(⚠️|💡|📍|🕒|💰|🚇|🚕|🚌|🚶|🧳|🛑|✈️|🚄|☕|🛍️)/g, '<span class="mr-1">$1</span>');
+                    formatted = formatted.replace(/(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g, '<b>$1</b>');
+                    return formatted;
+                };
+
+                // Map Logic
+                const initMap = () => {
+                    if (typeof L === 'undefined') {
+                        setTimeout(initMap, 500);
+                        return;
+                    }
+                    if (map) return;
+                    
+                    map = L.map('map', { zoomControl: false }).setView([37.5665, 126.9780], 13);
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                        attribution: '&copy; OpenStreetMap &copy; CARTO',
+                        maxZoom: 20
+                    }).addTo(map);
+                    
+                    renderMarkers();
+                };
+
+                const renderMarkers = () => {
+                    if (!map) return;
+                    markers.forEach(m => map.removeLayer(m));
+                    markers = [];
+                    
+                    const colorMap = { activity: '#D6BCC0', food: '#D6C0B3', shopping: '#8E9AAF', transport: '#8FA39D', hotel: '#5D6D7E', flight: '#BCAAA4', alert: '#EF4444' };
+
+                    currentDay.value.events.forEach((event) => {
+                        if (event.coords) {
+                            const color = colorMap[event.category] || '#9CA3AF';
+                            const iconHtml = `<div style="background-color: ${color};" class="custom-marker-pin"></div><i class="fa-solid fa-location-dot text-white absolute top-[-9px] left-[1px] text-[13px] z-10 w-[32px] text-center"></i>`;
+                            const icon = L.divIcon({
+                                className: 'custom-marker',
+                                html: iconHtml,
+                                iconSize: [32, 42],
+                                iconAnchor: [16, 42],
+                                popupAnchor: [0, -45]
+                            });
+                            
+                            const marker = L.marker(event.coords, { icon: icon }).addTo(map);
+                            marker.bindPopup(`<div class="font-sans font-bold text-gray-700 p-1 text-sm">${event.location}</div>`, { closeButton: false });
+                            
+                            marker.on('click', () => {
+                                focusEvent(event);
+                            });
+                            
+                            marker.eventData = event;
+                            markers.push(marker);
+                        }
+                    });
+                    
+                    fitBounds();
+                };
+
+                const fitBounds = () => {
+                    if (markers.length > 0 && map) {
+                        const group = L.featureGroup(markers);
+                        map.fitBounds(group.getBounds(), { padding: [50, 50], maxZoom: 15 });
+                    }
+                };
+
+                const focusEvent = (event) => {
+                    activeEvent.value = event;
+                    
+                    if (event.coords) {
+                        if (window.innerWidth < 768) {
+                            isMapOpen.value = true;
+                            nextTick(() => {
+                                map.invalidateSize();
+                                map.flyTo(event.coords, 16, { animate: true, duration: 1 });
+                            });
+                        } else if (map) {
+                            map.flyTo(event.coords, 16, { animate: true, duration: 1.2 });
+                        }
+                        
+                        markers.forEach(m => {
+                            if (m.eventData === event) m.openPopup();
+                            else m.closePopup();
+                        });
+                    }
+                };
+
+                // Lifecycle
+                onMounted(() => {
+                    // Load notes
+                    const saved = localStorage.getItem('seoul2026_notes');
+                    if (saved) userNotes.value = saved;
+                    
+                    // Init Map
+                    initMap();
+                    
+                    // Handle resize
+                    window.addEventListener('resize', () => {
+                        if (map) map.invalidateSize();
+                    });
+                });
+
+                return {
+                    schedule, currentDay, currentDayIndex, activeEvent, showNotebook, isMapOpen, userNotes, saveStatus,
+                    selectDay, focusEvent, toggleMap, openNotebook, saveNotes,
+                    getDotColor, getCategoryBadge, getTagStyle, formatNote
+                };
             }
         }).mount('#app');
     </script>

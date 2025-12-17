@@ -102,16 +102,6 @@
             z-index: 1000;
         }
 
-        .marker-icon-inner {
-            transform: rotate(45deg);
-            position: absolute;
-            top: 5px; left: 8px;
-            font-size: 14px;
-            color: white;
-            width: 100%; height: 100%;
-            text-align: center;
-        }
-
         /* Animation */
         @keyframes fade-in-up {
             from { opacity: 0; transform: translateY(10px); }
@@ -137,8 +127,12 @@
 
     <div id="app" class="w-full h-full flex flex-col-reverse md:flex-row relative">
         
-        <!-- Left Panel: Itinerary -->
-        <div class="w-full h-[55%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-[#F9FAFB] relative z-20 shadow-sheet md:shadow-2xl rounded-t-[2rem] md:rounded-none overflow-hidden transition-all duration-300">
+        <!-- 
+          [LEFT PANEL / BOTTOM SHEET]
+          ⚠️ Layout Adjustment: Changed height from 55% to 65% for Mobile.
+          This leaves 35% for the Map, making the map smaller (better ratio).
+        -->
+        <div class="w-full h-[65%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-[#F9FAFB] relative z-20 shadow-sheet md:shadow-2xl rounded-t-[2rem] md:rounded-none overflow-hidden transition-all duration-300">
             
             <!-- Mobile Drag Handle -->
             <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-white/95 backdrop-blur-sm z-50">
@@ -529,6 +523,8 @@
                             markers.push(marker);
                         }
                     });
+                    
+                    // Added maxZoom to prevent zooming in too much
                     fitBounds();
                 };
 
@@ -537,7 +533,8 @@
                         const group = L.featureGroup(markers);
                         const isMobile = window.innerWidth < 768;
                         const paddingBottom = isMobile ? 20 : 50; 
-                        map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 15, animate: true });
+                        // Added maxZoom: 14 to prevent map from being too zoomed in
+                        map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 14, animate: true });
                     }
                 };
 

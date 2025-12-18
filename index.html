@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Seoul 2026">
     <meta name="application-name" content="Seoul 2026">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ECEDEA">
     <title>Seoul 2026 Travel Guide</title>
 
@@ -18,9 +18,9 @@
     
     <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js" crossorigin></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin>
     
     <!-- Fonts -->
@@ -48,7 +48,7 @@
                         'm-sub': '#969694',      
                         'm-border': 'rgba(200,204,199,0.3)',  
                         
-                        // Semantic Colors (Terracotta)
+                        // Semantic Colors
                         's-pin': '#C8A7A1',      
                         's-alert': '#B0726B',    
                         's-warn': '#C9B56A',     
@@ -91,7 +91,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* iOS 26 Active Pill */
+        /* Pills */
         .segment-pill-active {
             background: rgba(120, 125, 120, 0.15); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -267,7 +267,7 @@
             </div>
         </div>
 
-        <!-- Right Panel: Map -->
+        <!-- Right Panel: Map (Flex-1) -->
         <div class="w-full flex-1 relative z-0 md:z-auto bg-m-bg overflow-hidden">
             <div id="map" class="w-full h-full outline-none z-0"></div>
             <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-m-card via-m-card/40 to-transparent pointer-events-none md:hidden z-10"></div>
@@ -309,15 +309,15 @@
             setup() {
                 const showNotebook = ref(false);
                 const userNotes = ref("");
-                // saveStatus removed as it was dead state and unused in UI
+                const saveStatus = ref("Ready"); 
                 const currentDayIndex = ref(0);
                 const activeEvent = ref(null);
                 let map = null;
                 let markers = [];
                 let resizeObserver = null; 
-                let resizeRaf = 0; // For ResizeObserver throttling
+                let resizeRaf = 0; 
 
-                // --- P1: 邏輯潔淨的 Debounce (修復 this 指向) ---
+                // --- Utils ---
                 const debounce = (fn, delay) => {
                     let timeoutId;
                     return (...args) => {
@@ -326,13 +326,12 @@
                     };
                 };
 
-                // --- P0: XSS 防護 ---
                 const escapeHtml = (text) => {
                     const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
                     return text.replace(/[&<>"']/g, (m) => map[m]);
                 };
 
-                // --- 完整行程數據 (Confirmed) ---
+                // --- Schedule Data ---
                 const schedule = ref([
                     {
                         date: "06/01 (一) Day 1",
@@ -493,17 +492,16 @@
 
                 const openNotebook = () => { showNotebook.value = true; };
                 
-                // --- P2: 穩健性 (Try/Catch) ---
                 const performSave = () => {
                     try {
                         localStorage.setItem('seoul2026_notes', userNotes.value);
-                        // saveStatus logic removed
+                        saveStatus.value = 'Saved!';
+                        setTimeout(() => { saveStatus.value = 'Ready'; }, 2000);
                     } catch (e) {
                         console.warn("LocalStorage failed:", e);
                     }
                 };
                 
-                // 應用防抖：1秒
                 const saveNotes = debounce(performSave, 1000);
 
                 const resetMap = () => { fitBounds(); };
@@ -539,28 +537,24 @@
                     return 'bg-m-bg text-m-sub border border-m-border';
                 };
 
-                // --- P0: XSS 防護與格式化 ---
                 const formatNote = (text) => {
                     if (!text) return "";
-                    // Step 1: Escape untrusted input
                     let formatted = escapeHtml(text);
-                    // Step 2: Apply trusted formatting
                     formatted = formatted.replace(/\n/g, '<br>');
                     formatted = formatted.replace(/(⚠️|💡|📍|🕒|💰|🚇|🚕|🚌|🚶|🧳|🛑|✈️|🚄|☕|🛍️)/g, '<span class="mr-1.5 opacity-80 inline-block">$1</span>');
                     formatted = formatted.replace(/(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g, '<b class="text-typo-title font-bold">$1</b>');
                     return formatted;
                 };
 
-                // 優化後的地圖初始化：重試限制
+                // Map Initialization Logic (Enhanced Robustness)
                 let retryCount = 0;
                 const maxRetries = 20;
 
                 const initMap = () => {
-                    // Safety check for CDN failures
                     if (typeof L === 'undefined') { 
                         if (retryCount < maxRetries) {
                             retryCount++;
-                            console.warn(`Leaflet not loaded yet, retrying (${retryCount}/${maxRetries})...`);
+                            // console.warn(`Leaflet not loaded yet, retrying (${retryCount}/${maxRetries})...`);
                             setTimeout(initMap, 500); 
                         } else {
                             console.error('Leaflet failed to load after multiple attempts.');
@@ -571,20 +565,24 @@
                     
                     try {
                         map = L.map('map', { zoomControl: false, zoomAnimation: true }).setView([37.5665, 126.9780], 13);
-                        // --- P0: 合規的 Attribution ---
                         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
                             attribution: '&copy; OpenStreetMap contributors &copy; CARTO', 
                             maxZoom: 20 
                         }).addTo(map);
                         renderMarkers();
                         
-                        // --- P1: 性能優化 (Throttling) ---
+                        // Force a resize check after mount to handle layout transitions
+                        setTimeout(() => { map.invalidateSize(); }, 500);
+
                         const mapDiv = document.getElementById('map');
                         if (mapDiv) {
                             resizeObserver = new ResizeObserver(() => { 
                                 if (resizeRaf) cancelAnimationFrame(resizeRaf);
                                 resizeRaf = requestAnimationFrame(() => {
-                                    if(map) map.invalidateSize(); 
+                                    if(map) {
+                                        map.invalidateSize();
+                                        // Optional: Re-center if needed, but risky during zoom
+                                    }
                                 });
                             });
                             resizeObserver.observe(mapDiv);
@@ -598,7 +596,6 @@
                     if (!map) return;
                     markers.forEach(m => map.removeLayer(m));
                     markers = [];
-                    // Morandi Colors Hex Map
                     const colorMap = { 
                         activity: '#C8A7A1', food: '#D6C0B3', shopping: '#8E9AAF', 
                         transport: '#8FA39D', hotel: '#2F2F2D', flight: '#D6C0B3', alert: '#B0726B' 
@@ -629,6 +626,7 @@
                     if (markers.length > 0 && map) {
                         const group = L.featureGroup(markers);
                         const isMobile = window.innerWidth < 768;
+                        // RESTORED: Original padding for larger map area
                         const paddingBottom = isMobile ? 20 : 50; 
                         map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 14, animate: true });
                     }
@@ -669,7 +667,7 @@
                 });
 
                 return {
-                    schedule, currentDay, currentDayIndex, activeEvent, showNotebook, userNotes, // saveStatus removed
+                    schedule, currentDay, currentDayIndex, activeEvent, showNotebook, userNotes, saveStatus,
                     selectDay, focusEvent, openNotebook, saveNotes, resetMap,
                     getDotColor, getCategoryBadge, getTagStyle, formatNote
                 };

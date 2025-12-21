@@ -2,44 +2,39 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- A11y: 允許縮放 -->
+    <!-- Mobile Usability: Removed user-scalable=no, added safe-area handling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
-    <!-- Security: Enhanced CSP (Stricter directives) -->
+    <!-- Security: Balanced CSP for Vue/Leaflet/Tailwind CDN -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         base-uri 'self';
         object-src 'none';
         frame-ancestors 'none';
         form-action 'self';
-        img-src 'self' data: https://*.basemaps.cartocdn.com https://unpkg.com https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org;
+        connect-src 'self' https://script.google.com https://script.googleusercontent.com;
+        img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://fonts.googleapis.com https://cdnjs.cloudflare.com;
         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
     ">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <!-- PWA / APP 設定 -->
-    <meta name="apple-mobile-web-app-title" content="Seoul 2026">
-    <meta name="application-name" content="Seoul 2026">
+    <meta name="apple-mobile-web-app-title" content="Travel Guide">
+    <meta name="application-name" content="Travel Guide">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- iOS Status Bar: 融合背景色 + 黑字 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ECEDEA">
-    <title>Seoul 2026 Travel Guide</title>
+    <title>Travel Guide</title>
 
-    <!-- APP Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE8IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE8IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
     
-    <!-- Fix 1: Load Tailwind Library FIRST -->
-    <!-- Security: Removed crossorigin for compatibility with Play CDN logic -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Fix 2: Safety check for Tailwind Config -->
+    <!-- 1. Configure Tailwind BEFORE loading the CDN -->
     <script>
-        if (typeof tailwind !== 'undefined') {
-            tailwind.config = {
+        window.tailwind = {
+            config: {
                 theme: {
                     extend: {
                         fontFamily: {
@@ -47,193 +42,131 @@
                             hand: ['Nanum Pen Script', 'cursive'],
                         },
                         colors: {
-                            'm-bg': '#ECEDEA',       
-                            'm-card': '#F4F5F2',
-                            'typo-label': '#8F918C', // Enhanced contrast
+                            'm-bg': '#ECEDEA', 'm-card': '#F4F5F2',
+                            'typo-label': '#B6B8B3', 
                             'typo-title': '#2E2E2E', 
                             'typo-accent': '#C9A6A1', 
-                            'm-text': '#484846',     // Enhanced contrast
-                            'm-sub': '#757573',      // Enhanced contrast
-                            'm-border': 'rgba(200,204,199,0.3)',  
-                            's-pin': '#C8A7A1',      
-                            's-alert': '#B0726B',    
-                            's-warn': '#C9B56A',     
-                            's-green': '#8FA39D',    
-                            's-blue': '#8E9AAF',     
-                            's-sand': '#D6C0B3',     
+                            'm-text': '#484846', 'm-sub': '#757573', 'm-border': 'rgba(200,204,199,0.3)',  
+                            's-pin': '#C8A7A1', 's-alert': '#B0726B', 's-warn': '#C9B56A', 's-green': '#8FA39D', 's-blue': '#8E9AAF', 's-sand': '#D6C0B3',      
                         },
-                        letterSpacing: {
-                            'context': '0.12em', 
-                            'calm': '0.03em',    
-                        },
+                        letterSpacing: { 'context': '0.12em', 'calm': '0.03em' },
                         boxShadow: {
                             'ios-card': '0 8px 24px -6px rgba(0, 0, 0, 0.04)',
                             'ios-float': '0 20px 40px -12px rgba(47, 47, 45, 0.08)',
                             'ios-sheet': '0 -12px 30px rgba(0, 0, 0, 0.06)',
                         },
                         spacing: {
-                            'safe-top': 'env(safe-area-inset-top)',
-                            'safe-bottom': 'env(safe-area-inset-bottom)',
+                            'safe-top': 'env(safe-area-inset-top)', 'safe-bottom': 'env(safe-area-inset-bottom)',
                         }
                     }
                 }
             }
-        } else {
-            console.error("Tailwind CSS failed to load.");
-        }
+        };
     </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Other Libraries -->
+    <!-- Vue & Leaflet -->
     <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 
     <style>
-        /* Global Reset */
-        :root {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body { 
-            background-color: #ECEDEA; color: #2E2E2E; 
-            -webkit-font-smoothing: antialiased; overscroll-behavior: none; 
-        }
-        
+        :root { -webkit-tap-highlight-color: transparent; }
+        body { background-color: #ECEDEA; color: #2E2E2E; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
         .no-select { user-select: none; -webkit-user-select: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Glass Header */
         .glass-header {
             background: rgba(244, 245, 242, 0.75); 
             backdrop-filter: blur(30px) saturate(150%);
             -webkit-backdrop-filter: blur(30px) saturate(150%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        /* Pills */
-        .segment-pill-active {
-            background: rgba(120, 125, 120, 0.15); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.45);
+        
+        .modal-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #757573;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        .modal-tab.active {
             color: #2E2E2E;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-bottom-color: #C9A6A1;
         }
+
+        .segment-pill-active { background: rgba(120, 125, 120, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.45); color: #2E2E2E; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .segment-pill-inactive { background: transparent; color: #757573; border: 1px solid transparent; }
-
-        /* Map Styling */
         .leaflet-tile-pane { filter: grayscale(0.2) sepia(0.05) contrast(0.95) brightness(1.02); }
-        
-        /* Custom Marker */
-        .custom-marker-pin {
-            width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
-            background: #C8A7A1; position: absolute; transform: rotate(-45deg);
-            left: 50%; top: 50%; margin: -15px 0 0 -15px; 
-            box-shadow: 0 5px 14px rgba(182, 106, 99, 0.25);
-            border: 2px solid #F4F5F2; transition: all 0.4s cubic-bezier(0.2, 1, 0.4, 1);
-        }
-        .custom-marker-pin::after {
-            content: ''; width: 8px; height: 8px; margin: 10px 0 0 10px;
-            background: rgba(244, 245, 242, 0.9); position: absolute; border-radius: 50%;
-        }
-        .leaflet-marker-icon.active .custom-marker-pin {
-            transform: rotate(-45deg) scale(1.18) translateY(-4px);
-            background: #2E2E2E !important; border-color: #ECEDEA;
-        }
-
-        /* Timeline */
+        .custom-marker-pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; background: #C8A7A1; position: absolute; transform: rotate(-45deg); left: 50%; top: 50%; margin: -15px 0 0 -15px; box-shadow: 0 5px 14px rgba(182, 106, 99, 0.25); border: 2px solid #F4F5F2; transition: all 0.4s cubic-bezier(0.2, 1, 0.4, 1); }
+        .custom-marker-pin::after { content: ''; width: 8px; height: 8px; margin: 10px 0 0 10px; background: rgba(244, 245, 242, 0.9); position: absolute; border-radius: 50%; }
+        .leaflet-marker-icon.active .custom-marker-pin { transform: rotate(-45deg) scale(1.18) translateY(-4px); background: #2E2E2E !important; border-color: #ECEDEA; }
         .timeline-line { background: linear-gradient(to bottom, #D6D8D4 0%, #C9CCC6 100%); }
-        
-        /* Notebook Modal */
-        .notebook-modal {
-            background-color: #F4F5F2;
-            background-image: linear-gradient(#E5E7E4 1px, transparent 1px);
-            background-size: 100% 2.2rem;
-        }
-        .notebook-textarea {
-            background: transparent; width: 100%; height: 100%; border: none; outline: none;
-            resize: none; line-height: 2.2rem; font-family: 'Noto Sans TC', sans-serif;
-            font-size: 1.05rem; color: #484846; padding-top: 0.2rem;
-        }
-
-        /* Save Indicator */
+        .notebook-modal { background-color: #F4F5F2; background-image: linear-gradient(#E5E7E4 1px, transparent 1px); background-size: 100% 2.2rem; }
+        .notebook-textarea { background: transparent; width: 100%; height: 100%; border: none; outline: none; resize: none; line-height: 2.2rem; font-family: 'Noto Sans TC', sans-serif; font-size: 1.05rem; color: #484846; padding-top: 0.2rem; }
+        .sync-input { background: #F4F5F2; border: 1px solid #D6D8D4; padding: 10px 14px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; color: #2E2E2E; width: 100%; outline: none; transition: border-color 0.2s; }
+        .sync-input:focus { border-color: #C9A6A1; }
         .save-indicator-enter-active, .save-indicator-leave-active { transition: opacity 0.3s; }
         .save-indicator-enter-from, .save-indicator-leave-to { opacity: 0; }
-
+        
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fade-in-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .slide-up-enter-active, .slide-up-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .slide-up-enter-from, .slide-up-leave-to { opacity: 0; transform: translateY(20px); }
         
-        /* Transitions */
-        .slide-up-enter-active,
-        .slide-up-leave-active {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .slide-up-enter-from,
-        .slide-up-leave-to {
-            opacity: 0;
-            transform: translateY(20px);
-        }
+        /* FIX: Map Container Absolute Positioning to prevent collapse */
+        #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
     </style>
 </head>
 <body class="h-[100dvh] w-full overflow-hidden bg-m-bg">
 
     <div id="app" class="w-full h-full flex flex-col-reverse md:flex-row relative">
-        
-        <!-- Left Panel: Itinerary (Mobile 65% Height) -->
+        <!-- Left Panel: Itinerary -->
         <div class="w-full h-[65%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-m-card relative z-20 shadow-ios-sheet md:shadow-2xl rounded-t-[2.5rem] md:rounded-none overflow-hidden transition-all duration-300">
-            
             <!-- Mobile Handle -->
-            <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-m-card/90 backdrop-blur-sm z-50 no-select">
-                <div class="w-10 h-1 bg-m-border rounded-full"></div>
-            </div>
-
-            <!-- Header Section -->
-            <div class="glass-header px-6 flex-none z-40 md:pt-safe-top no-select">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-m-card/90 backdrop-blur-sm z-50 no-select"><div class="w-10 h-1 bg-m-border rounded-full"></div></div>
+            
+            <!-- Header -->
+            <div class="glass-header px-6 flex-none z-40 pt-safe-top no-select">
                 <div class="pt-2 md:pt-6 flex justify-between items-end mb-5">
                     <div class="flex flex-col">
-                        <div class="text-[10px] font-normal tracking-context text-typo-label uppercase mb-1">
-                            Seoul Travel Guide
+                        <div class="text-[10px] font-normal tracking-[0.14em] text-typo-label uppercase mb-1">
+                            {{ currentTripTitle || 'SEOUL TRAVEL GUIDE' }}
                         </div>
-                        <div class="flex items-baseline gap-2.5">
-                            <h1 class="text-3xl font-medium text-typo-title tracking-calm font-sans leading-none">
-                                Seoul
+                        <div class="flex items-baseline gap-3">
+                            <h1 class="text-[32px] font-medium text-typo-title tracking-[0.02em] font-sans leading-none truncate max-w-[200px]">
+                                {{ currentTripId?.split('_')[0] || 'Seoul' }}
                             </h1>
-                            <span class="font-hand text-[32px] text-typo-accent font-normal leading-none transform translate-y-[2px]">
-                                2026
+                            <span class="font-hand text-[28px] text-typo-accent font-normal leading-none transform translate-y-[1px]">
+                                {{ currentTripId?.split('_')[1] || '2026' }}
                             </span>
                         </div>
                     </div>
-                    
                     <div class="flex gap-3 mb-0.5">
-                        <button type="button" aria-label="Reset Map" @click="resetMap" class="w-10 h-10 rounded-full bg-m-card shadow-ios-card border border-white/50 flex items-center justify-center text-m-sub active:scale-95 transition-transform" title="Reset Map">
-                            <i class="fa-solid fa-location-crosshairs"></i>
-                        </button>
-                        <!-- Diagnostic Button Removed -->
-                        <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="flex items-center gap-2 bg-typo-title px-5 py-2.5 rounded-full shadow-lg shadow-typo-title/10 active:scale-95 transition-transform">
-                            <i class="fa-solid fa-pen-nib text-m-bg text-xs"></i>
-                            <span class="text-xs font-bold text-m-bg hidden sm:block tracking-wide">Notes</span>
-                        </button>
+                        <button type="button" aria-label="Reset Map" @click="resetMap" class="w-10 h-10 rounded-full bg-m-card shadow-ios-card border border-white/50 flex items-center justify-center text-m-sub active:scale-95 transition-transform"><i class="fa-solid fa-location-crosshairs"></i></button>
+                        <button type="button" aria-label="Settings" @click="showSync = true" class="w-10 h-10 rounded-full bg-transparent flex items-center justify-center text-m-border hover:text-m-sub active:scale-95 transition-colors"><i class="fa-solid fa-gear"></i></button>
+                        <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="flex items-center gap-2 bg-typo-title px-5 py-2.5 rounded-full shadow-lg shadow-typo-title/10 active:scale-95 transition-transform"><i class="fa-solid fa-pen-nib text-m-bg text-xs"></i><span class="text-xs font-bold text-m-bg hidden sm:block tracking-wide">Notes</span></button>
                     </div>
                 </div>
-
-                <!-- Date Pills -->
                 <div class="flex overflow-x-auto hide-scroll gap-2 pb-4 snap-x -mx-6 px-6 items-center">
-                    <button type="button" v-for="(day, index) in schedule" :key="index"
-                        @click="selectDay(index)" 
-                        :ref="(el) => { if(el) dayRefs[index] = el }"
-                        class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-300"
-                        :class="currentDayIndex === index ? 'segment-pill-active scale-[1.02]' : 'segment-pill-inactive'">
-                        Day {{ index + 1 }}
-                    </button>
+                    <button type="button" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="snap-start flex-shrink-0 px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.02]' : 'segment-pill-inactive'">Day {{ index + 1 }}</button>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div ref="timelineContainerRef" id="timeline-container" class="flex-1 overflow-y-auto hide-scroll p-6 pb-24 bg-m-card">
+            <div ref="timelineContainerRef" id="timeline-container" class="flex-1 overflow-y-auto hide-scroll p-6 pb-24 bg-m-card relative">
+                <div v-if="initLoading" class="absolute inset-0 flex items-center justify-center z-50 bg-m-card/80 backdrop-blur-sm">
+                    <div class="text-center">
+                        <i class="fa-solid fa-cloud-arrow-down text-2xl text-typo-accent mb-2 animate-bounce"></i>
+                        <div class="text-xs font-bold text-m-sub">Loading...</div>
+                    </div>
+                </div>
+
                 <div v-if="currentDay" class="mb-10 animate-fade-in">
                     <div class="flex items-baseline gap-3 mb-2">
                         <h2 class="text-3xl font-medium text-typo-title tracking-calm font-sans">{{ currentDay.date?.split(' ')[0] }}</h2>
@@ -241,64 +174,56 @@
                     </div>
                     <p class="text-lg font-medium text-m-text mb-8 leading-relaxed opacity-90">{{ currentDay.title }}</p>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-8 no-select">
-                        <div class="bg-white/60 p-4 rounded-2xl border border-m-border flex items-center gap-3 backdrop-blur-sm shadow-ios-card">
-                            <div class="w-9 h-9 rounded-full bg-s-sand/20 text-s-sand flex items-center justify-center text-sm flex-none"><i class="fa-solid fa-utensils"></i></div>
-                            <div class="overflow-hidden min-w-0">
+                    <!-- Meal Grid -->
+                    <div class="grid grid-cols-3 gap-2 mb-8 no-select">
+                        <div @click="openMealMap('lunch')" class="bg-white/60 p-3 rounded-2xl border border-m-border flex flex-col items-center justify-center gap-1 backdrop-blur-sm shadow-ios-card text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group">
+                            <div class="w-8 h-8 rounded-full bg-s-sand/20 text-s-sand flex items-center justify-center text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="overflow-hidden w-full">
                                 <div class="text-[9px] text-m-sub uppercase font-bold tracking-wider mb-0.5">Lunch</div>
-                                <div class="text-xs font-bold text-m-text truncate">{{ currentDay.lunch }}</div>
+                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.lunch }}</div>
                             </div>
                         </div>
-                        <div class="bg-white/60 p-4 rounded-2xl border border-m-border flex items-center gap-3 backdrop-blur-sm shadow-ios-card">
-                            <div class="w-9 h-9 rounded-full bg-s-blue/20 text-s-blue flex items-center justify-center text-sm flex-none"><i class="fa-solid fa-moon"></i></div>
-                            <div class="overflow-hidden min-w-0">
+                        <div @click="openMealMap('tea')" class="bg-white/60 p-3 rounded-2xl border border-m-border flex flex-col items-center justify-center gap-1 backdrop-blur-sm shadow-ios-card text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group">
+                            <div class="w-8 h-8 rounded-full bg-s-warn/20 text-s-warn flex items-center justify-center text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-mug-hot"></i></div>
+                            <div class="overflow-hidden w-full">
+                                <div class="text-[9px] text-m-sub uppercase font-bold tracking-wider mb-0.5">Tea</div>
+                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.tea || '_______' }}</div>
+                            </div>
+                        </div>
+                        <div @click="openMealMap('dinner')" class="bg-white/60 p-3 rounded-2xl border border-m-border flex flex-col items-center justify-center gap-1 backdrop-blur-sm shadow-ios-card text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group">
+                            <div class="w-8 h-8 rounded-full bg-s-blue/20 text-s-blue flex items-center justify-center text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-moon"></i></div>
+                            <div class="overflow-hidden w-full">
                                 <div class="text-[9px] text-m-sub uppercase font-bold tracking-wider mb-0.5">Dinner</div>
-                                <div class="text-xs font-bold text-m-text truncate">{{ currentDay.dinner }}</div>
+                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.dinner }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div v-if="currentDay.notice" class="p-5 rounded-2xl bg-s-alert/5 border border-s-alert/15 flex gap-3 items-start">
-                        <i class="fa-solid fa-circle-info text-s-alert mt-0.5 text-sm flex-none opacity-80"></i>
-                        <div class="text-xs text-m-text leading-[1.85] font-medium whitespace-pre-line select-text" v-html="formatNote(currentDay.notice)"></div>
-                    </div>
+                    <div v-if="currentDay.notice" class="p-5 rounded-2xl bg-s-alert/5 border border-s-alert/15 flex gap-3 items-start"><i class="fa-solid fa-circle-info text-s-alert mt-0.5 text-sm flex-none opacity-80"></i><div class="text-xs text-m-text leading-[1.85] font-medium whitespace-pre-line select-text" v-html="formatNote(currentDay.notice)"></div></div>
                 </div>
 
                 <!-- Timeline -->
                 <div v-if="displayEvents" class="relative pl-2 space-y-10">
                     <div class="absolute left-[19px] top-4 bottom-4 w-[2px] timeline-line rounded-full opacity-50"></div>
-                    <div v-for="(event, eIndex) in displayEvents" :key="event.id"
-                        @click="focusEvent(event.id)"
-                        @keydown.enter.prevent="focusEvent(event.id)"
-                        @keydown.space.prevent="focusEvent(event.id)"
-                        tabindex="0"
-                        role="button"
-                        class="relative pl-10 group cursor-pointer active:scale-[0.99] transition-transform duration-300 rounded-[1.8rem] outline-none focus-visible:outline-none">
-                        
-                        <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" 
-                             :class="[getDotColor(event.category), activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
-
-                        <div class="bg-white p-6 rounded-[1.8rem] shadow-ios-card border border-white/80 relative overflow-hidden transition-all duration-400
-                                    group-focus-visible:ring-2 group-focus-visible:ring-typo-title/20 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-m-card"
-                             :class="activeEventId === event.id ? 'ring-1 ring-typo-title/10 bg-white' : ''">
-                            
+                    <div v-for="(event, eIndex) in displayEvents" :key="event.id" :id="'event-' + event.id" @click="focusEvent(event.id)" @keydown.enter.prevent="focusEvent(event.id)" @keydown.space.prevent="focusEvent(event.id)" tabindex="0" role="button" class="relative pl-10 group cursor-pointer active:scale-[0.99] transition-transform duration-300 rounded-[1.8rem] outline-none focus-visible:outline-none">
+                        <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" :class="[getDotColor(event.category), activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
+                        <div class="bg-white p-6 rounded-[1.8rem] shadow-ios-card border border-white/80 relative overflow-hidden transition-all duration-400 group-focus-visible:ring-2 group-focus-visible:ring-typo-title/20 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-m-card" :class="activeEventId === event.id ? 'ring-1 ring-typo-title/10 bg-white' : ''">
                             <div class="flex justify-between items-center mb-3 no-select">
                                 <span class="font-mono text-[11px] font-bold text-m-sub bg-m-bg px-2.5 py-1 rounded-lg tracking-tight">{{ event.time }}</span>
                                 <span class="text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest text-white/85 shadow-sm" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
                             </div>
-
                             <div class="flex justify-between items-start gap-2 mb-3">
                                 <h3 class="text-[17px] font-medium text-typo-title leading-snug tracking-calm select-text">{{ event.location }}</h3>
-                                <button type="button" @click.stop="copyText(event.location)" class="flex-none w-7 h-7 rounded-full bg-m-bg text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20" aria-label="Copy Location">
-                                    <i class="fa-regular fa-copy text-xs"></i>
-                                </button>
+                                <div class="flex gap-2">
+                                    <button type="button" @click.stop="openMapService(event)" class="flex-none w-7 h-7 rounded-full bg-m-bg hover:text-white flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20 group" :class="countrySetting === 'KR' ? 'text-[#03C75A] hover:bg-[#03C75A]' : 'text-[#4285F4] hover:bg-[#4285F4]'" :title="countrySetting === 'KR' ? 'Naver Map' : 'Google Maps'">
+                                        <span class="font-black text-[10px]" v-if="countrySetting === 'KR'">N</span>
+                                        <i class="fa-brands fa-google text-[10px]" v-else></i>
+                                    </button>
+                                    <button type="button" @click.stop="copyText(event.location)" class="flex-none w-7 h-7 rounded-full bg-m-bg text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-regular fa-copy text-xs"></i></button>
+                                </div>
                             </div>
-                            
                             <div v-if="event.note" class="text-[13.5px] text-m-text leading-[1.85] bg-m-bg/40 p-4 rounded-xl border border-m-border select-text" v-html="formatNote(event.note)"></div>
-                            
-                            <div v-if="event.tags" class="mt-4 flex flex-wrap gap-2 no-select">
-                                <span v-for="tag in event.tags" class="text-[10px] px-2.5 py-1 rounded-md font-bold tracking-wide" :class="getTagStyle(tag)">#{{ tag }}</span>
-                            </div>
+                            <div v-if="event.tags" class="mt-4 flex flex-wrap gap-2 no-select"><span v-for="tag in event.tags" class="text-[10px] px-2.5 py-1 rounded-md font-bold tracking-wide" :class="getTagStyle(tag)">#{{ tag }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -306,63 +231,117 @@
         </div>
 
         <!-- Right Panel: Map -->
-        <div class="w-full flex-1 relative z-0 md:z-auto bg-m-bg overflow-hidden">
-            <div id="map" class="w-full h-full outline-none z-0"></div>
-            
-            <!-- Fallback UI for map failure -->
+        <div class="w-full flex-1 relative z-0 md:z-auto bg-m-bg overflow-hidden relative">
+            <!-- FIX: Added relative to parent and absolute to map to force height -->
+            <div id="map"></div>
             <div v-if="mapError" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-m-bg/90 p-6 text-center animate-fade-in">
                 <i class="fa-solid fa-map-location-dot text-4xl text-m-sub mb-4"></i>
                 <p class="text-m-text font-bold mb-2">Map Unavailable</p>
-                <p class="text-xs text-m-sub mb-4">Connection to map tiles failed.</p>
                 <button @click="retryMap" class="px-4 py-2 bg-typo-title text-white rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Retry</button>
             </div>
-
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-m-card via-m-card/40 to-transparent pointer-events-none md:hidden z-10"></div>
-            <!-- Optimized Legend -->
             <div class="absolute bottom-8 right-8 z-[500] bg-white/70 backdrop-blur-md px-5 py-4 rounded-3xl shadow-ios-float hidden md:block border border-white/40 no-select">
                 <div class="text-[9px] font-bold text-typo-label uppercase mb-3 tracking-[0.2em]">Map Index</div>
-                <div class="space-y-2.5">
-                    <div v-for="(config, key) in mapLegendItems" :key="key" class="flex items-center gap-3 text-xs font-bold text-m-text">
-                        <span class="w-2.5 h-2.5 rounded-full shadow-sm" :style="{ backgroundColor: config.color }"></span> {{ config.label }}
-                    </div>
-                </div>
+                <div class="space-y-2.5"><div v-for="(config, key) in mapLegendItems" :key="key" class="flex items-center gap-3 text-xs font-bold text-m-text"><span class="w-2.5 h-2.5 rounded-full shadow-sm" :style="{ backgroundColor: config.color }"></span> {{ config.label }}</div></div>
             </div>
         </div>
 
         <!-- Notebook Modal -->
         <transition name="slide-up">
-            <div v-if="showNotebook" 
-                 class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center bg-typo-title/15 backdrop-blur-[2px] notebook-overlay" 
-                 @click.self="closeNotebook"
-                 role="dialog"
-                 aria-modal="true"
-                 aria-labelledby="modal-title">
+            <div v-if="showNotebook" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center bg-typo-title/15 backdrop-blur-[2px] notebook-overlay" @click.self="closeNotebook" role="dialog" aria-modal="true">
                 <div class="bg-m-card w-full md:w-[600px] h-[85vh] md:h-[70vh] rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden ring-1 ring-white/50 notebook-modal-container" @keydown.tab.prevent="trapFocus">
                     <div class="px-6 py-5 bg-m-card border-b border-m-border flex justify-between items-center flex-none">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-pen-nib text-typo-title"></i>
-                            <span id="modal-title" class="font-bold text-typo-title text-lg">Trip Notes</span>
-                        </div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-pen-nib text-typo-title"></i><span class="font-bold text-typo-title text-lg">Trip Notes</span></div>
                         <div class="flex items-center gap-4">
-                            <transition name="save-indicator">
-                                <span v-if="saveStatus === 'Saved'" class="text-[10px] font-bold text-s-green uppercase tracking-wider bg-s-green/10 px-2 py-1 rounded-md">
-                                    <i class="fa-solid fa-check mr-1"></i>Saved
-                                </span>
-                            </transition>
+                            <transition name="save-indicator"><span v-if="saveStatus === 'Saved'" class="text-[10px] font-bold text-s-green uppercase tracking-wider bg-s-green/10 px-2 py-1 rounded-md"><i class="fa-solid fa-check mr-1"></i>Saved</span></transition>
                             <button ref="closeNoteBtn" type="button" aria-label="Close Notes" @click="closeNotebook" class="w-9 h-9 rounded-full bg-black/5 flex items-center justify-center text-m-text hover:bg-black/10 transition-colors focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
-                    <div class="flex-1 notebook-modal p-8 overflow-y-auto">
-                        <textarea ref="noteTextarea" v-model="userNotes" @input="saveNotes" class="notebook-textarea" placeholder="Type here..."></textarea>
-                    </div>
+                    <div class="flex-1 notebook-modal p-8 overflow-y-auto"><textarea ref="noteTextarea" v-model="userNotes" @input="saveNotes" class="notebook-textarea" placeholder="Type here..."></textarea></div>
                 </div>
             </div>
         </transition>
 
+        <!-- Settings Modal -->
+        <transition name="slide-up">
+            <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showSync = false">
+                <div class="bg-white w-[90%] max-w-[420px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[85vh] flex flex-col">
+                    <div class="flex justify-between items-center mb-4 flex-none">
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">Settings</span></div>
+                        <button @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <!-- Standard CSS Tabs -->
+                    <div class="flex gap-4 mb-4 border-b border-m-border pb-1">
+                        <button @click="settingsTab = 'trips'" :class="['modal-tab', settingsTab === 'trips' ? 'active' : '']">☁️ Trips</button>
+                        <button @click="settingsTab = 'ai'" :class="['modal-tab', settingsTab === 'ai' ? 'active' : '']">✨ AI Tools</button>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto hide-scroll space-y-6">
+                        <!-- TAB 1: TRIPS -->
+                        <div v-if="settingsTab === 'trips'">
+                            <div class="bg-m-card p-5 rounded-2xl border border-m-border mb-6">
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">Active Trip</div>
+                                <div class="mb-4">
+                                    <div class="text-sm font-bold text-m-sub mb-1">Trip ID</div>
+                                    <input v-model="activeTripId" type="text" class="sync-input font-mono text-lg font-bold text-typo-title uppercase" placeholder="e.g. TOKYO_2027">
+                                </div>
+                                <div class="mb-4">
+                                    <div class="text-sm font-bold text-m-sub mb-1">Map Region</div>
+                                    <select v-model="countrySetting" class="sync-input">
+                                        <option value="KR">Korea (NAVER Map)</option>
+                                        <option value="GLOBAL">Global (Google Maps)</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button @click="saveTrip" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-typo-title text-white font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Backup</button>
+                                    <button @click="fetchTripLibrary" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-white border border-m-border text-m-text font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-rotate mr-2"></i>Cloud</button>
+                                </div>
+                                <div v-if="syncLog" class="mt-3 text-center text-xs font-bold" :class="syncLog.type === 'error' ? 'text-s-alert' : 'text-s-green'"><i v-if="syncLoading" class="fa-solid fa-spinner fa-spin mr-1"></i>{{ syncLog.message }}</div>
+                            </div>
+
+                            <div v-if="tripLibrary.length > 0">
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">Cloud Backups</div>
+                                <div class="space-y-3 mt-2">
+                                    <div v-for="trip in tripLibrary" :key="trip.tripId" class="bg-white p-4 rounded-2xl border border-m-border shadow-sm flex justify-between items-center group">
+                                        <div class="overflow-hidden">
+                                            <div class="text-sm font-bold text-typo-title truncate">{{ trip.title }}</div>
+                                            <div class="text-xs font-mono text-m-sub mt-0.5">{{ trip.tripId }}</div>
+                                        </div>
+                                        <button @click="loadTrip(trip.tripId)" class="px-4 py-2 bg-s-sand/20 text-s-sand rounded-lg text-xs font-bold hover:bg-s-sand hover:text-white transition-colors">Load</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div v-else class="text-center py-8 text-m-sub text-sm bg-m-card/50 rounded-2xl border-dashed border border-m-border">
+                                No backups found.<br>Connect GAS URL & Refresh.
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: AI TOOLS -->
+                        <div v-if="settingsTab === 'ai'">
+                            <div class="bg-m-card/50 p-5 rounded-2xl border border-m-border mb-6">
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest flex items-center gap-2"><i class="fa-solid fa-robot"></i> AI Prompt Helper</div>
+                                <textarea readonly class="sync-input text-xs font-mono mb-3 h-32 bg-white/50" :value="aiPromptTemplate"></textarea>
+                                <button @click="copyPrompt" class="w-full py-2 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs hover:bg-m-card transition-colors"><i class="fa-regular fa-copy mr-2"></i>Copy Prompt</button>
+                                <div class="text-[9px] text-m-sub mt-2 text-center">Managed via Cloud ID: <code>__sys_prompt__</code></div>
+                            </div>
+
+                            <div class="bg-s-sand/10 p-5 rounded-2xl border border-s-sand/20">
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Import</div>
+                                <textarea v-model="importJson" class="sync-input text-xs font-mono mb-3 h-24" placeholder="Paste Gemini JSON here..."></textarea>
+                                <button @click="executeImport" class="w-full py-3 rounded-xl bg-typo-title text-white font-bold text-sm hover:bg-black transition-colors"><i class="fa-solid fa-file-import mr-2"></i>Import Schedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 
     <script>
         const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
+
+        // --- Config ---
+        const GAS_API_URL = ""; // ⚠️ FILL THIS WITH YOUR DEPLOYED WEB APP URL ⚠️
 
         const CATEGORY_CONFIG = {
             transport: { color: '#8FA39D', icon: 'bg-s-green', label: 'Transport', markerColor: '#8FA39D' },
@@ -379,12 +358,21 @@
         const REGEX_ICONS = /(⚠️|💡|📍|🕒|💰|🚇|🚕|🚌|🚶|🧳|🛑|✈️|🚄|☕|🛍️)/g;
         const REGEX_KEYWORDS = /(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g;
         
-        const SCHEDULE_DATA = [
+        const DEFAULT_AI_PROMPT = `請扮演資深資料工程師。分析我上傳的行程表圖片，將其轉換為符合以下規範的 JSON 格式。
+核心規則:
+1. Time: 轉為 "HH:MM" (24h)。
+2. Category: transport, food, shopping, activity, hotel, flight, alert.
+3. Map Term: 若有韓文店名優先提取；若無則取最獨特的中英文。
+4. Structure: 必須完全符合 App 的 SCHEDULE_DATA 結構。
+5. Country: 請在 root 屬性加入 country: 'KR' (or 'JP' etc.)。
+輸出 JSON Array。`;
+
+        // Default Data Payload
+        const DEFAULT_SCHEDULE = [
             {
                 date: "06/01 (一) Day 1",
                 title: "高雄➔首爾(移動)＋飯店宵夜(1h)",
-                lunch: "機上/機場",
-                dinner: "外送 (獵奇年糕/橋村炸雞)",
+                lunch: "_______", lunchId: null, tea: "_______", teaId: null, dinner: "外送 (獵奇年糕/橋村炸雞)", dinnerId: "d1-e9",
                 events: [
                     { id: "d1-e1", time: "12:00", location: "家裡出發 ➔ 高雄小港機場 (KHH)", category: "transport", note: "🕒 時間：預計 12:00-12:30 出門 (保留緩衝)", coords: [22.5768, 120.3478] },
                     { id: "d1-e2", time: "13:30", location: "抵達機場 & 辦理登機 (Check-in)", category: "flight", note: "✈️ 航班：台灣虎航 (Tigerair Taiwan) IT662\n⚠️ 動作：托運行李、領登機證、過安檢", coords: [22.5768, 120.3478] },
@@ -400,16 +388,15 @@
             {
                 date: "06/02 (二) Day 2",
                 title: "夢碳(2h)＋加山Outlet(4h)",
-                lunch: "夢碳 (燒肉)",
-                dinner: "Outlet 自理",
+                lunch: "夢碳 (燒肉)", lunchId: "d2-e4", tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
                 events: [
                     { id: "d2-e1", time: "10:00", location: "交通：飯店 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50 (서울 용산구 백범로99길 50)\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km / Naver Map 驗證)", coords: [37.5372, 126.9698] },
                     { id: "d2-e2", time: "10:40", location: "【排隊關鍵】抵達現場準備候位", category: "alert", note: "⚠️ 規則：11:00 開放現場機台登記 (不可指定時間/無預約)\n📋 動作：10:40 前抵達周邊 ➔ 11:00 準時操作機台\n🛑 風險控管：若號碼過於靠後 (需等 3hr+)，直接啟動備案午餐", tags: ["關鍵", "風險"], coords: [37.5372, 126.9698] },
-                    { id: "d2-e3", time: "11:15", location: "附近咖啡廳等待 (如: Approach Coffee)", category: "food", note: "", coords: [37.5288, 126.9715] },
-                    { id: "d2-e4", time: "12:00", location: "午餐：夢碳 (燒肉)", category: "food", note: "🕒 營業：12:00 開始叫號入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
-                    { id: "d2-e5", time: "14:30", location: "【空窗期決策：14:30-16:00】", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
+                    { id: "d2-e3", time: "上午", location: "附近咖啡廳等待 (_______ 自行尋找)", map_term: "Approach Coffee", category: "food", note: "", coords: [37.5288, 126.9715] },
+                    { id: "d2-e4", time: "午餐", location: "夢碳 (燒肉)", map_term: "몽탄", category: "food", note: "🕒 營業：12:00 開始叫號入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
+                    { id: "d2-e5", time: "14:30", location: "【空窗期決策：14:30-16:00】(KPI 導向)", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
                     { id: "d2-e6", time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 地鐵：1號線 [龍山] ➔ [加山數碼園區] (往仁川/水原方向)\n🕒 時間：全程約 35-40 分鐘 (含步行與候車)\n*註：飯店步行至車站約5分(主出口)+乘車19分+出站步行約10分", coords: [37.4815, 126.8826] },
-                    { id: "d2-e7", time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n   • 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n   • 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n   • 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (3館美食街/速食)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
+                    { id: "d2-e7", time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n   • 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n   • 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n   • 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (_______)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
                     { id: "d2-e8", time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 地鐵：1號線直達 [龍山站] (約 35-40 分鐘)", coords: [37.5293, 126.9654] },
                     { id: "d2-e9", time: "21:15", location: "抵達飯店 (整理大量戰利品)", category: "hotel", note: "", coords: [37.5293, 126.9654] }
                 ]
@@ -417,25 +404,23 @@
             {
                 date: "06/03 (三) Day 3",
                 title: "龍理團路(1.5h)＋狎鷗亭(3.5h)＋漢南洞(3h)",
-                lunch: "龍理團路早午餐 (三選一)",
-                dinner: "漢南洞 24H 馬鈴薯湯",
+                lunch: "龍理團路早午餐", lunchId: "d3-e2", tea: "Milestone Coffee", teaId: "d3-e6", dinner: "漢南洞 24H 馬鈴薯湯", dinnerId: "d3-e8",
                 events: [
                     { id: "d3-e1", time: "09:30", location: "交通：飯店 ➔ 龍理團路 (早午餐戰區)", category: "transport", note: "💡 策略：名店位於「三角地站」附近，離飯店約 1.2km，建議搭車省力\n🚇 地鐵：4號線 [新龍山站] ➔ [三角地站] (搭 1 站 / 3號出口)\n🚌 公車：藍色巴士 100/150/151 等 (搭 2 站) ➔ [三角地站]\n🚶 步行：沿大馬路直走約 20-25 分鐘 (6月天氣熱，不建議)", coords: [37.5312, 126.9705] },
-                    { id: "d3-e2", time: "10:00", location: "早午餐名店【三選一】(皆位於三角地站周邊)", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
+                    { id: "d3-e2", time: "上午", location: "早午餐名店【三選一】(皆位於三角地站周邊)", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
                     { id: "d3-e3", time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧 (單次最遠距離)", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)", coords: [37.5273, 127.0392] },
-                    { id: "d3-e4", time: "13:00", location: "狎鷗亭 / 羅德奧 (島山公園周邊)：逛精品與潮牌", category: "shopping", note: "🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)", coords: [37.5273, 127.0392] },
+                    { id: "d3-e4", time: "下午", location: "狎鷗亭 / 羅德奧 (島山公園周邊)：逛精品與潮牌", category: "shopping", note: "🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)", coords: [37.5273, 127.0392] },
                     { id: "d3-e5", time: "16:00", location: "交通：狎鷗亭 ➔ 漢南洞 (線性回程)", category: "transport", note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行至商圈約 10 分鐘\n🚕 備案：計程車約 10-15 分鐘 (約 10,000 韓元)", coords: [37.5348, 127.0012] },
-                    { id: "d3-e6", time: "16:30", location: "漢南洞逛街 (設計師品牌、咖啡廳)", category: "shopping", note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)", coords: [37.5348, 127.0012] },
+                    { id: "d3-e6", time: "下午", location: "漢南洞逛街 & 咖啡廳", category: "shopping", note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n☕ **咖啡推薦：Milestone Coffee Hannam** (마일스톤커피 한남점)\n   • 特色：知名維也納咖啡、提拉米蘇，氛圍極佳\n   • 位置：漢南洞巷弄內，逛街途中適合休憩\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)", coords: [37.5348, 127.0012] },
                     { id: "d3-e7", time: "19:30", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯 (或周邊晚餐)", category: "transport", note: "", coords: [37.5332, 127.0028] },
-                    { id: "d3-e8", time: "20:00", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", category: "food", note: "", coords: [37.5332, 127.0028] },
+                    { id: "d3-e8", time: "20:00", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", map_term: "24시뼈다귀감자탕", category: "food", note: "", coords: [37.5332, 127.0028] },
                     { id: "d3-e9", time: "21:30", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山 (短程收尾)", category: "transport", note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/04 (四) Day 4",
                 title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車(1.5h)",
-                lunch: "明洞辣炒雞排",
-                dinner: "車站附近自理",
+                lunch: "明洞辣炒雞排", lunchId: "d4-e6", tea: "馬鈴薯麵包 (外帶)", teaId: "d4-e5", dinner: "_______", dinnerId: null,
                 notice: "====== ⚠️ 行前準備確認 ======\n1. [火車] 5/4 早上 07:00 準時開搶 ITX (去:龍山09:17 / 回:南春川18:56左右)。\n2. [預約] 出發前完成「春川外國人觀光計程車」線上預約。\n3. [體驗] 出發前 2 週預約江村鐵路自行車 (16:30 場次)。\n4. [現金] 錢包準備 80,000 韓元現金 (專付計程車費)。\n5. [證件] 務必攜帶護照。",
                 events: [
                     { id: "d4-e1", time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 動作：搭乘 ITX-青春號出發 (建議車上吃早餐)。\n🕒 時間：乘車約 1 小時 23 分鐘\n💰 票價：單程約 9,800 韓元 (來回約 20,000 韓元)。", coords: [37.5298, 126.9647] },
@@ -443,73 +428,66 @@
                     { id: "d4-e3", time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 指令：準時上車。(目標控制 5 小時，預算 7 萬韓元)", coords: [37.8844, 127.7171] },
                     { id: "d4-e4", time: "11:40", location: "幸福草原牧場 (90分鐘)", category: "activity", note: "🕒 停留：1.5 小時 (爬坡拍小瑞士絕景、下山餵綿羊)", coords: [37.9472, 127.6703] },
                     { id: "d4-e5", time: "13:35", location: "馬鈴薯麵包 (25分鐘)", category: "food", note: "🥡 指令：外帶模式 (Takeout Only)。\n⚠️ 重點：只拍照＋買麵包外帶，不內用。(省時關鍵)", coords: [37.9255, 127.7812] },
-                    { id: "d4-e6", time: "14:20", location: "明洞辣炒雞排街 (60分鐘)", category: "food", note: "🕒 停留：1 小時 (從容享用午餐)\n⚠️ 死線 (GATE)：15:25 必須上車離開，前往車站。", tags: ["死線"], coords: [37.8797, 127.7283] },
-                    { id: "d4-e7", time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", category: "transport", note: "🛑 動作：計程車任務結束。\n💰 付款：支付現金約 70,000 韓元給司機 (含超時費)。", tags: ["現金"], coords: [37.8164, 127.7135] },
+                    { id: "d4-e6", time: "14:20", location: "明洞辣炒雞排街 (60分鐘)", map_term: "Myeongdong Dakgalbi Street", category: "food", note: "🕒 停留：1 小時 (從容享用午餐)\n⚠️ 死線 (GATE)：15:25 必須上車離開，前往車站。", tags: ["死線"], coords: [37.8797, 127.7283] },
+                    { id: "d4-e7", time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", map_term: "Gimyujeong Station", category: "transport", note: "🛑 動作：計程車任務結束。\n💰 付款：支付現金約 70,000 韓元給司機 (含超時費)。", tags: ["現金"], coords: [37.8164, 127.7135] },
                     { id: "d4-e8", time: "15:45", location: "報到緩衝 (45分鐘)", category: "alert", note: "🚻 動作：上廁所、換實體票、16:10 前抵達搭乘區集合。", coords: [37.8164, 127.7135] },
                     { id: "d4-e9", time: "16:30", location: "江村鐵路自行車 (夕陽場)", category: "activity", note: "🕒 體驗：約 1.5 小時 (騎行50分 + 火車20分 + 接駁車)\n⚠️ 時間推算：約 18:00 回到金裕貞站。", coords: [37.8164, 127.7135] },
                     { id: "d4-e10", time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 動作：搭乘京春線地鐵 (往春川方向) 坐 1 站。", coords: [37.8164, 127.7135] },
-                    { id: "d4-e11", time: "18:25", location: "抵達南春川站 (Namchuncheon)", category: "transport", note: "☕ 動作：出站休息、買零食候車。", coords: [37.8638, 127.7239] },
+                    { id: "d4-e11", time: "18:25", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ 動作：出站休息、買零食候車。", coords: [37.8638, 127.7239] },
                     { id: "d4-e12", time: "18:56", location: "回程首爾 (ITX-青春號 雙班次備案)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n   *(平日晚間為 1 小時一班，這是銜接最完美的班次)*\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山\n   *(若錯過 Plan A 需等 1 小時，建議在車站附近吃晚餐)*\n💰 票價：單程約 9,800 韓元。", coords: [37.5298, 126.9647] }
                 ]
             },
             {
                 date: "06/05 (五) Day 5",
                 title: "舍堂醫美(3.5h)＋聖水洞(5h)",
-                lunch: "烤黨 (聖水店)",
-                dinner: "聖水馬鈴薯排骨湯",
+                lunch: "烤黨 (聖水店)", lunchId: "d5-e5", tea: "_______", teaId: null, dinner: "聖水馬鈴薯排骨湯", dinnerId: "d5-e7",
                 events: [
-                    { id: "d5-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [舍堂]\n🕒 時間：乘車約 13 分鐘 + 步行約 5 分鐘 (總計 20 分鐘)", coords: [37.4765, 126.9816] },
+                    { id: "d5-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 地鐵：4號線 [新龍山] ➔ [舍堂]", coords: [37.4765, 126.9816] },
                     { id: "d5-e2", time: "11:00", location: "舍堂醫美療程", category: "activity", note: "🕒 預估停留：3 ~ 3.5 小時 (含諮詢、麻醉、施作、修復)", coords: [37.4765, 126.9816] },
                     { id: "d5-e3", time: "14:30", location: "療程結束，準備移動", category: "alert", note: "", coords: null },
-                    { id: "d5-e4", time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
-                    { id: "d5-e5", time: "15:20", location: "午晚餐：烤黨 (聖水店)", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
-                    // Fix: Changed "下午" to "16:30"
-                    { id: "d5-e6", time: "16:30", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
-                    // Fix: Changed "晚餐" to "19:30"
-                    { id: "d5-e7", time: "19:30", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", category: "food", note: "", coords: [37.5445, 127.0560] },
+                    { id: "d5-e4", time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 地鐵：2號線 [舍堂] ➔ [聖水] (約 40 分鐘)", coords: [37.5445, 127.0560] },
+                    { id: "d5-e5", time: "15:20", location: "午晚餐：烤黨 (聖水店)", map_term: "Kkudang Seongsu", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
+                    { id: "d5-e6", time: "下午", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
+                    { id: "d5-e7", time: "晚餐", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", map_term: "Seongsu Potato Soup", category: "food", note: "", coords: [37.5445, 127.0560] },
                     { id: "d5-e8", time: "20:30", location: "交通：聖水 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚕 建議：計程車 (術後建議舒適移動)\n🕒 時間：修正估 45-50 分鐘 (週五晚間塞車風險加權)\n💳 氣候卡：地鐵轉乘約 45 分鐘 (較累但時間穩)", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/06 (六) Day 6",
                 title: "安國/益善洞(4.5h)＋新羅免稅/彈性(2h)",
-                lunch: "益善翠響 / 無招牌店 (義式二選一)",
-                dinner: "雞林食堂 (備案:乙支精肉)",
+                lunch: "益善翠響/無招牌店", lunchId: "d6-e4", tea: "_______", teaId: null, dinner: "雞林蒜辣雞湯 (備案: 乙支精肉)", dinnerId: "d6-e8",
                 events: [
                     { id: "d6-e1", time: "09:00", location: "Catchtable 遠端取號 (Artist Bakery)", category: "alert", note: "", coords: null },
                     { id: "d6-e2", time: "10:00", location: "交通：龍山 ➔ 安國站 (顯忠日地鐵為佳)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [忠武路] 轉 3號線 ➔ [安國]\n🕒 時間：乘車+轉乘約 25 分鐘 (假日地鐵最穩)", coords: [37.5766, 126.9854] },
-                    { id: "d6-e3", time: "10:30", location: "【Artist Bakery】(鹽麵包外帶/點心)", category: "food", note: "🕒 預估停留：約 1 小時 (取號/購買/簡單吃點心)\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
+                    { id: "d6-e3", time: "10:30", location: "【Artist Bakery】(鹽麵包外帶/點心)", map_term: "Artist Bakery", category: "food", note: "🕒 預估停留：約 1 小時 (取號/購買/簡單吃點心)\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
                     { id: "d6-e4", time: "12:00", location: "午餐：人氣義式料理【二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時 (含排隊與用餐)\n❶ Ikseon Chwihyang (益善翠響)：益善洞內，韓式復古洋食(蛋包飯/義大利麵)\n❷ Ganpan Eopneun Gage (無招牌店)：益善洞內，知名義大利麵/燉飯(明太子/牛排)", coords: [37.5744, 126.9905] },
                     { id: "d6-e5", time: "13:30", location: "【益善洞韓屋村】(氛圍咖啡廳/文創小物)", category: "activity", note: "🕒 預估停留：約 1.5 小時 (逛街與拍照)\n☕ 推薦：清水堂 / 樂園驛", coords: [37.5744, 126.9905] },
                     { id: "d6-e6", time: "15:15", location: "【下午行程二選一】(依體力與購物需求決定)", category: "activity", note: "▼ 選項 A：主攻免稅品 (原定計劃)\n🚕 交通：計程車前往新羅免稅店 (約 20-25 分鐘)\n🛍️ 行程：新羅免稅店 首爾店 (預估停留 2 小時)\n\n▼ 選項 B：彈性自由時間 (備案購物/補逛/休息)\n💡 建議：續逛益善洞、安國站周邊，或前往明洞/乙支路\n☕ 行程：找間韓屋咖啡廳休息，或提早前往晚餐區域", coords: [37.5562, 127.0084] },
                     { id: "d6-e7", time: "17:40", location: "交通：前往鐘路3街 (晚餐)", category: "transport", note: "🚕 建議：從新羅出發約 15-20 分鐘；或從備案地點步行前往", coords: [37.5714, 126.9915] },
-                    { id: "d6-e8", time: "18:00", location: "晚餐：雞林食堂 本店 (계림식당)", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk)\n   *位置：乙支路3街站附近 (步行約 5-8 分鐘)\n   *特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
+                    { id: "d6-e8", time: "18:00", location: "晚餐：雞林蒜辣雞湯 (雞林食堂 本店 / 계림식당)", map_term: "계림식당", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk / 을지정육)\n   *位置：乙支路3街站附近 (步行約 5-8 分鐘)\n   *特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
                     { id: "d6-e9", time: "20:00", location: "交通：鐘路3街 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "💳 氣候卡：地鐵 1號線 [鐘路3街] ➔ [龍山站] (直達)\n🕒 時間：乘車約 12 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/07 (日) Day 7",
                 title: "合井剪髮(4h)＋望遠/弘大/新村(4.5h)",
-                lunch: "望遠市場小吃",
-                dinner: "新村 奶辣燉排骨",
+                lunch: "望遠市場小吃", lunchId: "d7-e4", tea: "_______", teaId: null, dinner: "新村 奶辣燉排骨", dinnerId: "d7-e8",
                 events: [
                     { id: "d7-e1", time: "10:20", location: "交通：龍山 ➔ 合井 (地鐵轉乘最順)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [三角地] 轉 6號線 ➔ [合井]\n🕒 時間：乘車+轉乘約 20-25 分鐘 (飯店門口進站，轉乘1站，最省力)\n🚕 備案：計程車直達合井 (約 15-20 分鐘 / 10,000 韓元)", coords: [37.5488, 126.9133] },
                     { id: "d7-e2", time: "11:00", location: "合井站髮廊", category: "activity", note: "🕒 預估停留：約 4 小時 (剪+染/燙，含溝通時間)", coords: [37.5488, 126.9133] },
-                    { id: "d7-e3", time: "15:00", location: "交通：合井 ➔ 望遠", category: "transport", note: "💳 氣候卡：地鐵 6號線 (僅 1 站)\n🕒 時間：乘車 2 分鐘 + 步行至市場約 5-8 分鐘", coords: [37.5561, 126.9064] },
+                    { id: "d7-e3", time: "15:00", location: "交通：合井 ➔ 望遠", category: "transport", note: "💳 地鐵 6號線 (僅 1 站)\n🕒 時間：乘車 2 分鐘 + 步行至市場約 5-8 分鐘", coords: [37.5561, 126.9064] },
                     { id: "d7-e4", time: "15:20", location: "望遠市場 (吃雨耳樂炸辣椒、可樂餅)", category: "food", note: "🕒 預估停留：約 1.5 小時 (吃小吃 + 逛市場)", coords: [37.5561, 126.9064] },
                     { id: "d7-e6", time: "16:40", location: "交通：望遠 ➔ 弘大", category: "transport", note: "💳 氣候卡：地鐵 6號線轉 2號線\n🕒 時間：乘車+轉乘約 15 分鐘", coords: [37.5575, 126.9245] },
                     { id: "d7-e7", time: "17:00", location: "弘大入口站 8 號出口 (藥局/美妝)", category: "shopping", note: "🕒 預估停留：約 1.5 小時 (快速補貨)", coords: [37.5575, 126.9245] },
-                    // Fixed Duplicate ID: d7-e7 -> d7-e7-transport
                     { id: "d7-e7-transport", time: "19:00", location: "交通：弘大 ➔ 新村 (晚餐)", category: "transport", note: "🚶 步行：沿京義線書街散步約 15-20 分鐘\n💳 地鐵：2號線 (1 站) 約 5 分鐘", coords: [37.5551, 126.9369] },
-                    { id: "d7-e8", time: "19:30", location: "晚餐：新村 奶辣燉排骨", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5551, 126.9369] },
+                    { id: "d7-e8", time: "19:30", location: "晚餐：新村 奶辣燉排骨", map_term: "소신이쏘", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5551, 126.9369] },
                     { id: "d7-e9", time: "21:00", location: "交通：新村 ➔ 九樹 ROKAUS 龍山 (回程)", category: "transport", note: "💡 策略：週日晚間弘大/新村區易塞車，建議優先搭地鐵\n🚇 地鐵：2號線 [新村] ➔ [市廳] 轉 1號線 ➔ [龍山]\n🕒 時間：全程約 25-30 分鐘 (時間最穩，免塞車)\n🚌 公車：藍色巴士 750A / 750B / 752 (直達新龍山站)\n🚕 備案：計程車 (若太累不想走) 約 20-25 分鐘 / 12,000 韓元", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/08 (一) Day 8",
                 title: "龍山最後掃貨(4h)＋金浦機場(3h)",
-                lunch: "I-Park Mall/超市",
-                dinner: "機場/機上",
+                lunch: "_______", lunchId: null, tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
                 events: [
                     { id: "d8-e1", time: "10:00", location: "整理行李 & 準備 Check-out", category: "hotel", note: "", coords: [37.5293, 126.9654] },
                     { id: "d8-e2", time: "11:00", location: "辦理退房 (Check-out)", category: "hotel", note: "🧳 動作：將行李寄放在飯店櫃台", coords: [37.5293, 126.9654] },
@@ -529,28 +507,60 @@
         createApp({
             setup() {
                 const showNotebook = ref(false);
+                const showSync = ref(false);
+                const settingsTab = ref('trips'); 
                 const userNotes = ref("");
                 const saveStatus = ref("Ready");
                 const currentDayIndex = ref(0);
                 const activeEventId = ref(null);
                 const mapError = ref(false);
                 
-                // Optimized: Refs for direct DOM access replacement
+                const activeTripId = ref("");
+                const countrySetting = ref("KR"); 
+                const syncLoading = ref(false);
+                const syncLog = ref(null);
+                const tripLibrary = ref([]); 
+                const initLoading = ref(false);
+                const importJson = ref(""); 
+                const aiPromptTemplate = ref(DEFAULT_AI_PROMPT);
+
+                const schedule = ref(JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)));
+                const currentTripTitle = ref("Seoul Travel Guide");
+
                 const timelineContainerRef = ref(null);
                 const dayRefs = ref({});
                 const openNoteBtn = ref(null);
                 const noteTextarea = ref(null);
                 const closeNoteBtn = ref(null);
                 
-                // Non-reactive data for logic
-                const schedule = ref(SCHEDULE_DATA);
                 let map = null;
-                // Optimization: Use a Map for O(1) marker access instead of array
                 let markersMap = new Map();
                 let resizeObserver = null; 
                 let resizeRaf = 0; 
 
-                // --- Utils ---
+                const currentTripId = computed(() => activeTripId.value);
+                const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
+                const displayEvents = computed(() => currentDay.value.events || []);
+                const mapLegendItems = computed(() => {
+                    const items = {};
+                    Object.values(CATEGORY_CONFIG).forEach(c => { if(c.label !== 'Other') items[c.label] = c; });
+                    return items;
+                });
+                
+                const getStorageKey = (key) => {
+                    // Unified key generation
+                    const prefix = activeTripId.value || 'seoul2026';
+                    return `${prefix}_${key}`;
+                };
+
+                const debounce = (fn, delay) => {
+                    let timeoutId;
+                    return (...args) => {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => fn(...args), delay);
+                    };
+                };
+
                 const escapeHtml = (text) => {
                     if (typeof text !== 'string') return text;
                     const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
@@ -559,10 +569,9 @@
 
                 const copyText = (text) => {
                     if (!text) return;
-                    // Optimized: Try Clipboard API first, fallback gracefully
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).catch(err => {
-                            console.warn('Clipboard API failed, trying fallback', err);
+                            console.warn('Clipboard API failed', err);
                             fallbackCopy(text);
                         });
                     } else {
@@ -574,123 +583,169 @@
                     try {
                         const textArea = document.createElement("textarea");
                         textArea.value = text;
-                        textArea.style.position = "fixed"; // Avoid scrolling to bottom
+                        textArea.style.position = "fixed";
                         textArea.style.opacity = "0";
                         document.body.appendChild(textArea);
                         textArea.focus();
                         textArea.select();
-                        const successful = document.execCommand('copy');
+                        document.execCommand('copy');
                         document.body.removeChild(textArea);
-                        if (!successful) console.error("Fallback copy failed");
-                    } catch (err) {
-                        console.error('Fallback copy failed', err);
-                    }
+                    } catch (err) {}
                 };
 
-                const copyToClipboard = (text) => {
+                const copyPrompt = () => {
                     if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(text)
-                            .then(() => alert("Diagnostic info copied to clipboard!"))
-                            .catch((err) => {
-                                console.warn("Clipboard access denied (async issue?), trying fallback...", err);
-                                fallbackCopy(text);
-                                alert("Diagnostic info copied via fallback!");
-                            });
+                        navigator.clipboard.writeText(aiPromptTemplate.value)
+                            .then(() => alert("Copied! Paste to Gemini with your image."))
+                            .catch(err => fallbackCopy(aiPromptTemplate.value));
                     } else {
-                        fallbackCopy(text);
-                        alert("Diagnostics logged to console (clipboard failed).");
+                        fallbackCopy(aiPromptTemplate.value);
                     }
                 };
 
-                // --- UI Helpers (Centralized Config) ---
-                const getDotColor = (category) => {
-                    const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default;
-                    return `${config.icon} border-m-card`;
+                const getCleanQuery = (rawLocation) => {
+                    if (!rawLocation) return "";
+                    let temp = rawLocation;
+                    if (temp.includes('➔')) temp = temp.split('➔').pop().trim();
+                    if (countrySetting.value === 'KR') {
+                        const hangulRegex = /[\u3131-\uD79D]+/g;
+                        const hangulMatches = temp.match(hangulRegex);
+                        if (hangulMatches && hangulMatches.length > 0) return hangulMatches.join(' '); 
+                    }
+                    temp = temp.replace(/^(交通|Transport|午餐|Lunch|晚餐|Dinner|午茶|Tea|住宿|Hotel)[：:]\s*/i, '');
+                    temp = temp.replace(/\s*\((計程車|Taxi|地鐵|Subway|公車|Bus|步行|Walk|機台|Kiosk|外帶|Takeout|Take-out|25分鐘|.*分鐘).*?\)/gi, '');
+                    temp = temp.replace(/[【】]/g, ' ');
+                    return temp.trim();
                 };
-
-                const getCategoryBadge = (category) => {
-                    const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default;
-                    return config.icon;
-                };
-
-                const getTagStyle = (tag) => {
-                    if (tag.includes("死線") || tag.includes("風險") || tag.includes("關鍵") || tag.includes("現金")) return 'bg-s-alert/10 text-s-alert border border-s-alert/20';
-                    return 'bg-m-bg text-m-sub border border-m-border';
-                };
-
-                // Security: Whitelist approach mostly via restricted replacements
-                const formatNote = (text) => {
-                    if (!text) return "";
-                    // 1. Escaping first (Defense against injection)
-                    let formatted = escapeHtml(text);
-                    // 2. Controlled replacement
-                    formatted = formatted.replace(REGEX_NEWLINE, '<br>');
-                    formatted = formatted.replace(REGEX_ICONS, '<span class="mr-1.5 opacity-80 inline-block">$1</span>');
-                    formatted = formatted.replace(REGEX_KEYWORDS, '<b class="text-typo-title font-bold">$1</b>');
-                    return formatted;
-                };
-
-                const parseTime = (timeStr) => {
-                    if (!timeStr) return 9999;
-                    const match = timeStr.match(/(\d{1,2}):(\d{2})/);
-                    if (!match) return 9999;
-                    return parseInt(match[1]) * 60 + parseInt(match[2]);
-                };
-
-                // --- App Logic ---
-                const validateAndSortSchedule = () => {
-                    const idSet = new Set();
-                    schedule.value.forEach((day, dIdx) => {
-                        if (!day.events) return;
-                        day.events.forEach(evt => {
-                            // Guardrail: Duplicate ID Check
-                            if (idSet.has(evt.id)) {
-                                console.error(`Duplicate ID found: ${evt.id}. UI may behave unexpectedly.`);
-                                // Auto-fix (simple fallback, though we fixed data source)
-                                evt.id = `${evt.id}_dup_${dIdx}`; 
-                            }
-                            idSet.add(evt.id);
-                            
-                            evt.timeMin = parseTime(evt.time);
-                        });
-                        day.events.sort((a, b) => a.timeMin - b.timeMin);
-                    });
-                };
-
-                // --- Computed ---
-                const currentDay = computed(() => {
-                    return schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] };
-                });
-
-                const displayEvents = computed(() => {
-                    return currentDay.value.events || [];
-                });
                 
-                const mapLegendItems = computed(() => {
-                    // Extract unique categories from config for the legend
-                    const items = {};
-                    Object.values(CATEGORY_CONFIG).forEach(c => {
-                       if(c.label !== 'Other') items[c.label] = c;
+                // Helper: Open map (used by Smart Links & Fallbacks)
+                window.appOpenMap = (query) => {
+                    const clean = getCleanQuery(query);
+                    const provider = countrySetting.value;
+                    let url = "";
+                    if (provider === 'KR') {
+                        url = `https://map.naver.com/p/search/${encodeURIComponent(clean)}`;
+                    } else {
+                        url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clean)}`;
+                    }
+                    window.open(url, '_blank');
+                };
+
+                const openMapService = (event) => {
+                    let query = "";
+                    if (event.map_term) query = event.map_term;
+                    else if (event.location) query = getCleanQuery(event.location);
+                    if (query) window.appOpenMap(query);
+                };
+
+                const fitBounds = () => {
+                    if (markersMap.size > 0 && map) {
+                        const group = L.featureGroup(Array.from(markersMap.values()));
+                        const isMobile = window.innerWidth < 768;
+                        const paddingBottom = isMobile ? 20 : 50; 
+                        map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 14, animate: true });
+                    }
+                };
+
+                const renderMarkers = () => {
+                    if (!map) return;
+                    markersMap.forEach(marker => { marker.off('click'); map.removeLayer(marker); });
+                    markersMap.clear();
+                    const events = displayEvents.value;
+                    if (!events) return;
+                    events.forEach((event) => {
+                        if (event.coords) {
+                            const config = CATEGORY_CONFIG[event.category] || CATEGORY_CONFIG.default;
+                            const iconHtml = `<div class="custom-marker-pin" style="background-color: ${config.markerColor};"><div class="marker-icon-inner"></div></div>`;
+                            const icon = L.divIcon({ className: 'custom-marker', html: iconHtml, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -36] });
+                            const marker = L.marker(event.coords, { icon: icon }).addTo(map);
+                            const safeCategory = escapeHtml(event.category);
+                            const safeLocation = escapeHtml(event.location);
+                            const popupContent = `
+                                <div class="font-sans p-1 min-w-[120px]">
+                                    <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${safeCategory}</div>
+                                    <div class="font-bold text-sm leading-tight text-[#2F2F2D]">${safeLocation}</div>
+                                </div>`;
+                            marker.bindPopup(popupContent, { closeButton: false, className: 'rounded-xl shadow-lg border-none', offset: [0, -5] });
+                            marker.eventId = event.id;
+                            marker.on('click', () => { focusEvent(event.id); });
+                            markersMap.set(event.id, marker);
+                        }
                     });
-                    return items;
-                });
+                    fitBounds();
+                };
+
+                let retryCount = 0;
+                let tileErrorTimestamps = [];
+                
+                const initMap = () => {
+                    // Safety check for Leaflet availability
+                    if (typeof L === 'undefined') { 
+                        if (retryCount < 20) { 
+                            retryCount++; 
+                            setTimeout(initMap, 500); 
+                        } else { 
+                            mapError.value = true; 
+                        }
+                        return; 
+                    }
+                    if (map) return; // Already initialized
+                    
+                    const mapDiv = document.getElementById('map');
+                    if (!mapDiv) {
+                        setTimeout(initMap, 300); // DOM not ready
+                        return;
+                    }
+
+                    try {
+                        map = L.map('map', { zoomControl: false, zoomAnimation: true, fadeAnimation: true }).setView([37.5665, 126.9780], 13);
+                        const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>', 
+                            maxZoom: 20,
+                            subdomains: 'abcd'
+                        }).addTo(map);
+                        
+                        // Robust error handling for tiles
+                        tileLayer.on('tileerror', () => { 
+                            const now = Date.now();
+                            tileErrorTimestamps = tileErrorTimestamps.filter(t => now - t < 15000); 
+                            tileErrorTimestamps.push(now);
+                            if (tileErrorTimestamps.length >= 20) { 
+                                console.error("Map tile issues detected."); 
+                                mapError.value = true; 
+                            }
+                        });
+                        tileLayer.on('load', () => { tileErrorTimestamps = []; });
+                        
+                        renderMarkers();
+                        
+                        // Resize Observer to fix flex layout issues
+                        resizeObserver = new ResizeObserver(() => { 
+                            if (resizeRaf) cancelAnimationFrame(resizeRaf);
+                            resizeRaf = requestAnimationFrame(() => { if(map) map.invalidateSize(); });
+                        });
+                        resizeObserver.observe(mapDiv);
+                    } catch (e) {
+                        console.error("Map init error:", e);
+                        mapError.value = true;
+                    }
+                };
+                
+                const retryMap = () => { 
+                    mapError.value = false;
+                    retryCount = 0;
+                    if (map) { map.remove(); map = null; markersMap.clear(); }
+                    nextTick(() => { initMap(); });
+                };
 
                 // --- Interactions ---
                 const selectDay = (index) => {
                     currentDayIndex.value = index;
                     activeEventId.value = null;
-                    
-                    // Optimized: Use ref for scrolling
-                    if(timelineContainerRef.value) {
-                        timelineContainerRef.value.scrollTop = 0;
-                    }
-
+                    if(timelineContainerRef.value) timelineContainerRef.value.scrollTop = 0;
                     nextTick(() => {
-                        // Optimized: Use function ref array for scrolling into view
                         const btn = dayRefs.value[index];
-                        if (btn) {
-                            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                        }
+                        if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                         renderMarkers();
                     });
                 };
@@ -699,45 +754,65 @@
                     activeEventId.value = id;
                     const event = displayEvents.value.find(e => e.id === id);
                     if (event && event.coords && map) {
-                        // Optimization: O(1) Lookup
                         markersMap.forEach((marker, mId) => {
                             const icon = marker.getElement();
                             if (!icon) return;
-                            
-                            if (mId === id) { 
-                                icon.classList.add('active'); 
-                                marker.openPopup(); 
-                            } else { 
-                                icon.classList.remove('active'); 
-                                marker.closePopup(); 
-                            }
+                            if (mId === id) { icon.classList.add('active'); marker.openPopup(); } 
+                            else { icon.classList.remove('active'); marker.closePopup(); }
                         });
                         map.flyTo(event.coords, 16, { animate: true, duration: 1.2, easeLinearity: 0.25 });
                     }
+                    // Auto-scroll to event card
+                    nextTick(() => {
+                        const el = document.getElementById('event-' + id);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
                 };
 
+                // --- NEW FUNCTION: Robust Meal Map Logic (ID-based) ---
+                const openMealMap = (type) => {
+                    const day = currentDay.value;
+                    const name = day[type];
+                    const id = day[type + 'Id']; // Look for lunchId, teaId...
+
+                    if (!name || name.includes('_______')) return;
+
+                    // Blocklist: Prevent searching for generic terms if no ID
+                    const blocklist = ['機上', '自理', '外送', '泡麵', '超商', '機場'];
+                    if (!id && blocklist.some(k => name.includes(k))) {
+                        // Optional: Show toast or just ignore
+                        console.log("Blocked generic search:", name);
+                        return;
+                    }
+
+                    // 1. ID Direct Link (The Robust Way)
+                    if (id) {
+                        focusEvent(id);
+                        return;
+                    }
+
+                    // 2. Fallback: Name Search (Legacy)
+                    window.appOpenMap(name);
+                };
+
+                // --- Interactions (Notebook & Sync) ---
                 const openNotebook = () => { 
                     showNotebook.value = true;
-                    // A11y: Auto-focus textarea on open
-                    nextTick(() => {
-                        if (noteTextarea.value) noteTextarea.value.focus();
-                    });
+                    nextTick(() => { if (noteTextarea.value) noteTextarea.value.focus(); });
                 };
 
                 const closeNotebook = () => {
                     showNotebook.value = false;
-                    // A11y: Return focus to trigger button
-                    nextTick(() => {
-                        if (openNoteBtn.value) openNoteBtn.value.focus();
-                    });
+                    nextTick(() => { if (openNoteBtn.value) openNoteBtn.value.focus(); });
                 };
                 
                 const saveNotes = debounce((e) => {
                     saveStatus.value = "Saving...";
                     try {
-                        localStorage.setItem('seoul2026_notes', userNotes.value);
+                        const keyPrefix = getStorageKey('data');
+                        const dataToSave = { notes: userNotes.value, schedule: schedule.value };
+                        localStorage.setItem(keyPrefix, JSON.stringify(dataToSave));
                         saveStatus.value = "Saved";
-                        // Auto-hide status after 2 seconds
                         setTimeout(() => { if(saveStatus.value === 'Saved') saveStatus.value = 'Ready'; }, 2000);
                     } catch(err) {
                         console.error("Save failed", err);
@@ -745,56 +820,19 @@
                     }
                 }, 800);
 
-                // --- Modal Focus Trap & ESC Key ---
                 const trapFocus = (e) => {
                     if (!showNotebook.value) return;
                     const focusable = [noteTextarea.value, closeNoteBtn.value].filter(el => el);
                     const first = focusable[0];
                     const last = focusable[focusable.length - 1];
-
-                    if (e.shiftKey) { // Shift + Tab
-                        if (document.activeElement === first) {
-                            last.focus();
-                            e.preventDefault();
-                        }
-                    } else { // Tab
-                        if (document.activeElement === last) {
-                            first.focus();
-                            e.preventDefault();
-                        }
-                    }
+                    if (e.shiftKey) { if (document.activeElement === first) { last.focus(); e.preventDefault(); } } 
+                    else { if (document.activeElement === last) { first.focus(); e.preventDefault(); } }
                 };
 
-                // Global ESC handler for reliable modal closing
                 const handleGlobalKeydown = (e) => {
-                    if (e.key === 'Escape' && showNotebook.value) {
-                        closeNotebook();
-                    }
-                };
-
-                // --- Diagnostic Export ---
-                const exportDiagnostics = () => {
-                    const diagInfo = {
-                        timestamp: new Date().toISOString(),
-                        userAgent: navigator.userAgent,
-                        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-                        mapError: mapError.value,
-                        tileErrors: tileErrorTimestamps.length, // From tileErrorTimestamps array
-                        storageQuota: 'N/A', // approximate
-                        eventsCount: SCHEDULE_DATA.reduce((acc, day) => acc + day.events.length, 0)
-                    };
-                    
-                    try {
-                        if (navigator.storage && navigator.storage.estimate) {
-                            navigator.storage.estimate().then(estimate => {
-                                diagInfo.storageQuota = `${(estimate.usage / 1024 / 1024).toFixed(2)}MB used`;
-                                copyToClipboard(JSON.stringify(diagInfo, null, 2));
-                            });
-                        } else {
-                            copyToClipboard(JSON.stringify(diagInfo, null, 2));
-                        }
-                    } catch(e) {
-                        alert("Diagnostic export failed: " + e.message);
+                    if (e.key === 'Escape') {
+                        if (showNotebook.value) closeNotebook();
+                        if (showSync.value) showSync.value = false;
                     }
                 };
 
@@ -810,145 +848,244 @@
                    }
                 };
 
-                // --- Map Logic (Robust) ---
-                const retryMap = () => { mapError.value = false; initMap(); };
-                let retryCount = 0;
-                // Patch 2: Tile Error Time Window State
-                let tileErrorTimestamps = [];
-                
-                const initMap = () => {
-                    if (typeof L === 'undefined') { 
-                        if (retryCount < 10) {
-                            retryCount++;
-                            setTimeout(initMap, 500); 
-                        } else {
-                            mapError.value = true;
-                        }
-                        return; 
-                    }
-                    
-                    if (map) return;
-                    
-                    try {
-                        map = L.map('map', { zoomControl: false, zoomAnimation: true, fadeAnimation: true }).setView([37.5665, 126.9780], 13);
-                        
-                        // Updated Attribution for compliance
-                        const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>', 
-                            maxZoom: 20,
-                            subdomains: 'abcd'
-                        }).addTo(map);
-                        
-                        // Patch 2: Sliding Window for Tile Errors
-                        tileLayer.on('tileerror', () => { 
-                            const now = Date.now();
-                            // Keep errors only from the last 8 seconds
-                            tileErrorTimestamps = tileErrorTimestamps.filter(t => now - t < 8000); 
-                            tileErrorTimestamps.push(now);
-
-                            // Only fallback if we have >= 8 errors in that window
-                            if (tileErrorTimestamps.length >= 8) {
-                                console.error("High frequency of tile errors detected. Switching to fallback UI.");
-                                mapError.value = true;
+                // --- Validation ---
+                const validateSchedule = () => {
+                    schedule.value.forEach(day => {
+                        ['lunch', 'tea', 'dinner'].forEach(type => {
+                            const idKey = type + 'Id';
+                            const eventId = day[idKey];
+                            if (eventId) {
+                                const event = day.events.find(e => e.id === eventId);
+                                if (!event || !['food', 'shopping', 'activity', 'hotel', 'flight', 'transport'].includes(event.category)) {
+                                    // Relaxed check: Allow almost all categories to be linked if ID is valid
+                                    console.warn(`Invalid Meal ID removed: ${eventId} in ${day.date}`);
+                                    day[idKey] = null; 
+                                }
                             }
                         });
-                        
-                        // Reset on load
-                        tileLayer.on('load', () => { tileErrorTimestamps = []; });
+                    });
+                };
 
-                        renderMarkers();
-                        
-                        // Optimized: Resize Observer with debounce
-                        const mapDiv = document.getElementById('map');
-                        if (mapDiv) {
-                            resizeObserver = new ResizeObserver(() => { 
-                                if (resizeRaf) cancelAnimationFrame(resizeRaf);
-                                resizeRaf = requestAnimationFrame(() => {
-                                    if(map) map.invalidateSize(); 
-                                });
-                            });
-                            resizeObserver.observe(mapDiv);
+                // --- Sync Logic ---
+                const fetchTripLibrary = async () => {
+                    if (!GAS_API_URL) {
+                        syncLog.value = { type: 'error', message: 'API URL Not Configured' };
+                        return;
+                    }
+                    syncLoading.value = true;
+                    syncLog.value = { type: 'info', message: 'Fetching library...' };
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                    try {
+                        const response = await fetch(`${GAS_API_URL}?action=list`, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            tripLibrary.value = result.trips;
+                            syncLog.value = { type: 'success', message: 'Updated' };
+                        } else {
+                            throw new Error(result.message);
                         }
                     } catch (e) {
-                        console.error("Map initialization failed:", e);
-                        mapError.value = true;
+                        syncLog.value = { type: 'error', message: 'Fetch Failed' };
+                    } finally {
+                        syncLoading.value = false;
                     }
                 };
 
-                const renderMarkers = () => {
-                    if (!map) return;
+                const loadTrip = async (tripId) => {
+                    if (!GAS_API_URL) return;
+                    syncLoading.value = true;
+                    syncLog.value = { type: 'info', message: `Loading ${tripId}...` };
                     
-                    // Cleanup existing markers properly using Map
-                    markersMap.forEach(marker => {
-                        marker.off('click');
-                        map.removeLayer(marker);
-                    });
-                    markersMap.clear();
-                    
-                    const events = displayEvents.value;
-                    if (!events) return;
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-                    events.forEach((event) => {
-                        if (event.coords) {
-                            const config = CATEGORY_CONFIG[event.category] || CATEGORY_CONFIG.default;
-                            
-                            // Optimized: Simplified HTML structure
-                            const iconHtml = `<div class="custom-marker-pin" style="background-color: ${config.markerColor};"><div class="marker-icon-inner"></div></div>`;
-                            const icon = L.divIcon({ className: 'custom-marker', html: iconHtml, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -36] });
-                            const marker = L.marker(event.coords, { icon: icon }).addTo(map);
-                            
-                            const safeCategory = escapeHtml(event.category);
-                            const safeLocation = escapeHtml(event.location);
-                            const popupContent = `
-                                <div class="font-sans p-1 min-w-[120px]">
-                                    <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${safeCategory}</div>
-                                    <div class="font-bold text-sm leading-tight text-[#2F2F2D]">${safeLocation}</div>
-                                </div>`;
-                            marker.bindPopup(popupContent, { closeButton: false, className: 'rounded-xl shadow-lg border-none', offset: [0, -5] });
-                            
-                            marker.eventId = event.id;
-                            marker.on('click', () => { focusEvent(event.id); });
-                            
-                            // Store in Map for O(1) Access
-                            markersMap.set(event.id, marker);
-                        }
-                    });
-                    
-                    fitBounds();
-                };
-
-                const fitBounds = () => {
-                    if (markersMap.size > 0 && map) {
-                        const group = L.featureGroup(Array.from(markersMap.values()));
-                        const isMobile = window.innerWidth < 768;
-                        const paddingBottom = isMobile ? 20 : 50; 
-                        map.fitBounds(group.getBounds(), { paddingTopLeft: [50, 50], paddingBottomRight: [50, paddingBottom], maxZoom: 14, animate: true });
-                    }
-                };
-
-                // Helper for debounce
-                function debounce(fn, delay) {
-                    let timeoutId;
-                    return (...args) => {
+                    try {
+                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=${encodeURIComponent(tripId)}`, { signal: controller.signal });
                         clearTimeout(timeoutId);
-                        timeoutId = setTimeout(() => fn(...args), delay);
-                    };
-                }
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            const data = JSON.parse(result.data);
+                            activeTripId.value = tripId;
+                            schedule.value = data.schedule || DEFAULT_SCHEDULE;
+                            userNotes.value = data.notes || "";
+                            currentTripTitle.value = data.meta?.title || tripId;
+                            countrySetting.value = data.meta?.country || (tripId.includes('SEOUL') ? 'KR' : 'GLOBAL');
+                            localStorage.setItem('activeTripId', tripId);
+                            saveNotes(); 
+                            validateSchedule(); // Validate on load
+                            selectDay(0);
+                            syncLog.value = { type: 'success', message: 'Loaded!' };
+                        } else {
+                            throw new Error(result.message);
+                        }
+                    } catch (e) {
+                        syncLog.value = { type: 'error', message: 'Load Failed' };
+                    } finally {
+                        syncLoading.value = false;
+                    }
+                };
+
+                const saveTrip = async () => {
+                    if (!GAS_API_URL) {
+                        alert("API URL not configured in code.");
+                        return;
+                    }
+                    if (!activeTripId.value) {
+                        alert("Please enter a Trip ID first.");
+                        return;
+                    }
+                    syncLoading.value = true;
+                    syncLog.value = { type: 'info', message: 'Backing up...' };
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                    try {
+                        const payload = {
+                            tripId: activeTripId.value,
+                            meta: { 
+                                title: currentTripTitle.value, 
+                                dateRange: schedule.value[0]?.date || 'Unknown Date',
+                                country: countrySetting.value
+                            },
+                            data: JSON.stringify({ notes: userNotes.value, schedule: schedule.value })
+                        };
+
+                        const response = await fetch(GAS_API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(payload),
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+                        
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const result = await response.json();
+
+                        if (result.status === 'success') {
+                            syncLog.value = { type: 'success', message: 'Backup Saved!' };
+                            fetchTripLibrary();
+                        } else {
+                            throw new Error(result.message);
+                        }
+                    } catch (e) {
+                        syncLog.value = { type: 'error', message: 'Backup Failed' };
+                    } finally {
+                        syncLoading.value = false;
+                    }
+                };
+
+                const executeImport = () => {
+                    try {
+                        if (!importJson.value) return;
+                        const data = JSON.parse(importJson.value);
+                        if (Array.isArray(data)) {
+                            schedule.value = data; 
+                            alert("Schedule imported! Please save to backup.");
+                        } else if (data.schedule) {
+                            schedule.value = data.schedule; 
+                            if(data.notes) userNotes.value = data.notes;
+                            alert("Full trip data imported! Please save to backup.");
+                        } else {
+                             throw new Error("Invalid format");
+                        }
+                        validateSchedule(); // Validate on import
+                        selectDay(0);
+                        saveNotes();
+                        importJson.value = ""; 
+                    } catch(e) {
+                        alert("Import failed: Invalid JSON format.");
+                    }
+                };
+                
+                const fetchSystemConfig = async () => {
+                      if (!GAS_API_URL) return;
+                      try {
+                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=__sys_prompt__`);
+                        const result = await response.json();
+                        if (result.status === 'success' && result.data) {
+                            const configData = JSON.parse(result.data);
+                            if (configData.prompt) aiPromptTemplate.value = configData.prompt;
+                        }
+                      } catch(e) {}
+                };
+
+                const autoFetchTrip = async (tripId) => {
+                    if (!GAS_API_URL) return;
+                    initLoading.value = true;
+                    try {
+                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=${encodeURIComponent(tripId)}`);
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            const data = JSON.parse(result.data);
+                            schedule.value = data.schedule || schedule.value; 
+                            currentTripTitle.value = data.meta?.title || tripId;
+                            countrySetting.value = data.meta?.country || countrySetting.value;
+                            validateSchedule(); // Validate on auto-fetch
+                        }
+                    } catch (e) {
+                        console.warn("Auto-fetch failed", e);
+                    } finally {
+                        initLoading.value = false;
+                    }
+                };
+
+                // --- Formatters ---
+                const getDotColor = (cat) => ''; // Handled by Tailwind/CSS classes for markers
+                const getCategoryBadge = (cat) => (CATEGORY_CONFIG[cat] || CATEGORY_CONFIG.default).icon;
+                const getTagStyle = (tag) => {
+                    if (tag === '死線' || tag === '風險') return 'bg-s-alert/20 text-s-alert';
+                    if (tag === '關鍵') return 'bg-s-warn/20 text-s-warn';
+                    if (tag === '現金') return 'bg-s-green/20 text-s-green';
+                    return 'bg-m-border text-m-sub';
+                };
+
+                const formatNote = (note) => {
+                    if (!note) return '';
+                    let processed = escapeHtml(note);
+                    processed = processed.replace(REGEX_NEWLINE, '<br>');
+                    processed = processed.replace(REGEX_KEYWORDS, '<span class="font-bold text-typo-title bg-yellow-100 px-1 rounded">$1</span>');
+                    processed = processed.replace(/([0-9,]+)\s*(韓元|元|KRW)/g, '<span class="font-mono font-bold text-s-green">$1 $2</span>');
+                    processed = processed.replace(/([0-9]{2}:[0-9]{2})/g, '<span class="font-mono font-bold text-typo-title bg-gray-100 px-1 rounded">$1</span>');
+                    
+                    // Smart Links Removed per request
+                    
+                    return processed;
+                };
 
                 // --- Lifecycle ---
-                onMounted(() => {
+                onMounted(async () => {
                     try {
-                        const saved = localStorage.getItem('seoul2026_notes');
-                        if (saved) userNotes.value = saved;
-                        validateAndSortSchedule();
-                        // Retry loop check for map element
-                        const checkMap = () => {
-                            if (document.getElementById('map')) {
-                                initMap();
-                            } else {
-                                setTimeout(checkMap, 100);
+                        const lastTripId = localStorage.getItem('activeTripId');
+                        if (lastTripId) {
+                            activeTripId.value = lastTripId;
+                            const savedData = localStorage.getItem(`${lastTripId}_data`);
+                            if (savedData) {
+                                const parsed = JSON.parse(savedData);
+                                userNotes.value = parsed.notes || "";
+                                if (parsed.schedule) schedule.value = parsed.schedule;
                             }
-                        };
+                            if (GAS_API_URL) await autoFetchTrip(lastTripId);
+                        } else {
+                             const saved = localStorage.getItem('seoul2026_data');
+                             if (saved) {
+                                 const parsed = JSON.parse(saved);
+                                 userNotes.value = parsed.notes || "";
+                             }
+                             activeTripId.value = "SEOUL_2026";
+                        }
+                        
+                        validateSchedule(); // Initial validation
+                        await fetchSystemConfig();
+
+                        const checkMap = () => { if (document.getElementById('map')) initMap(); else setTimeout(checkMap, 100); };
                         nextTick(checkMap);
                         window.addEventListener('keydown', handleGlobalKeydown);
                     } catch (e) {
@@ -964,35 +1101,14 @@
                 });
 
                 return {
-                    schedule, 
-                    currentDay, 
-                    currentDayIndex, 
-                    activeEventId, 
-                    showNotebook, 
-                    userNotes, 
-                    saveStatus,
-                    displayEvents, 
-                    mapError,
-                    timelineContainerRef,
-                    dayRefs,
-                    mapLegendItems,
-                    openNoteBtn,
-                    noteTextarea,
-                    closeNoteBtn,
-                    selectDay, 
-                    focusEvent, 
-                    openNotebook, 
-                    closeNotebook, 
-                    saveNotes, 
-                    resetMap, 
-                    retryMap, 
-                    copyText,
-                    getDotColor, 
-                    getCategoryBadge, 
-                    getTagStyle, 
-                    formatNote,
-                    trapFocus,
-                    exportDiagnostics
+                    schedule, currentDay, currentDayIndex, activeEventId, showNotebook, showSync, settingsTab,
+                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, syncLoading, syncLog,
+                    tripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
+                    timelineContainerRef, dayRefs, mapLegendItems, openNoteBtn, noteTextarea, closeNoteBtn,
+                    selectDay, focusEvent, openNotebook, closeNotebook, saveNotes, resetMap, retryMap, copyText,
+                    getDotColor, getCategoryBadge, getTagStyle, formatNote, trapFocus, openMapService, openMealMap,
+                    fetchTripLibrary, loadTrip, saveTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting,
+                    validateSchedule
                 };
             }
         }).mount('#app');

@@ -23,13 +23,15 @@
     <meta name="apple-mobile-web-app-title" content="Travel Guide">
     <meta name="application-name" content="Travel Guide">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ECEDEA">
+    <link rel="manifest" href="./manifest.webmanifest">
     <title>Travel Guide</title>
 
     <!-- Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE8IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE8IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQyIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQzhBN0ExO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0IyOTg5NDtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNncmFkMikiLz48IS0tIFRvd2VyIEdyYXBoaWMgLS0+PHBhdGggZD0iTTI1NiAxMjAgTDI1NiAzNjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMjAgMzYwIEwyOTIgMzYwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMjAiIHI9IjM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjE1IiBmaWxsPSJub25lIi8+PHRleHQgeD0iNTAlIiB5PSI0NDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjY1IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlNFT1VMPC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNDkwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSIzNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iOCI+MjAyNjwvdGV4dD48L3N2Zz4=">
     
     <!-- 1. Configure Tailwind BEFORE loading the CDN -->
     <script>
@@ -367,6 +369,15 @@
 5. Country: 請在 root 屬性加入 country: 'KR' (or 'JP' etc.)。
 輸出 JSON Array。`;
 
+        const DEFAULT_TRIP_META = {
+            dateRange: "2026/06/01 (一) - 06/08 (一)",
+            hotel: "九樹 ROKAUS 精品飯店首爾龍山",
+            hotelAccess: "Check-in 15:00 / Check-out 11:00 ｜ 龍山站 1 號出口步行約 3 分鐘，備援新龍山站",
+            pass: "氣候同行卡 7 日券",
+            passNotice: "Day 2-8 使用；不可搭新盆唐線、廣域/機場巴士，離開首爾區域下車可能需補票。",
+            transportStrategy: "短程、疲勞或趕時間搭計程車；中長程以氣候卡搭地鐵或公車。"
+        };
+
         // Default Data Payload
         const DEFAULT_SCHEDULE = [
             {
@@ -442,10 +453,10 @@
                 title: "舍堂醫美(3.5h)＋聖水洞(5h)",
                 lunch: "烤黨 (聖水店)", lunchId: "d5-e5", tea: "_______", teaId: null, dinner: "聖水馬鈴薯排骨湯", dinnerId: "d5-e7",
                 events: [
-                    { id: "d5-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 地鐵：4號線 [新龍山] ➔ [舍堂]", coords: [37.4765, 126.9816] },
+                    { id: "d5-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [舍堂]\n🕒 時間：乘車約 13 分鐘 + 步行約 5 分鐘 (總計 20 分鐘)", coords: [37.4765, 126.9816] },
                     { id: "d5-e2", time: "11:00", location: "舍堂醫美療程", category: "activity", note: "🕒 預估停留：3 ~ 3.5 小時 (含諮詢、麻醉、施作、修復)", coords: [37.4765, 126.9816] },
                     { id: "d5-e3", time: "14:30", location: "療程結束，準備移動", category: "alert", note: "", coords: null },
-                    { id: "d5-e4", time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 地鐵：2號線 [舍堂] ➔ [聖水] (約 40 分鐘)", coords: [37.5445, 127.0560] },
+                    { id: "d5-e4", time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
                     { id: "d5-e5", time: "15:20", location: "午晚餐：烤黨 (聖水店)", map_term: "Kkudang Seongsu", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
                     { id: "d5-e6", time: "下午", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
                     { id: "d5-e7", time: "晚餐", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", map_term: "Seongsu Potato Soup", category: "food", note: "", coords: [37.5445, 127.0560] },
@@ -523,6 +534,7 @@
                 const initLoading = ref(false);
                 const importJson = ref(""); 
                 const aiPromptTemplate = ref(DEFAULT_AI_PROMPT);
+                const tripMeta = ref(JSON.parse(JSON.stringify(DEFAULT_TRIP_META)));
 
                 const schedule = ref(JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)));
                 const currentTripTitle = ref("Seoul Travel Guide");
@@ -597,9 +609,13 @@
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(aiPromptTemplate.value)
                             .then(() => alert("Copied! Paste to Gemini with your image."))
-                            .catch(err => fallbackCopy(aiPromptTemplate.value));
+                            .catch(err => {
+                                fallbackCopy(aiPromptTemplate.value);
+                                alert("Copied! Paste to Gemini with your image.");
+                            });
                     } else {
                         fallbackCopy(aiPromptTemplate.value);
+                        alert("Copied! Paste to Gemini with your image.");
                     }
                 };
 
@@ -628,7 +644,12 @@
                     } else {
                         url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clean)}`;
                     }
-                    window.open(url, '_blank');
+                    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                    if (isStandalone) {
+                        window.location.href = url;
+                        return;
+                    }
+                    window.open(url, '_blank', 'noopener');
                 };
 
                 const openMapService = (event) => {
@@ -753,13 +774,20 @@
                 const focusEvent = (id) => {
                     activeEventId.value = id;
                     const event = displayEvents.value.find(e => e.id === id);
-                    if (event && event.coords && map) {
+                    if (map) {
                         markersMap.forEach((marker, mId) => {
                             const icon = marker.getElement();
                             if (!icon) return;
-                            if (mId === id) { icon.classList.add('active'); marker.openPopup(); } 
-                            else { icon.classList.remove('active'); marker.closePopup(); }
+                            if (event && event.coords && mId === id) {
+                                icon.classList.add('active');
+                                marker.openPopup();
+                            } else {
+                                icon.classList.remove('active');
+                                marker.closePopup();
+                            }
                         });
+                    }
+                    if (event && event.coords && map) {
                         map.flyTo(event.coords, 16, { animate: true, duration: 1.2, easeLinearity: 0.25 });
                     }
                     // Auto-scroll to event card
@@ -810,8 +838,9 @@
                     saveStatus.value = "Saving...";
                     try {
                         const keyPrefix = getStorageKey('data');
-                        const dataToSave = { notes: userNotes.value, schedule: schedule.value };
+                        const dataToSave = { notes: userNotes.value, schedule: schedule.value, tripMeta: tripMeta.value };
                         localStorage.setItem(keyPrefix, JSON.stringify(dataToSave));
+                        if (activeTripId.value) localStorage.setItem('activeTripId', activeTripId.value);
                         saveStatus.value = "Saved";
                         setTimeout(() => { if(saveStatus.value === 'Saved') saveStatus.value = 'Ready'; }, 2000);
                     } catch(err) {
@@ -838,7 +867,8 @@
 
                 const resetMap = () => {
                    if (map) {
-                       map.flyTo([37.5665, 126.9780], 13, { animate: true, duration: 1 });
+                       if (markersMap.size > 0) fitBounds();
+                       else map.flyTo([37.5665, 126.9780], 13, { animate: true, duration: 1 });
                        markersMap.forEach(marker => {
                            const icon = marker.getElement();
                            if(icon) icon.classList.remove('active');
@@ -915,6 +945,7 @@
                             activeTripId.value = tripId;
                             schedule.value = data.schedule || DEFAULT_SCHEDULE;
                             userNotes.value = data.notes || "";
+                            tripMeta.value = data.tripMeta || DEFAULT_TRIP_META;
                             currentTripTitle.value = data.meta?.title || tripId;
                             countrySetting.value = data.meta?.country || (tripId.includes('SEOUL') ? 'KR' : 'GLOBAL');
                             localStorage.setItem('activeTripId', tripId);
@@ -955,7 +986,7 @@
                                 dateRange: schedule.value[0]?.date || 'Unknown Date',
                                 country: countrySetting.value
                             },
-                            data: JSON.stringify({ notes: userNotes.value, schedule: schedule.value })
+                            data: JSON.stringify({ notes: userNotes.value, schedule: schedule.value, tripMeta: tripMeta.value })
                         };
 
                         const response = await fetch(GAS_API_URL, {
@@ -988,10 +1019,12 @@
                         const data = JSON.parse(importJson.value);
                         if (Array.isArray(data)) {
                             schedule.value = data; 
+                            tripMeta.value = JSON.parse(JSON.stringify(DEFAULT_TRIP_META));
                             alert("Schedule imported! Please save to backup.");
                         } else if (data.schedule) {
                             schedule.value = data.schedule; 
                             if(data.notes) userNotes.value = data.notes;
+                            tripMeta.value = data.tripMeta || DEFAULT_TRIP_META;
                             alert("Full trip data imported! Please save to backup.");
                         } else {
                              throw new Error("Invalid format");
@@ -1026,6 +1059,7 @@
                         if (result.status === 'success') {
                             const data = JSON.parse(result.data);
                             schedule.value = data.schedule || schedule.value; 
+                            tripMeta.value = data.tripMeta || tripMeta.value;
                             currentTripTitle.value = data.meta?.title || tripId;
                             countrySetting.value = data.meta?.country || countrySetting.value;
                             validateSchedule(); // Validate on auto-fetch
@@ -1038,7 +1072,7 @@
                 };
 
                 // --- Formatters ---
-                const getDotColor = (cat) => ''; // Handled by Tailwind/CSS classes for markers
+                const getDotColor = (cat) => (CATEGORY_CONFIG[cat] || CATEGORY_CONFIG.default).icon;
                 const getCategoryBadge = (cat) => (CATEGORY_CONFIG[cat] || CATEGORY_CONFIG.default).icon;
                 const getTagStyle = (tag) => {
                     if (tag === '死線' || tag === '風險') return 'bg-s-alert/20 text-s-alert';
@@ -1071,13 +1105,16 @@
                                 const parsed = JSON.parse(savedData);
                                 userNotes.value = parsed.notes || "";
                                 if (parsed.schedule) schedule.value = parsed.schedule;
+                                if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
                             }
                             if (GAS_API_URL) await autoFetchTrip(lastTripId);
                         } else {
-                             const saved = localStorage.getItem('seoul2026_data');
+                             const saved = localStorage.getItem('SEOUL_2026_data') || localStorage.getItem('seoul2026_data');
                              if (saved) {
                                  const parsed = JSON.parse(saved);
                                  userNotes.value = parsed.notes || "";
+                                 if (parsed.schedule) schedule.value = parsed.schedule;
+                                 if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
                              }
                              activeTripId.value = "SEOUL_2026";
                         }
@@ -1088,6 +1125,11 @@
                         const checkMap = () => { if (document.getElementById('map')) initMap(); else setTimeout(checkMap, 100); };
                         nextTick(checkMap);
                         window.addEventListener('keydown', handleGlobalKeydown);
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.register('./sw.js').catch((err) => {
+                                console.warn('Service worker registration failed', err);
+                            });
+                        }
                     } catch (e) {
                         console.error("App mount failed:", e);
                     }
@@ -1102,7 +1144,7 @@
 
                 return {
                     schedule, currentDay, currentDayIndex, activeEventId, showNotebook, showSync, settingsTab,
-                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, syncLoading, syncLog,
+                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog,
                     tripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
                     timelineContainerRef, dayRefs, mapLegendItems, openNoteBtn, noteTextarea, closeNoteBtn,
                     selectDay, focusEvent, openNotebook, closeNotebook, saveNotes, resetMap, retryMap, copyText,

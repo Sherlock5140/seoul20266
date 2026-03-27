@@ -264,61 +264,82 @@
             <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showSync = false">
                 <div class="bg-white w-[90%] max-w-[420px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[85vh] flex flex-col">
                     <div class="flex justify-between items-center mb-4 flex-none">
-                        <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">Settings</span></div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">設定</span></div>
                         <button @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <!-- Standard CSS Tabs -->
                     <div class="flex gap-4 mb-4 border-b border-m-border pb-1">
-                        <button @click="settingsTab = 'trips'" :class="['modal-tab', settingsTab === 'trips' ? 'active' : '']">☁️ Trips</button>
-                        <button @click="settingsTab = 'ai'" :class="['modal-tab', settingsTab === 'ai' ? 'active' : '']">✨ AI Tools</button>
+                        <button @click="settingsTab = 'trips'" :class="['modal-tab', settingsTab === 'trips' ? 'active' : '']">☁️ 行程管理</button>
+                        <button @click="settingsTab = 'ai'" :class="['modal-tab', settingsTab === 'ai' ? 'active' : '']">✨ AI 工具</button>
                     </div>
 
                     <div class="flex-1 overflow-y-auto hide-scroll space-y-6">
                         <!-- TAB 1: TRIPS -->
                         <div v-if="settingsTab === 'trips'">
                             <div class="bg-m-card p-5 rounded-2xl border border-m-border mb-6">
-                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">Active Trip</div>
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">目前行程</div>
                                 <div class="mb-4">
-                                    <div class="text-sm font-bold text-m-sub mb-1">Cloud API URL</div>
+                                    <div class="text-sm font-bold text-m-sub mb-1">雲端 API 網址</div>
                                     <input v-model="gasApiUrl" type="url" class="sync-input text-xs font-mono" placeholder="https://script.google.com/macros/s/.../exec">
                                     <div class="flex gap-2 mt-3">
-                                        <button @click="saveGasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">Save API</button>
-                                        <button @click="testGasApiUrl" :disabled="syncLoading || !gasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform disabled:opacity-50">Test</button>
+                                        <button @click="saveGasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">儲存 API</button>
+                                        <button @click="testGasApiUrl" :disabled="syncLoading || !gasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform disabled:opacity-50">測試</button>
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="text-sm font-bold text-m-sub mb-1">Trip ID</div>
+                                    <div class="text-sm font-bold text-m-sub mb-1">行程代號</div>
                                     <input v-model="activeTripId" type="text" class="sync-input font-mono text-lg font-bold text-typo-title uppercase" placeholder="e.g. TOKYO_2027">
                                 </div>
+                                <div class="grid grid-cols-3 gap-2 mb-4">
+                                    <button @click="createNewTrip" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">新增</button>
+                                    <button @click="duplicateCurrentTrip" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">複製</button>
+                                    <button @click="deleteCurrentTrip" class="py-2 px-3 rounded-xl bg-s-alert/10 border border-s-alert/20 text-s-alert font-bold text-xs active:scale-95 transition-transform">刪除</button>
+                                </div>
                                 <div class="mb-4">
-                                    <div class="text-sm font-bold text-m-sub mb-1">Map Region</div>
+                                    <div class="text-sm font-bold text-m-sub mb-1">地圖區域</div>
                                     <select v-model="countrySetting" class="sync-input">
-                                        <option value="KR">Korea (NAVER Map)</option>
-                                        <option value="GLOBAL">Global (Google Maps)</option>
+                                        <option value="KR">韓國（NAVER Map）</option>
+                                        <option value="GLOBAL">全球（Google Maps）</option>
                                     </select>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <button @click="saveTrip" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-typo-title text-white font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Backup</button>
-                                    <button @click="fetchTripLibrary" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-white border border-m-border text-m-text font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-rotate mr-2"></i>Cloud</button>
+                                    <button @click="saveTrip" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-typo-title text-white font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>備份</button>
+                                    <button @click="fetchTripLibrary" :disabled="syncLoading" class="py-3 px-4 rounded-xl bg-white border border-m-border text-m-text font-bold text-sm active:scale-95 transition-transform disabled:opacity-50"><i class="fa-solid fa-rotate mr-2"></i>雲端</button>
                                 </div>
                                 <div v-if="syncLog" class="mt-3 text-center text-xs font-bold" :class="syncLog.type === 'error' ? 'text-s-alert' : 'text-s-green'"><i v-if="syncLoading" class="fa-solid fa-spinner fa-spin mr-1"></i>{{ syncLog.message }}</div>
                             </div>
 
                             <div v-if="tripLibrary.length > 0">
-                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">Cloud Backups</div>
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">雲端備份</div>
                                 <div class="space-y-3 mt-2">
                                     <div v-for="trip in tripLibrary" :key="trip.tripId" class="bg-white p-4 rounded-2xl border border-m-border shadow-sm flex justify-between items-center group">
                                         <div class="overflow-hidden">
                                             <div class="text-sm font-bold text-typo-title truncate">{{ trip.title }}</div>
                                             <div class="text-xs font-mono text-m-sub mt-0.5">{{ trip.tripId }}</div>
                                         </div>
-                                        <button @click="loadTrip(trip.tripId)" class="px-4 py-2 bg-s-sand/20 text-s-sand rounded-lg text-xs font-bold hover:bg-s-sand hover:text-white transition-colors">Load</button>
+                                        <div class="flex gap-2">
+                                            <button @click="loadTrip(trip.tripId)" class="px-4 py-2 bg-s-sand/20 text-s-sand rounded-lg text-xs font-bold hover:bg-s-sand hover:text-white transition-colors">載入</button>
+                                            <button @click="deleteCloudTrip(trip.tripId)" class="px-3 py-2 bg-s-alert/10 text-s-alert rounded-lg text-xs font-bold hover:bg-s-alert hover:text-white transition-colors">刪除</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                              <div v-else class="text-center py-8 text-m-sub text-sm bg-m-card/50 rounded-2xl border-dashed border border-m-border">
-                                No backups found.<br>Connect GAS URL & Refresh.
+                                尚未找到備份。<br>請先連接 GAS API 並重新整理。
+                            </div>
+
+                            <div v-if="localTripLibrary.length > 0" class="mt-6">
+                                <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">本機行程</div>
+                                <div class="space-y-3 mt-2">
+                                    <div v-for="trip in localTripLibrary" :key="trip.tripId" class="bg-white p-4 rounded-2xl border border-m-border shadow-sm flex justify-between items-center group">
+                                        <div class="overflow-hidden">
+                                            <div class="text-sm font-bold text-typo-title truncate">{{ trip.title }}</div>
+                                            <div class="text-xs font-mono text-m-sub mt-0.5">{{ trip.tripId }}</div>
+                                        </div>
+                                        <button @click="loadLocalTrip(trip.tripId)" class="px-4 py-2 bg-s-blue/10 text-s-blue rounded-lg text-xs font-bold hover:bg-s-blue hover:text-white transition-colors">開啟</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -558,6 +579,28 @@
                 const currentTripId = computed(() => activeTripId.value);
                 const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
                 const displayEvents = computed(() => currentDay.value.events || []);
+                const localTripLibrary = computed(() => {
+                    const trips = [];
+                    for (let index = 0; index < localStorage.length; index += 1) {
+                        const key = localStorage.key(index);
+                        if (!key || !key.endsWith('_data')) continue;
+                        const tripId = key.slice(0, -5);
+                        try {
+                            const raw = localStorage.getItem(key);
+                            const parsed = raw ? JSON.parse(raw) : {};
+                            trips.push({
+                                tripId,
+                                title: parsed.meta?.title || tripId.replace(/_/g, ' ')
+                            });
+                        } catch (error) {
+                            trips.push({
+                                tripId,
+                                title: tripId.replace(/_/g, ' ')
+                            });
+                        }
+                    }
+                    return trips.sort((a, b) => a.tripId.localeCompare(b.tripId));
+                });
                 const mapLegendItems = computed(() => {
                     const items = {};
                     Object.values(CATEGORY_CONFIG).forEach(c => { if(c.label !== 'Other') items[c.label] = c; });
@@ -571,32 +614,113 @@
                 };
 
                 const getGasApiUrl = () => (gasApiUrl.value || "").trim();
+                const cloneData = (value) => JSON.parse(JSON.stringify(value));
+                const formatTripTitleFromId = (tripId) => tripId.replace(/_/g, ' ').trim() || '新行程';
+                const loadLocalTrip = (tripId) => {
+                    const savedData = localStorage.getItem(`${tripId}_data`);
+                    if (!savedData) {
+                        syncLog.value = { type: 'error', message: '找不到本機行程' };
+                        return;
+                    }
+                    try {
+                        const parsed = JSON.parse(savedData);
+                        activeTripId.value = tripId;
+                        schedule.value = parsed.schedule || cloneData(DEFAULT_SCHEDULE);
+                        userNotes.value = parsed.notes || "";
+                        tripMeta.value = parsed.tripMeta || cloneData(DEFAULT_TRIP_META);
+                        currentTripTitle.value = parsed.meta?.title || formatTripTitleFromId(tripId);
+                        countrySetting.value = parsed.meta?.country || countrySetting.value;
+                        localStorage.setItem('activeTripId', tripId);
+                        validateSchedule();
+                        selectDay(0);
+                        syncLog.value = { type: 'success', message: `已載入 ${tripId}` };
+                    } catch (error) {
+                        syncLog.value = { type: 'error', message: '本機行程載入失敗' };
+                    }
+                };
+
+                const createNewTrip = () => {
+                    const tripId = window.prompt('請輸入新的行程代號', '');
+                    if (!tripId) return;
+                    const normalizedTripId = tripId.trim().toUpperCase().replace(/\s+/g, '_');
+                    if (!normalizedTripId) return;
+                    activeTripId.value = normalizedTripId;
+                    currentTripTitle.value = formatTripTitleFromId(normalizedTripId);
+                    schedule.value = cloneData(DEFAULT_SCHEDULE);
+                    userNotes.value = "";
+                    tripMeta.value = cloneData(DEFAULT_TRIP_META);
+                    currentDayIndex.value = 0;
+                    activeEventId.value = null;
+                    saveNotes();
+                    syncLog.value = { type: 'success', message: `已建立 ${normalizedTripId}` };
+                };
+
+                const duplicateCurrentTrip = () => {
+                    const sourceTripId = activeTripId.value || 'SEOUL_2026';
+                    const suggestedId = `${sourceTripId}_COPY`;
+                    const nextTripId = window.prompt('請輸入複製後的行程代號', suggestedId);
+                    if (!nextTripId) return;
+                    const normalizedTripId = nextTripId.trim().toUpperCase().replace(/\s+/g, '_');
+                    if (!normalizedTripId) return;
+                    const snapshot = {
+                        notes: userNotes.value,
+                        schedule: cloneData(schedule.value),
+                        tripMeta: cloneData(tripMeta.value),
+                        meta: {
+                            title: currentTripTitle.value,
+                            country: countrySetting.value
+                        }
+                    };
+                    localStorage.setItem(`${normalizedTripId}_data`, JSON.stringify(snapshot));
+                    activeTripId.value = normalizedTripId;
+                    localStorage.setItem('activeTripId', normalizedTripId);
+                    syncLog.value = { type: 'success', message: `已複製為 ${normalizedTripId}` };
+                };
+
+                const deleteCurrentTrip = async () => {
+                    const tripId = activeTripId.value;
+                    if (!tripId) return;
+                    const shouldDelete = window.confirm(`要從這台裝置刪除 ${tripId} 嗎？`);
+                    if (!shouldDelete) return;
+                    localStorage.removeItem(`${tripId}_data`);
+                    if (localStorage.getItem('activeTripId') === tripId) {
+                        localStorage.removeItem('activeTripId');
+                    }
+                    activeTripId.value = 'SEOUL_2026';
+                    currentTripTitle.value = 'Seoul Travel Guide';
+                    schedule.value = cloneData(DEFAULT_SCHEDULE);
+                    userNotes.value = "";
+                    tripMeta.value = cloneData(DEFAULT_TRIP_META);
+                    countrySetting.value = 'KR';
+                    selectDay(0);
+                    syncLog.value = { type: 'success', message: `已刪除本機行程 ${tripId}` };
+                };
 
                 const saveGasApiUrl = () => {
                     const normalized = getGasApiUrl();
                     gasApiUrl.value = normalized;
                     localStorage.setItem('travelguide_gas_api_url', normalized);
                     syncLog.value = normalized
-                        ? { type: 'success', message: 'API URL Saved' }
-                        : { type: 'info', message: 'API URL Cleared' };
+                        ? { type: 'success', message: 'API 網址已儲存' }
+                        : { type: 'info', message: 'API 網址已清除' };
                 };
 
                 const testGasApiUrl = async () => {
                     const apiUrl = getGasApiUrl();
                     if (!apiUrl) {
-                        syncLog.value = { type: 'error', message: 'Enter API URL First' };
+                        syncLog.value = { type: 'error', message: '請先輸入 API 網址' };
                         return;
                     }
                     syncLoading.value = true;
-                    syncLog.value = { type: 'info', message: 'Testing API...' };
+                    syncLog.value = { type: 'info', message: '正在測試 API...' };
                     try {
                         const response = await fetch(`${apiUrl}?action=list`);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const result = await response.json();
                         if (result.status !== 'success') throw new Error(result.message || 'Unexpected response');
-                        syncLog.value = { type: 'success', message: 'API Connected' };
+                        syncLog.value = { type: 'success', message: 'API 連線成功' };
                     } catch (e) {
-                        syncLog.value = { type: 'error', message: 'API Test Failed' };
+                        syncLog.value = { type: 'error', message: 'API 測試失敗' };
                     } finally {
                         syncLoading.value = false;
                     }
@@ -875,7 +999,15 @@
                     saveStatus.value = "Saving...";
                     try {
                         const keyPrefix = getStorageKey('data');
-                        const dataToSave = { notes: userNotes.value, schedule: schedule.value, tripMeta: tripMeta.value };
+                        const dataToSave = {
+                            notes: userNotes.value,
+                            schedule: schedule.value,
+                            tripMeta: tripMeta.value,
+                            meta: {
+                                title: currentTripTitle.value,
+                                country: countrySetting.value
+                            }
+                        };
                         localStorage.setItem(keyPrefix, JSON.stringify(dataToSave));
                         if (activeTripId.value) localStorage.setItem('activeTripId', activeTripId.value);
                         saveStatus.value = "Saved";
@@ -937,11 +1069,11 @@
                 const fetchTripLibrary = async () => {
                     const apiUrl = getGasApiUrl();
                     if (!apiUrl) {
-                        syncLog.value = { type: 'error', message: 'API URL Not Configured' };
+                        syncLog.value = { type: 'error', message: '尚未設定 API 網址' };
                         return;
                     }
                     syncLoading.value = true;
-                    syncLog.value = { type: 'info', message: 'Fetching library...' };
+                    syncLog.value = { type: 'info', message: '正在讀取雲端清單...' };
                     
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -953,12 +1085,12 @@
                         const result = await response.json();
                         if (result.status === 'success') {
                             tripLibrary.value = result.trips;
-                            syncLog.value = { type: 'success', message: 'Updated' };
+                            syncLog.value = { type: 'success', message: '雲端清單已更新' };
                         } else {
                             throw new Error(result.message);
                         }
                     } catch (e) {
-                        syncLog.value = { type: 'error', message: 'Fetch Failed' };
+                        syncLog.value = { type: 'error', message: '讀取雲端清單失敗' };
                     } finally {
                         syncLoading.value = false;
                     }
@@ -968,7 +1100,7 @@
                     const apiUrl = getGasApiUrl();
                     if (!apiUrl) return;
                     syncLoading.value = true;
-                    syncLog.value = { type: 'info', message: `Loading ${tripId}...` };
+                    syncLog.value = { type: 'info', message: `正在載入 ${tripId}...` };
                     
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -985,18 +1117,18 @@
                             schedule.value = data.schedule || DEFAULT_SCHEDULE;
                             userNotes.value = data.notes || "";
                             tripMeta.value = data.tripMeta || DEFAULT_TRIP_META;
-                            currentTripTitle.value = data.meta?.title || tripId;
+                            currentTripTitle.value = data.meta?.title || formatTripTitleFromId(tripId);
                             countrySetting.value = data.meta?.country || (tripId.includes('SEOUL') ? 'KR' : 'GLOBAL');
                             localStorage.setItem('activeTripId', tripId);
                             saveNotes(); 
                             validateSchedule(); // Validate on load
                             selectDay(0);
-                            syncLog.value = { type: 'success', message: 'Loaded!' };
+                            syncLog.value = { type: 'success', message: '載入完成' };
                         } else {
                             throw new Error(result.message);
                         }
                     } catch (e) {
-                        syncLog.value = { type: 'error', message: 'Load Failed' };
+                        syncLog.value = { type: 'error', message: '載入失敗' };
                     } finally {
                         syncLoading.value = false;
                     }
@@ -1005,15 +1137,15 @@
                 const saveTrip = async () => {
                     const apiUrl = getGasApiUrl();
                     if (!apiUrl) {
-                        alert("Please save your GAS API URL first.");
+                        alert("請先儲存 GAS API 網址。");
                         return;
                     }
                     if (!activeTripId.value) {
-                        alert("Please enter a Trip ID first.");
+                        alert("請先輸入行程代號。");
                         return;
                     }
                     syncLoading.value = true;
-                    syncLog.value = { type: 'info', message: 'Backing up...' };
+                    syncLog.value = { type: 'info', message: '正在備份...' };
 
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -1041,13 +1173,41 @@
                         const result = await response.json();
 
                         if (result.status === 'success') {
-                            syncLog.value = { type: 'success', message: 'Backup Saved!' };
+                            syncLog.value = { type: 'success', message: '備份成功' };
                             fetchTripLibrary();
                         } else {
                             throw new Error(result.message);
                         }
                     } catch (e) {
-                        syncLog.value = { type: 'error', message: 'Backup Failed' };
+                        syncLog.value = { type: 'error', message: '備份失敗' };
+                    } finally {
+                        syncLoading.value = false;
+                    }
+                };
+
+                const deleteCloudTrip = async (tripId) => {
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) {
+                        syncLog.value = { type: 'error', message: '尚未設定 API 網址' };
+                        return;
+                    }
+                    const shouldDelete = window.confirm(`要從雲端備份刪除 ${tripId} 嗎？`);
+                    if (!shouldDelete) return;
+                    syncLoading.value = true;
+                    syncLog.value = { type: 'info', message: `正在刪除 ${tripId}...` };
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({ action: 'delete', tripId })
+                        });
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const result = await response.json();
+                        if (result.status !== 'success') throw new Error(result.message || 'Delete failed');
+                        tripLibrary.value = tripLibrary.value.filter((trip) => trip.tripId !== tripId);
+                        syncLog.value = { type: 'success', message: '雲端行程已刪除' };
+                    } catch (error) {
+                        syncLog.value = { type: 'error', message: '雲端刪除失敗' };
                     } finally {
                         syncLoading.value = false;
                     }
@@ -1102,7 +1262,7 @@
                             const data = JSON.parse(result.data);
                             schedule.value = data.schedule || schedule.value; 
                             tripMeta.value = data.tripMeta || tripMeta.value;
-                            currentTripTitle.value = data.meta?.title || tripId;
+                            currentTripTitle.value = data.meta?.title || formatTripTitleFromId(tripId);
                             countrySetting.value = data.meta?.country || countrySetting.value;
                             validateSchedule(); // Validate on auto-fetch
                         }
@@ -1148,6 +1308,8 @@
                                 userNotes.value = parsed.notes || "";
                                 if (parsed.schedule) schedule.value = parsed.schedule;
                                 if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
+                                currentTripTitle.value = parsed.meta?.title || formatTripTitleFromId(lastTripId);
+                                countrySetting.value = parsed.meta?.country || countrySetting.value;
                             }
                             if (getGasApiUrl()) await autoFetchTrip(lastTripId);
                         } else {
@@ -1157,6 +1319,8 @@
                                  userNotes.value = parsed.notes || "";
                                  if (parsed.schedule) schedule.value = parsed.schedule;
                                  if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
+                                 currentTripTitle.value = parsed.meta?.title || "Seoul Travel Guide";
+                                 countrySetting.value = parsed.meta?.country || countrySetting.value;
                              }
                              activeTripId.value = "SEOUL_2026";
                         }
@@ -1187,11 +1351,11 @@
                 return {
                     schedule, currentDay, currentDayIndex, activeEventId, showNotebook, showSync, settingsTab,
                     tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog, gasApiUrl,
-                    tripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
+                    tripLibrary, localTripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
                     timelineContainerRef, dayRefs, mapLegendItems, openNoteBtn, noteTextarea, closeNoteBtn,
                     selectDay, focusEvent, openNotebook, closeNotebook, saveNotes, resetMap, retryMap, copyText,
                     getDotColor, getCategoryBadge, getTagStyle, formatNote, trapFocus, openMapService, openMealMap,
-                    fetchTripLibrary, loadTrip, saveTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting, saveGasApiUrl, testGasApiUrl,
+                    fetchTripLibrary, loadTrip, loadLocalTrip, saveTrip, deleteCloudTrip, createNewTrip, duplicateCurrentTrip, deleteCurrentTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting, saveGasApiUrl, testGasApiUrl,
                     validateSchedule
                 };
             }

@@ -217,10 +217,6 @@
                             <div class="flex justify-between items-start gap-2 mb-3">
                                 <h3 class="text-[17px] font-medium text-typo-title leading-snug tracking-calm select-text">{{ event.location }}</h3>
                                 <div class="flex gap-2">
-                                    <button type="button" @click.stop="openMapService(event)" class="flex-none w-7 h-7 rounded-full bg-m-bg hover:text-white flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20 group" :class="countrySetting === 'KR' ? 'text-[#03C75A] hover:bg-[#03C75A]' : 'text-[#4285F4] hover:bg-[#4285F4]'" :title="countrySetting === 'KR' ? 'Naver Map' : 'Google Maps'">
-                                        <span class="font-black text-[10px]" v-if="countrySetting === 'KR'">N</span>
-                                        <i class="fa-brands fa-google text-[10px]" v-else></i>
-                                    </button>
                                     <button type="button" @click.stop="copyText(event.location)" class="flex-none w-7 h-7 rounded-full bg-m-bg text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-regular fa-copy text-xs"></i></button>
                                 </div>
                             </div>
@@ -284,6 +280,14 @@
                             <div class="bg-m-card p-5 rounded-2xl border border-m-border mb-6">
                                 <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">Active Trip</div>
                                 <div class="mb-4">
+                                    <div class="text-sm font-bold text-m-sub mb-1">Cloud API URL</div>
+                                    <input v-model="gasApiUrl" type="url" class="sync-input text-xs font-mono" placeholder="https://script.google.com/macros/s/.../exec">
+                                    <div class="flex gap-2 mt-3">
+                                        <button @click="saveGasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">Save API</button>
+                                        <button @click="testGasApiUrl" :disabled="syncLoading || !gasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform disabled:opacity-50">Test</button>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
                                     <div class="text-sm font-bold text-m-sub mb-1">Trip ID</div>
                                     <input v-model="activeTripId" type="text" class="sync-input font-mono text-lg font-bold text-typo-title uppercase" placeholder="e.g. TOKYO_2027">
                                 </div>
@@ -343,7 +347,7 @@
         const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
 
         // --- Config ---
-        const GAS_API_URL = ""; // ⚠️ FILL THIS WITH YOUR DEPLOYED WEB APP URL ⚠️
+        const DEFAULT_GAS_API_URL = "https://script.google.com/macros/s/AKfycbxaBY-4GrXAHHDOqCW3KRTzyyVMjDVFzXOdw_0kymtOPGCPS_P8tiVtp7WjtOrMab0BOw/exec";
 
         const CATEGORY_CONFIG = {
             transport: { color: '#8FA39D', icon: 'bg-s-green', label: 'Transport', markerColor: '#8FA39D' },
@@ -528,6 +532,7 @@
                 
                 const activeTripId = ref("");
                 const countrySetting = ref("KR"); 
+                const gasApiUrl = ref(localStorage.getItem('travelguide_gas_api_url') || DEFAULT_GAS_API_URL);
                 const syncLoading = ref(false);
                 const syncLog = ref(null);
                 const tripLibrary = ref([]); 
@@ -563,6 +568,38 @@
                     // Unified key generation
                     const prefix = activeTripId.value || 'seoul2026';
                     return `${prefix}_${key}`;
+                };
+
+                const getGasApiUrl = () => (gasApiUrl.value || "").trim();
+
+                const saveGasApiUrl = () => {
+                    const normalized = getGasApiUrl();
+                    gasApiUrl.value = normalized;
+                    localStorage.setItem('travelguide_gas_api_url', normalized);
+                    syncLog.value = normalized
+                        ? { type: 'success', message: 'API URL Saved' }
+                        : { type: 'info', message: 'API URL Cleared' };
+                };
+
+                const testGasApiUrl = async () => {
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) {
+                        syncLog.value = { type: 'error', message: 'Enter API URL First' };
+                        return;
+                    }
+                    syncLoading.value = true;
+                    syncLog.value = { type: 'info', message: 'Testing API...' };
+                    try {
+                        const response = await fetch(`${apiUrl}?action=list`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const result = await response.json();
+                        if (result.status !== 'success') throw new Error(result.message || 'Unexpected response');
+                        syncLog.value = { type: 'success', message: 'API Connected' };
+                    } catch (e) {
+                        syncLog.value = { type: 'error', message: 'API Test Failed' };
+                    } finally {
+                        syncLoading.value = false;
+                    }
                 };
 
                 const debounce = (fn, delay) => {
@@ -898,7 +935,8 @@
 
                 // --- Sync Logic ---
                 const fetchTripLibrary = async () => {
-                    if (!GAS_API_URL) {
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) {
                         syncLog.value = { type: 'error', message: 'API URL Not Configured' };
                         return;
                     }
@@ -909,7 +947,7 @@
                     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
                     try {
-                        const response = await fetch(`${GAS_API_URL}?action=list`, { signal: controller.signal });
+                        const response = await fetch(`${apiUrl}?action=list`, { signal: controller.signal });
                         clearTimeout(timeoutId);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const result = await response.json();
@@ -927,7 +965,8 @@
                 };
 
                 const loadTrip = async (tripId) => {
-                    if (!GAS_API_URL) return;
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) return;
                     syncLoading.value = true;
                     syncLog.value = { type: 'info', message: `Loading ${tripId}...` };
                     
@@ -935,7 +974,7 @@
                     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                     try {
-                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=${encodeURIComponent(tripId)}`, { signal: controller.signal });
+                        const response = await fetch(`${apiUrl}?action=load&tripId=${encodeURIComponent(tripId)}`, { signal: controller.signal });
                         clearTimeout(timeoutId);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const result = await response.json();
@@ -964,8 +1003,9 @@
                 };
 
                 const saveTrip = async () => {
-                    if (!GAS_API_URL) {
-                        alert("API URL not configured in code.");
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) {
+                        alert("Please save your GAS API URL first.");
                         return;
                     }
                     if (!activeTripId.value) {
@@ -989,7 +1029,7 @@
                             data: JSON.stringify({ notes: userNotes.value, schedule: schedule.value, tripMeta: tripMeta.value })
                         };
 
-                        const response = await fetch(GAS_API_URL, {
+                        const response = await fetch(apiUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                             body: JSON.stringify(payload),
@@ -1039,9 +1079,10 @@
                 };
                 
                 const fetchSystemConfig = async () => {
-                      if (!GAS_API_URL) return;
+                      const apiUrl = getGasApiUrl();
+                      if (!apiUrl) return;
                       try {
-                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=__sys_prompt__`);
+                        const response = await fetch(`${apiUrl}?action=load&tripId=__sys_prompt__`);
                         const result = await response.json();
                         if (result.status === 'success' && result.data) {
                             const configData = JSON.parse(result.data);
@@ -1051,10 +1092,11 @@
                 };
 
                 const autoFetchTrip = async (tripId) => {
-                    if (!GAS_API_URL) return;
+                    const apiUrl = getGasApiUrl();
+                    if (!apiUrl) return;
                     initLoading.value = true;
                     try {
-                        const response = await fetch(`${GAS_API_URL}?action=load&tripId=${encodeURIComponent(tripId)}`);
+                        const response = await fetch(`${apiUrl}?action=load&tripId=${encodeURIComponent(tripId)}`);
                         const result = await response.json();
                         if (result.status === 'success') {
                             const data = JSON.parse(result.data);
@@ -1107,7 +1149,7 @@
                                 if (parsed.schedule) schedule.value = parsed.schedule;
                                 if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
                             }
-                            if (GAS_API_URL) await autoFetchTrip(lastTripId);
+                            if (getGasApiUrl()) await autoFetchTrip(lastTripId);
                         } else {
                              const saved = localStorage.getItem('SEOUL_2026_data') || localStorage.getItem('seoul2026_data');
                              if (saved) {
@@ -1144,12 +1186,12 @@
 
                 return {
                     schedule, currentDay, currentDayIndex, activeEventId, showNotebook, showSync, settingsTab,
-                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog,
+                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog, gasApiUrl,
                     tripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
                     timelineContainerRef, dayRefs, mapLegendItems, openNoteBtn, noteTextarea, closeNoteBtn,
                     selectDay, focusEvent, openNotebook, closeNotebook, saveNotes, resetMap, retryMap, copyText,
                     getDotColor, getCategoryBadge, getTagStyle, formatNote, trapFocus, openMapService, openMealMap,
-                    fetchTripLibrary, loadTrip, saveTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting,
+                    fetchTripLibrary, loadTrip, saveTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting, saveGasApiUrl, testGasApiUrl,
                     validateSchedule
                 };
             }

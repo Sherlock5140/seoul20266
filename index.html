@@ -280,7 +280,12 @@
                             <div class="bg-m-card p-5 rounded-2xl border border-m-border mb-6">
                                 <div class="text-[10px] font-bold text-typo-label uppercase mb-3 tracking-widest">目前行程</div>
                                 <div class="mb-4">
-                                    <div class="text-sm font-bold text-m-sub mb-1">雲端 API 網址</div>
+                                    <div class="flex items-center justify-between gap-3 mb-1">
+                                        <div class="text-sm font-bold text-m-sub">雲端 API 網址</div>
+                                        <div class="text-[10px] font-bold px-2.5 py-1 rounded-full" :class="apiStatusChipClass">
+                                            {{ apiStatusText }}
+                                        </div>
+                                    </div>
                                     <input v-model="gasApiUrl" type="url" class="sync-input text-xs font-mono" placeholder="https://script.google.com/macros/s/.../exec">
                                     <div class="flex gap-2 mt-3">
                                         <button @click="saveGasApiUrl" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">儲存 API</button>
@@ -290,6 +295,32 @@
                                 <div class="mb-4">
                                     <div class="text-sm font-bold text-m-sub mb-1">行程代號</div>
                                     <input v-model="activeTripId" type="text" class="sync-input font-mono text-lg font-bold text-typo-title uppercase" placeholder="e.g. TOKYO_2027">
+                                </div>
+                                <div class="mb-4">
+                                    <div class="text-sm font-bold text-m-sub mb-1">快速選取行程</div>
+                                    <input v-model="tripSearchQuery" type="text" class="sync-input text-sm" placeholder="搜尋城市、名稱或行程代號">
+                                    <div v-if="filteredTripOptions.length > 0" class="mt-3 max-h-44 overflow-y-auto space-y-2 hide-scroll">
+                                        <button
+                                            type="button"
+                                            v-for="trip in filteredTripOptions"
+                                            :key="`${trip.source}-${trip.tripId}`"
+                                            @click="selectTripOption(trip)"
+                                            class="w-full text-left bg-white rounded-2xl border border-m-border px-4 py-3 shadow-sm active:scale-[0.99] transition-transform"
+                                        >
+                                            <div class="flex items-center justify-between gap-3">
+                                                <div class="min-w-0">
+                                                    <div class="text-sm font-bold text-typo-title truncate">{{ trip.title }}</div>
+                                                    <div class="text-xs font-mono text-m-sub mt-1 truncate">{{ trip.tripId }}</div>
+                                                </div>
+                                                <div class="text-[10px] font-bold px-2.5 py-1 rounded-full" :class="trip.source === 'cloud' ? 'bg-s-sand/20 text-s-sand' : 'bg-s-blue/15 text-s-blue'">
+                                                    {{ trip.source === 'cloud' ? '雲端' : '本機' }}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div v-else class="mt-3 text-xs text-m-sub bg-m-bg/60 border border-m-border rounded-2xl px-4 py-3">
+                                        沒有符合的行程，可直接手動輸入新的行程代號。
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mb-4">
                                     <button @click="createNewTrip" class="py-2 px-3 rounded-xl bg-white border border-m-border text-m-text font-bold text-xs active:scale-95 transition-transform">新增</button>
@@ -326,7 +357,7 @@
                                 </div>
                             </div>
                              <div v-else class="text-center py-8 text-m-sub text-sm bg-m-card/50 rounded-2xl border-dashed border border-m-border">
-                                尚未找到備份。<br>請先連接 GAS API 並重新整理。
+                                尚未找到雲端備份。<br>請先按「測試」確認連線，再按「雲端」重新讀取。
                             </div>
 
                             <div v-if="localTripLibrary.length > 0" class="mt-6">
@@ -554,9 +585,11 @@
                 const activeTripId = ref("");
                 const countrySetting = ref("KR"); 
                 const gasApiUrl = ref(localStorage.getItem('travelguide_gas_api_url') || DEFAULT_GAS_API_URL);
+                const apiStatus = ref(gasApiUrl.value ? 'saved' : 'empty');
                 const syncLoading = ref(false);
                 const syncLog = ref(null);
                 const tripLibrary = ref([]); 
+                const tripSearchQuery = ref("");
                 const initLoading = ref(false);
                 const importJson = ref(""); 
                 const aiPromptTemplate = ref(DEFAULT_AI_PROMPT);
@@ -579,6 +612,20 @@
                 const currentTripId = computed(() => activeTripId.value);
                 const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
                 const displayEvents = computed(() => currentDay.value.events || []);
+                const apiStatusText = computed(() => {
+                    if (apiStatus.value === 'connected') return '已連線';
+                    if (apiStatus.value === 'testing') return '測試中';
+                    if (apiStatus.value === 'error') return '連線失敗';
+                    if (apiStatus.value === 'saved') return '已儲存';
+                    return '未設定';
+                });
+                const apiStatusChipClass = computed(() => {
+                    if (apiStatus.value === 'connected') return 'bg-s-green/15 text-s-green';
+                    if (apiStatus.value === 'testing') return 'bg-s-blue/15 text-s-blue';
+                    if (apiStatus.value === 'error') return 'bg-s-alert/15 text-s-alert';
+                    if (apiStatus.value === 'saved') return 'bg-s-warn/15 text-s-warn';
+                    return 'bg-m-border text-m-sub';
+                });
                 const localTripLibrary = computed(() => {
                     const trips = [];
                     for (let index = 0; index < localStorage.length; index += 1) {
@@ -600,6 +647,28 @@
                         }
                     }
                     return trips.sort((a, b) => a.tripId.localeCompare(b.tripId));
+                });
+                const combinedTripOptions = computed(() => {
+                    const byId = new Map();
+                    localTripLibrary.value.forEach((trip) => {
+                        byId.set(trip.tripId, { ...trip, source: 'local' });
+                    });
+                    tripLibrary.value.forEach((trip) => {
+                        const existing = byId.get(trip.tripId);
+                        byId.set(trip.tripId, {
+                            tripId: trip.tripId,
+                            title: trip.title || existing?.title || trip.tripId.replace(/_/g, ' '),
+                            source: existing ? 'cloud' : 'cloud'
+                        });
+                    });
+                    return Array.from(byId.values()).sort((a, b) => a.tripId.localeCompare(b.tripId));
+                });
+                const filteredTripOptions = computed(() => {
+                    const query = tripSearchQuery.value.trim().toLowerCase();
+                    if (!query) return combinedTripOptions.value.slice(0, 12);
+                    return combinedTripOptions.value.filter((trip) => {
+                        return trip.tripId.toLowerCase().includes(query) || String(trip.title || '').toLowerCase().includes(query);
+                    }).slice(0, 12);
                 });
                 const mapLegendItems = computed(() => {
                     const items = {};
@@ -637,6 +706,13 @@
                     } catch (error) {
                         syncLog.value = { type: 'error', message: '本機行程載入失敗' };
                     }
+                };
+
+                const selectTripOption = (trip) => {
+                    activeTripId.value = trip.tripId;
+                    tripSearchQuery.value = trip.tripId;
+                    if (trip.source === 'cloud') loadTrip(trip.tripId);
+                    else loadLocalTrip(trip.tripId);
                 };
 
                 const createNewTrip = () => {
@@ -700,6 +776,7 @@
                     const normalized = getGasApiUrl();
                     gasApiUrl.value = normalized;
                     localStorage.setItem('travelguide_gas_api_url', normalized);
+                    apiStatus.value = normalized ? 'saved' : 'empty';
                     syncLog.value = normalized
                         ? { type: 'success', message: 'API 網址已儲存' }
                         : { type: 'info', message: 'API 網址已清除' };
@@ -708,9 +785,11 @@
                 const testGasApiUrl = async () => {
                     const apiUrl = getGasApiUrl();
                     if (!apiUrl) {
+                        apiStatus.value = 'error';
                         syncLog.value = { type: 'error', message: '請先輸入 API 網址' };
                         return;
                     }
+                    apiStatus.value = 'testing';
                     syncLoading.value = true;
                     syncLog.value = { type: 'info', message: '正在測試 API...' };
                     try {
@@ -718,8 +797,10 @@
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const result = await response.json();
                         if (result.status !== 'success') throw new Error(result.message || 'Unexpected response');
+                        apiStatus.value = 'connected';
                         syncLog.value = { type: 'success', message: 'API 連線成功' };
                     } catch (e) {
+                        apiStatus.value = 'error';
                         syncLog.value = { type: 'error', message: 'API 測試失敗' };
                     } finally {
                         syncLoading.value = false;
@@ -1350,12 +1431,12 @@
 
                 return {
                     schedule, currentDay, currentDayIndex, activeEventId, showNotebook, showSync, settingsTab,
-                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog, gasApiUrl,
-                    tripLibrary, localTripLibrary, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
+                    tripId: activeTripId, activeTripId, currentTripId, currentTripTitle, tripMeta, syncLoading, syncLog, gasApiUrl, apiStatusText, apiStatusChipClass,
+                    tripLibrary, localTripLibrary, combinedTripOptions, filteredTripOptions, tripSearchQuery, initLoading, importJson, userNotes, saveStatus, displayEvents, mapError,
                     timelineContainerRef, dayRefs, mapLegendItems, openNoteBtn, noteTextarea, closeNoteBtn,
                     selectDay, focusEvent, openNotebook, closeNotebook, saveNotes, resetMap, retryMap, copyText,
                     getDotColor, getCategoryBadge, getTagStyle, formatNote, trapFocus, openMapService, openMealMap,
-                    fetchTripLibrary, loadTrip, loadLocalTrip, saveTrip, deleteCloudTrip, createNewTrip, duplicateCurrentTrip, deleteCurrentTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting, saveGasApiUrl, testGasApiUrl,
+                    fetchTripLibrary, loadTrip, loadLocalTrip, selectTripOption, saveTrip, deleteCloudTrip, createNewTrip, duplicateCurrentTrip, deleteCurrentTrip, executeImport, aiPromptTemplate, copyPrompt, countrySetting, saveGasApiUrl, testGasApiUrl,
                     validateSchedule
                 };
             }

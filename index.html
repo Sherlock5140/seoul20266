@@ -41,7 +41,8 @@
                 theme: {
                     extend: {
                         fontFamily: {
-                            sans: ['Inter', '-apple-system', 'SF Pro Display', 'Segoe UI', 'Noto Sans TC', 'sans-serif'],
+                            sans: ['Avenir Next', '-apple-system', 'SF Pro Display', 'Segoe UI', 'Noto Sans TC', 'sans-serif'],
+                            display: ['Avenir Next', '-apple-system', 'SF Pro Display', 'Segoe UI', 'Noto Sans TC', 'sans-serif'],
                             hand: ['Nanum Pen Script', 'cursive'],
                         },
                         colors: {
@@ -73,7 +74,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 
     <style>
         :root { -webkit-tap-highlight-color: transparent; }
@@ -88,13 +89,51 @@
             -webkit-backdrop-filter: blur(30px) saturate(150%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .header-icon-button {
-            width: 2.75rem;
-            height: 2.75rem;
+        .header-toolbar {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.45rem;
             border-radius: 9999px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(244,245,242,0.88) 100%);
-            border: 1px solid rgba(255,255,255,0.85);
-            box-shadow: 0 14px 30px -20px rgba(47,47,45,0.22);
+            background: linear-gradient(180deg, rgba(255,255,255,0.44) 0%, rgba(244,245,242,0.36) 100%);
+            border: 1px solid rgba(255,255,255,0.62);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 18px 34px -26px rgba(47,47,45,0.18);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+        }
+        .header-title-block {
+            min-width: 0;
+        }
+        .header-title-kicker {
+            font-size: 0.62rem;
+            font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.24em;
+            color: #adb0aa;
+            text-transform: uppercase;
+        }
+        .header-title-main {
+            font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
+            font-size: clamp(2rem, 6.1vw, 2.5rem);
+            line-height: 0.98;
+            letter-spacing: -0.045em;
+            font-weight: 600;
+        }
+        .header-title-year {
+            font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
+            font-size: 1.92rem;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            font-weight: 500;
+            color: #4a4a47;
+        }
+        .header-icon-button {
+            width: 2.6rem;
+            height: 2.6rem;
+            border-radius: 9999px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,248,245,0.84) 100%);
+            border: 1px solid rgba(255,255,255,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 12px 24px -18px rgba(47,47,45,0.22);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -103,15 +142,22 @@
         }
         .header-icon-button:hover {
             color: #2E2E2E;
-            box-shadow: 0 18px 32px -22px rgba(47,47,45,0.26);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.96), 0 16px 28px -20px rgba(47,47,45,0.24);
         }
         .header-icon-button:active {
             transform: scale(0.95);
         }
+        .header-icon-glyph {
+            font-size: 0.88rem;
+        }
+        .header-notes-label {
+            letter-spacing: 0.01em;
+        }
         .notes-button {
-            background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(244,245,242,0.95) 100%);
-            border: 1px solid rgba(255,255,255,0.9);
-            box-shadow: 0 18px 34px -22px rgba(47,47,45,0.24);
+            min-height: 2.6rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(247,247,244,0.94) 100%);
+            border: 1px solid rgba(255,255,255,0.94);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 14px 28px -20px rgba(47,47,45,0.2);
         }
         
         .modal-tab {
@@ -176,6 +222,9 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 100%);
             border: 1px solid rgba(255,255,255,0.86);
             box-shadow: 0 20px 40px -28px rgba(47,47,45,0.22);
+        }
+        .timeline-card:hover {
+            box-shadow: 0 24px 46px -30px rgba(47,47,45,0.24);
         }
         .timeline-note-box {
             background: linear-gradient(180deg, rgba(244,245,242,0.58) 0%, rgba(244,245,242,0.42) 100%);
@@ -244,6 +293,141 @@
             overflow: hidden;
             text-overflow: clip;
         }
+        .day-meta-shell {
+            background: linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.52) 100%);
+            border: 1px solid rgba(255,255,255,0.84);
+            box-shadow: 0 18px 34px -26px rgba(47,47,45,0.18);
+        }
+        .day-crowd-badge {
+            background: rgba(143, 163, 157, 0.12);
+            border: 1px solid rgba(143, 163, 157, 0.16);
+            color: #5c6b66;
+        }
+        .notice-panel {
+            background: linear-gradient(180deg, rgba(201,166,161,0.08) 0%, rgba(255,255,255,0.78) 100%);
+            border: 1px solid rgba(201,166,161,0.2);
+            box-shadow: 0 16px 30px -24px rgba(47,47,45,0.12);
+        }
+        .notice-body {
+            background: rgba(255,255,255,0.58);
+            border: 1px solid rgba(255,255,255,0.86);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+        }
+        .notice-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .notice-section-card {
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.92);
+            border-radius: 1.2rem;
+            padding: 0.95rem 1rem;
+            box-shadow: 0 12px 24px -20px rgba(47,47,45,0.12);
+        }
+        .notice-section-title {
+            font-size: 0.72rem;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #b0726b;
+            margin-bottom: 0.6rem;
+        }
+        .notice-line {
+            font-size: 0.8rem;
+            line-height: 1.8;
+            color: #484846;
+        }
+        .notice-line + .notice-line {
+            margin-top: 0.18rem;
+        }
+        .notice-schedule-line {
+            display: grid;
+            grid-template-columns: 3.35rem 1fr;
+            gap: 0.55rem;
+            align-items: start;
+        }
+        .notice-schedule-time {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 0.74rem;
+            letter-spacing: 0.02em;
+            color: #2E2E2E;
+            background: rgba(236, 237, 234, 0.95);
+            border: 1px solid rgba(214,216,212,0.95);
+            border-radius: 9999px;
+            padding: 0.18rem 0.45rem;
+            text-align: center;
+        }
+        .notice-decision-line {
+            color: #5c6b66;
+            font-weight: 700;
+        }
+        .notice-divider-line {
+            margin: 0.45rem 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(201,166,161,0.15), rgba(201,166,161,0.4), rgba(201,166,161,0.15));
+        }
+        .event-time-chip {
+            background: rgba(236, 237, 234, 0.94);
+            border: 1px solid rgba(214,216,212,0.95);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.76);
+        }
+        .event-category-chip {
+            box-shadow: 0 10px 18px -14px rgba(47,47,45,0.18);
+        }
+        .copy-button-soft {
+            background: linear-gradient(180deg, rgba(244,245,242,0.88) 0%, rgba(244,245,242,0.68) 100%);
+            border: 1px solid rgba(255,255,255,0.82);
+            box-shadow: 0 10px 18px -16px rgba(47,47,45,0.2);
+        }
+        .timeline-location {
+            text-wrap: balance;
+        }
+        .meal-value {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.45;
+            min-height: 2.8em;
+        }
+        @media (max-width: 640px) {
+            .header-toolbar {
+                gap: 0.38rem;
+                padding: 0.32rem;
+                align-self: flex-end;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 14px 24px -20px rgba(47,47,45,0.14);
+            }
+            .header-icon-button {
+                width: 2.28rem;
+                height: 2.28rem;
+            }
+            .header-icon-glyph {
+                font-size: 0.8rem;
+            }
+            .notes-button {
+                min-height: 2.28rem;
+                padding-left: 0.82rem;
+                padding-right: 0.82rem;
+            }
+            .header-title-main {
+                font-size: 2.24rem;
+                max-width: none;
+            }
+            .header-title-year {
+                font-size: 1.78rem;
+            }
+            .header-notes-label {
+                font-size: 0.72rem;
+            }
+            .day-tab {
+                min-width: 4.3rem;
+                padding: 0.72rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
         
         /* FIX: Map Container Absolute Positioning to prevent collapse */
         #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
@@ -259,25 +443,25 @@
             
             <!-- Header -->
             <div class="glass-header px-6 flex-none z-40 pt-safe-top no-select">
-                <div class="pt-2 md:pt-6 flex justify-between items-end mb-5">
-                    <div class="flex flex-col">
-                        <div class="text-[10px] font-normal tracking-[0.14em] text-typo-label uppercase mb-1">
+                <div class="pt-2 md:pt-6 flex flex-col md:flex-row md:justify-between md:items-end gap-3 md:gap-4 mb-5">
+                    <div class="header-title-block flex flex-col min-w-0">
+                        <div class="header-title-kicker mb-1">
                             {{ currentTripTitle || 'SEOUL TRAVEL GUIDE' }}
                         </div>
-                        <div class="flex items-baseline gap-3">
-                            <h1 class="text-[32px] font-medium text-typo-title tracking-[0.02em] font-sans leading-none truncate max-w-[200px]">
+                        <div class="flex items-baseline gap-3 min-w-0">
+                            <h1 class="header-title-main text-typo-title truncate md:max-w-[220px]">
                                 {{ currentTripId?.split('_')[0] || 'Seoul' }}
                             </h1>
-                            <span class="font-hand text-[28px] text-typo-accent font-normal leading-none transform translate-y-[1px]">
+                            <span class="header-title-year leading-none transform translate-y-[2px] whitespace-nowrap">
                                 {{ currentTripId?.split('_')[1] || '2026' }}
                             </span>
                         </div>
                     </div>
-                    <div class="flex gap-3 mb-0.5 items-center">
-                        <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-solid fa-location-crosshairs text-sm"></i></button>
-                        <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-solid fa-coins text-sm"></i></button>
-                        <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-gear text-sm"></i></button>
-                        <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2.5 px-5 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-solid fa-pen-nib text-typo-title text-xs"></i><span class="text-xs font-bold text-typo-title hidden sm:block tracking-wide">Notes</span></button>
+                    <div class="header-toolbar mb-0.5 flex-none">
+                        <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
+                        <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
+                        <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
+                        <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                     </div>
                 </div>
                 <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center">
@@ -295,38 +479,55 @@
                 </div>
 
                 <div v-if="currentDay" class="mb-10 animate-fade-in">
-                    <div class="flex items-baseline gap-3 mb-2">
-                        <h2 class="text-3xl font-medium text-typo-title tracking-calm font-sans">{{ currentDay.date?.split(' ')[0] }}</h2>
-                        <span class="text-sm font-medium text-m-sub">{{ currentDay.date?.split(' ').slice(1).join(' ') }}</span>
+                    <div class="day-meta-shell rounded-[1.9rem] p-5 mb-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="min-w-0">
+                                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                                    <h2 class="text-[2rem] font-medium text-typo-title tracking-[-0.03em] font-sans leading-none">{{ currentDay.date?.split(' ')[0] }}</h2>
+                                    <span class="text-sm font-semibold text-m-sub">{{ currentDay.date?.split(' ').slice(1).join(' ') }}</span>
+                                </div>
+                                <p class="text-[1.04rem] font-medium text-m-text leading-[1.72] opacity-95">{{ cleanDayTitle(currentDay.title) }}</p>
+                            </div>
+                            <div v-if="extractCrowdBadge(currentDay.title)" class="day-crowd-badge px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap">
+                                {{ extractCrowdBadge(currentDay.title) }}
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-lg font-medium text-m-text mb-8 leading-relaxed opacity-90">{{ currentDay.title }}</p>
                     
                     <!-- Meal Grid -->
-                    <div class="grid grid-cols-3 gap-3 mb-8 no-select">
-                        <div @click="openMealMap('lunch')" class="meal-card p-4 rounded-[1.6rem] flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[108px]">
+                    <div class="grid grid-cols-3 gap-3 mb-7 no-select">
+                        <div @click="openMealMap('lunch')" class="meal-card p-4 rounded-[1.65rem] flex flex-col items-center justify-start gap-2.5 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[120px]">
                             <div class="meal-icon bg-s-sand/18 text-s-sand text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-utensils"></i></div>
                             <div class="overflow-hidden w-full">
                                 <div class="text-[9px] text-m-sub uppercase font-bold tracking-[0.22em] mb-1">Lunch</div>
-                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.lunch }}</div>
+                                <div class="meal-value text-[10px] font-bold text-m-text px-1">{{ currentDay.lunch }}</div>
                             </div>
                         </div>
-                        <div @click="openMealMap('tea')" class="meal-card p-4 rounded-[1.6rem] flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[108px]">
+                        <div @click="openMealMap('tea')" class="meal-card p-4 rounded-[1.65rem] flex flex-col items-center justify-start gap-2.5 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[120px]">
                             <div class="meal-icon bg-s-warn/18 text-s-warn text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-mug-hot"></i></div>
                             <div class="overflow-hidden w-full">
                                 <div class="text-[9px] text-m-sub uppercase font-bold tracking-[0.22em] mb-1">Tea</div>
-                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.tea || '_______' }}</div>
+                                <div class="meal-value text-[10px] font-bold text-m-text px-1">{{ currentDay.tea || '_______' }}</div>
                             </div>
                         </div>
-                        <div @click="openMealMap('dinner')" class="meal-card p-4 rounded-[1.6rem] flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[108px]">
+                        <div @click="openMealMap('dinner')" class="meal-card p-4 rounded-[1.65rem] flex flex-col items-center justify-start gap-2.5 text-center cursor-pointer active:scale-95 transition-transform hover:bg-white/80 group min-h-[120px]">
                             <div class="meal-icon bg-s-blue/18 text-s-blue text-xs flex-none group-hover:scale-110 transition-transform"><i class="fa-solid fa-moon"></i></div>
                             <div class="overflow-hidden w-full">
                                 <div class="text-[9px] text-m-sub uppercase font-bold tracking-[0.22em] mb-1">Dinner</div>
-                                <div class="text-[10px] font-bold text-m-text truncate">{{ currentDay.dinner }}</div>
+                                <div class="meal-value text-[10px] font-bold text-m-text px-1">{{ currentDay.dinner }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div v-if="currentDay.notice" class="p-5 rounded-2xl bg-s-alert/5 border border-s-alert/15 flex gap-3 items-start"><i class="fa-solid fa-circle-info text-s-alert mt-0.5 text-sm flex-none opacity-80"></i><div class="text-xs text-m-text leading-[1.85] font-medium whitespace-pre-line select-text" v-html="formatNote(currentDay.notice)"></div></div>
+                    <div v-if="currentDay.notice" class="notice-panel rounded-[1.9rem] p-4 mb-8">
+                        <div class="flex items-center gap-2 mb-3 px-1">
+                            <i class="fa-solid fa-circle-info text-s-alert text-sm flex-none opacity-80"></i>
+                            <div class="text-[11px] font-bold tracking-[0.18em] uppercase text-s-alert">Day Notice</div>
+                        </div>
+                        <div class="notice-body rounded-[1.45rem] p-4">
+                            <div class="notice-stack select-text" v-html="formatDayNotice(currentDay.notice)"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Timeline -->
@@ -336,13 +537,13 @@
                         <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" :class="[getDotColor(event.category), activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
                         <div class="timeline-card p-6 rounded-[1.8rem] relative overflow-hidden transition-all duration-400 group-focus-visible:ring-2 group-focus-visible:ring-typo-title/20 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-m-card" :class="activeEventId === event.id ? 'ring-1 ring-typo-title/10 bg-white' : ''">
                             <div class="flex justify-between items-center mb-3 no-select">
-                                <span class="font-mono text-[11px] font-bold text-m-sub bg-m-bg px-2.5 py-1 rounded-lg tracking-tight">{{ event.time }}</span>
-                                <span class="text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest text-white/85 shadow-sm" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
+                                <span class="event-time-chip font-mono text-[11px] font-bold text-m-sub px-2.5 py-1 rounded-lg tracking-tight">{{ event.time }}</span>
+                                <span class="event-category-chip text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest text-white/85" :class="getCategoryBadge(event.category)">{{ event.category }}</span>
                             </div>
-                            <div class="flex justify-between items-start gap-2 mb-3">
-                                <h3 class="text-[17px] font-medium text-typo-title leading-snug tracking-calm select-text">{{ event.location }}</h3>
+                            <div class="flex justify-between items-start gap-3 mb-4">
+                                <h3 class="timeline-location text-[17px] font-medium text-typo-title leading-[1.55] tracking-calm select-text">{{ event.location }}</h3>
                                 <div class="flex gap-2">
-                                    <button type="button" @click.stop="copyText(event.location)" class="flex-none w-7 h-7 rounded-full bg-m-bg text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-regular fa-copy text-xs"></i></button>
+                                    <button type="button" @click.stop="copyText(event.location)" class="copy-button-soft flex-none w-7 h-7 rounded-full text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-regular fa-copy text-xs"></i></button>
                                 </div>
                             </div>
                             <div v-if="event.note" class="timeline-note-box text-[13.5px] text-m-text leading-[1.85] p-4 rounded-xl select-text" v-html="formatNote(event.note)"></div>
@@ -519,9 +720,9 @@
             dateRange: "2026/06/01 (一) - 06/08 (一)",
             hotel: "九樹 ROKAUS 精品飯店首爾龍山",
             hotelAccess: "Check-in 15:00 / Check-out 11:00 ｜ 龍山站 1 號出口步行約 3 分鐘，備援新龍山站",
-            pass: "氣候同行卡 7 日券",
-            passNotice: "Day 2-8 使用；不可搭新盆唐線、廣域/機場巴士，離開首爾區域下車可能需補票。",
-            transportStrategy: "短程、疲勞或趕時間搭計程車；中長程以氣候卡搭地鐵或公車。"
+            pass: "氣候同行卡 7 日券（售價 20,000 韓元）",
+            passNotice: "Day 2-8 使用；不可搭新盆唐線、廣域/機場巴士，離開首爾區域下車可能需補票 ｜ 備註：前往金浦機場搭乘地鐵（5號線 / 9號線）或 AREX 一般列車之金浦機場站－首爾站覆蓋區間，皆可使用氣候同行卡。",
+            transportStrategy: "短程、疲勞、有行李或趕時間搭計程車；中長程與尖峰跨江以地鐵優先。"
         };
 
         const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -529,134 +730,134 @@
         const DEFAULT_SCHEDULE = [
             {
                 date: "06/01 (一) Day 1",
-                title: "高雄➔首爾(移動)＋飯店宵夜(1h)",
+                title: "高雄➔首爾(移動)＋飯店宵夜(1h) 👥 2人",
                 lunch: "_______", lunchId: null, tea: "_______", teaId: null, dinner: "外送 (獵奇年糕/橋村炸雞)", dinnerId: "d1-e9",
                 events: [
-                    { id: "d1-e1", time: "12:00", location: "家裡出發 ➔ 高雄小港機場 (KHH)", category: "transport", note: "🕒 時間：預計 12:00-12:30 出門 (保留緩衝)", coords: [22.5768, 120.3478] },
-                    { id: "d1-e2", time: "13:30", location: "抵達機場 & 辦理登機 (Check-in)", category: "flight", note: "✈️ 航班：台灣虎航 (Tigerair Taiwan) IT662\n⚠️ 動作：托運行李、領登機證、過安檢", coords: [22.5768, 120.3478] },
-                    { id: "d1-e3", time: "15:15", location: "【登機時間 Boarding】(起飛前 40 分鐘)", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 死線：登機門通常於 15:35 關閉，請勿遲到", tags: ["死線"], coords: null },
-                    { id: "d1-e4", time: "15:55", location: "起飛 (前往首爾金浦)", category: "flight", note: "", coords: null },
-                    { id: "d1-e5", time: "19:40", location: "抵達金浦機場 (GMP)", category: "transport", note: "", coords: [37.5587, 126.8028] },
-                    { id: "d1-e6", time: "20:30", location: "交通：金浦機場 ➔ 九樹 ROKAUS 龍山 (計程車)", category: "transport", note: "🕒 時間：修正估 45-60 分鐘 (納入週一晚間塞車風險)\n💰 車資：約 25,000 韓元起 (依路況浮動)", coords: [37.5587, 126.8028] },
-                    { id: "d1-e7", time: "20:50", location: "【關鍵動作】叫外送決策", category: "alert", note: "A. 順利上車：在計程車上叫 (預估 21:10 抵達)\nB. 延誤/塞車：抵達飯店再叫 (改點橋村炸雞，較耐放)", tags: ["關鍵"], coords: null },
-                    { id: "d1-e8", time: "21:10", location: "抵達飯店 Check-in (已過 15:00 可直接入房)", category: "hotel", note: "", coords: [37.5293, 126.9654] },
-                    { id: "d1-e9", time: "21:30", location: "大廳取餐吃宵夜", category: "food", note: "【Plan A】獵奇辣炒年糕 (需 21:20 前下單)\n【Plan B】橋村炸雞 (若趕不上年糕改吃這個)", coords: [37.5293, 126.9654] }
+                    { id: "d1-e1", time: "12:00", location: "家裡出發 ➔ 高雄小港機場 (KHH)", category: "transport", note: "🕒 預計 12:00-12:30 出門（保留緩衝）", coords: [22.5768, 120.3478] },
+                    { id: "d1-e2", time: "13:30", location: "抵達機場 & 辦理登機 (Check-in)", category: "flight", note: "✈️ 航班：台灣虎航 (Tigerair Taiwan) IT662\n   15:55 高雄小港機場 (KHH) 起飛\n   19:45 首爾金浦機場 (GMP) 抵達\n⚠️ 動作：托運行李、領登機證、過安檢", coords: [22.5768, 120.3478] },
+                    { id: "d1-e3", time: "15:15", location: "登機時間 Boarding（起飛前 40 分鐘）", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 提醒：請於 15:35 前完成登機", tags: ["死線"], coords: null },
+                    { id: "d1-e4", time: "19:45", location: "抵達金浦機場 (GMP)", category: "transport", note: "🕒 通關預留 45-50 分鐘", coords: [37.5587, 126.8028] },
+                    { id: "d1-e5", time: "20:35", location: "交通：金浦機場 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚕 【首選】計程車：預估 45-60 分鐘 / 約 20,000-25,000 韓元\n🚇 【備援 A】AREX 一般列車 [金浦機場] ➔ [首爾站]，轉 1號線 ➔ [龍山]\n🚇 【備援 B】5號線 [金浦機場] ➔ [孔德]，轉 京義中央線 ➔ [龍山]", coords: [37.5293, 126.9654] },
+                    { id: "d1-e6", time: "20:50", location: "外送下單決策", category: "alert", note: "A. 車況順利：在計程車上叫（預估 21:20 抵達）\nB. 車程延誤：抵達飯店再叫（改點橋村炸雞）", tags: ["關鍵"], coords: null },
+                    { id: "d1-e7", time: "21:20", location: "抵達飯店 Check-in", category: "hotel", note: "", coords: [37.5293, 126.9654] },
+                    { id: "d1-e8", time: "21:40", location: "大廳取餐吃宵夜", category: "food", note: "【Plan A】獵奇辣炒年糕（需於 21:20 前下單）\n【Plan B】橋村炸雞", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/02 (二) Day 2",
-                title: "夢碳(2h)＋加山Outlet(4h)",
-                lunch: "夢碳 (燒肉)", lunchId: "d2-e4", tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
+                title: "龍理團路(1.5h)＋加山Outlet(4h) 👥 2人",
+                lunch: "龍理團路早午餐", lunchId: "d2-e2", tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
                 events: [
-                    { id: "d2-e1", time: "10:00", location: "交通：飯店 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "📍 地址：首爾 龍山區 白凡路99街 50 (서울 용산구 백범로99길 50)\n🚌 推薦：公車 (約 11 分鐘 / 最快) ➔ [三角地站] 下車\n🚶 備案：步行 (約 23 分鐘 / 1.4km / Naver Map 驗證)", coords: [37.5372, 126.9698] },
-                    { id: "d2-e2", time: "10:40", location: "【排隊關鍵】抵達現場準備候位", category: "alert", note: "⚠️ 規則：11:00 開放現場機台登記 (不可指定時間/無預約)\n📋 動作：10:40 前抵達周邊 ➔ 11:00 準時操作機台\n🛑 風險控管：若號碼過於靠後 (需等 3hr+)，直接啟動備案午餐", tags: ["關鍵", "風險"], coords: [37.5372, 126.9698] },
-                    { id: "d2-e3", time: "上午", location: "附近咖啡廳等待 (_______ 自行尋找)", map_term: "Approach Coffee", category: "food", note: "", coords: [37.5288, 126.9715] },
-                    { id: "d2-e4", time: "午餐", location: "夢碳 (燒肉)", map_term: "몽탄", category: "food", note: "🕒 營業：12:00 開始叫號入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
-                    { id: "d2-e5", time: "14:30", location: "【空窗期決策：14:30-16:00】(KPI 導向)", category: "alert", note: "💡 選項 A (味道重/需補妝)：回飯店 (15:30 必須出發)\n💡 選項 B (精神佳)：Amore Pacific 總部 (15:40 必須離開)\n💡 選項 C (人潮焦慮)：直接提早去 Outlet (戰力最強化)", coords: [37.5293, 126.9654] },
-                    { id: "d2-e6", time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 地鐵：1號線 [龍山] ➔ [加山數碼園區] (往仁川/水原方向)\n🕒 時間：全程約 35-40 分鐘 (含步行與候車)\n*註：飯店步行至車站約5分(主出口)+乘車19分+出站步行約10分", coords: [37.4815, 126.8826] },
-                    { id: "d2-e7", time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 營業：平日(週二) 至 21:00 結束營業\n⚠️ 進場 SOP：1.先拍樓層導覽 2.鎖定目標品牌樓層\n====== 🛍️ 購物動線 (省力最大化) ======\n❶ [16:40-17:50] 2館 (Leisure)：先攻機能\n   • 專攻：The North Face (一般線), K2, Black Yak (折扣深)\n❷ [17:50-19:20] 3館 (Mario Mall)：再攻潮流\n   • 專攻：MLB, Discovery, National Geographic (1F/2F為主)\n❸ [19:20-20:00] 決策與複驗\n   • 動作：回到命中櫃位確認尺寸/顏色，進行結帳\n❹ [20:00-20:30] 晚餐 (_______)", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
-                    { id: "d2-e8", time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 地鐵：1號線直達 [龍山站] (約 35-40 分鐘)", coords: [37.5293, 126.9654] },
-                    { id: "d2-e9", time: "21:15", location: "抵達飯店 (整理大量戰利品)", category: "hotel", note: "", coords: [37.5293, 126.9654] }
+                    { id: "d2-e1", time: "10:00", location: "交通：飯店 ➔ 龍理團路", category: "transport", note: "🚇 【首選】4號線 [新龍山] ➔ [三角地]（1站 / 約3分鐘）\n🚌 【備案】藍色巴士 100 / 150 / 151 等", coords: [37.5312, 126.9705] },
+                    { id: "d2-e2", time: "上午", location: "早午餐名店【三選一】（位於三角地站周邊）", category: "food", note: "🕒 預估停留：約 1.5 小時（含候位與用餐）\n❶ Dotori (橡實)\n❷ SAM SAM SAM\n❸ Teddy Beurre House", coords: [37.5312, 126.9705] },
+                    { id: "d2-e3", time: "14:00", location: "【空窗期決策：14:00-15:30】", category: "alert", note: "💡 選項 A（需整理物品）：回飯店（15:30 出發前往加山）\n💡 選項 B（無須回防）：前往 Amore Pacific 總部（15:40 前離開）\n💡 選項 C（提早購物）：直接前往 Outlet\n💡 選項 D（車站商圈）：Emart 龍山店 / iPark Mall / 新羅愛寶客免稅店（15:40 前離開）", coords: [37.5293, 126.9654] },
+                    { id: "d2-e4", time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 【首選】1號線 [龍山] ➔ [加山數碼園區] 直達\n🕒 全程約 35-40 分鐘（含步行與候車）\n🚕 【不建議】計程車：下班前路況不穩，效率通常不如地鐵", coords: [37.4815, 126.8826] },
+                    { id: "d2-e5", time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 平日（週二）至 21:00 結束營業\n====== 🛍️ 購物動線 ======\n❶ [16:40-17:50] 2館 (Leisure)：機能服飾\n❷ [17:50-19:20] 3館 (Mario Mall)：潮流服飾\n❸ [19:20-20:00] 決策與複驗結帳\n❹ [20:00-20:30] 晚餐（_______）", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
+                    { id: "d2-e6", time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 【首選】1號線 [加山數碼園區] ➔ [龍山] 直達（車程約 20 分鐘，總時間約 35 分鐘）", coords: [37.5293, 126.9654] },
+                    { id: "d2-e7", time: "21:15", location: "抵達飯店", category: "hotel", note: "", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/03 (三) Day 3",
-                title: "龍理團路(1.5h)＋狎鷗亭(3.5h)＋漢南洞(3h)",
-                lunch: "龍理團路早午餐", lunchId: "d3-e2", tea: "Milestone Coffee", teaId: "d3-e6", dinner: "漢南洞 24H 馬鈴薯湯", dinnerId: "d3-e8",
+                title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車(1.5h) 👥 2人",
+                lunch: "明洞辣炒雞排", lunchId: "d3-e6", tea: "馬鈴薯麵包 (外帶)", teaId: "d3-e5", dinner: "_______", dinnerId: null,
+                notice: "====== ⚠️ 行前準備確認（2人主行程） ======\n1. [火車] 5/4 早上 07:00 開搶 ITX（去：龍山 09:17 / 回：南春川 18:56）\n2. [預約] 完成「春川外國人觀光計程車」線上預約\n3. [體驗] 預約江村鐵路自行車（16:30 場次，2人座）\n4. [現金] 準備 100,000 韓元現金（車費、牧場門票與備用）\n5. [證件] 攜帶護照",
                 events: [
-                    { id: "d3-e1", time: "09:30", location: "交通：飯店 ➔ 龍理團路 (早午餐戰區)", category: "transport", note: "💡 策略：名店位於「三角地站」附近，離飯店約 1.2km，建議搭車省力\n🚇 地鐵：4號線 [新龍山站] ➔ [三角地站] (搭 1 站 / 3號出口)\n🚌 公車：藍色巴士 100/150/151 等 (搭 2 站) ➔ [三角地站]\n🚶 步行：沿大馬路直走約 20-25 分鐘 (6月天氣熱，不建議)", coords: [37.5312, 126.9705] },
-                    { id: "d3-e2", time: "上午", location: "早午餐名店【三選一】(皆位於三角地站周邊)", category: "food", note: "🕒 預估停留：約 1.5 小時 (含候位與用餐)\n❶ Dotori (橡實)：特色優格/橡實麵包 (徒步約 3 分鐘)\n❷ SAM SAM SAM：美式復古家常菜 (徒步約 3 分鐘)\n❸ Teddy Beurre House：法式可頌名店 (徒步約 2 分鐘)", coords: [37.5312, 126.9705] },
-                    { id: "d3-e3", time: "12:00", location: "交通：龍理團路 ➔ 狎鷗亭/羅德奧 (單次最遠距離)", category: "transport", note: "🚕 建議：計程車 (跨區最快)\n🕒 時間：修正估 25-35 分鐘 (視漢南大橋路況浮動)\n💳 氣候卡：地鐵 4號線轉 3號線 [新沙] (約 40 分鐘)", coords: [37.5273, 127.0392] },
-                    { id: "d3-e4", time: "下午", location: "狎鷗亭 / 羅德奧 (島山公園周邊)：逛精品與潮牌", category: "shopping", note: "🕒 預估停留：約 3.5 - 4 小時 (區域較大，含下午茶)", coords: [37.5273, 127.0392] },
-                    { id: "d3-e5", time: "16:00", location: "交通：狎鷗亭 ➔ 漢南洞 (線性回程)", category: "transport", note: "💳 氣候卡：巴士 142 / 144 / 472 (順向回程)\n🕒 時間：公車約 15-20 分鐘 + 步行至商圈約 10 分鐘\n🚕 備案：計程車約 10-15 分鐘 (約 10,000 韓元)", coords: [37.5348, 127.0012] },
-                    { id: "d3-e6", time: "下午", location: "漢南洞逛街 & 咖啡廳", category: "shopping", note: "🕒 預估停留：約 3 小時 (含逛街與晚餐)\n☕ **咖啡推薦：Milestone Coffee Hannam** (마일스톤커피 한남점)\n   • 特色：知名維也納咖啡、提拉米蘇，氛圍極佳\n   • 位置：漢南洞巷弄內，逛街途中適合休憩\n*註：若 D2 已買夠戶外牌，這裡專攻設計師潮牌 (Mardi, Marithe等)", coords: [37.5348, 127.0012] },
-                    { id: "d3-e7", time: "19:30", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯 (或周邊晚餐)", category: "transport", note: "", coords: [37.5332, 127.0028] },
-                    { id: "d3-e8", time: "20:00", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", map_term: "24시뼈다귀감자탕", category: "food", note: "", coords: [37.5332, 127.0028] },
-                    { id: "d3-e9", time: "21:30", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山 (短程收尾)", category: "transport", note: "💳 氣候卡：巴士 400 / 110B (直達飯店附近)\n🕒 時間：公車約 20 分鐘 (Naver Map 驗證)\n🚕 備案：計程車約 10 分鐘 (約 8,000 韓元)", coords: [37.5293, 126.9654] }
+                    { id: "d3-e1", time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 搭乘 ITX-青春號出發（建議車上用餐）\n🕒 約 1 小時 15 分鐘\n💰 票價：單程 9,800 韓元/人", coords: [37.5298, 126.9647] },
+                    { id: "d3-e2", time: "10:40", location: "抵達春川站 (Chuncheon)", category: "activity", note: "📍 前往 1 號出口「Travel Island」櫃檯核對護照與資料", coords: [37.8844, 127.7171] },
+                    { id: "d3-e3", time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 準時上車（控制 5 小時）\n💰 車資：若沿用目前方案，3小時 30,000 韓元＋超時每小時 20,000 韓元，5小時推估約 70,000 韓元/車；實際價格以預約時公告為準", coords: [37.8844, 127.7171] },
+                    { id: "d3-e4", time: "11:40", location: "幸福草原牧場", category: "activity", note: "🕒 停留：1.5 小時", coords: [37.9472, 127.6703] },
+                    { id: "d3-e5", time: "13:35", location: "馬鈴薯麵包", category: "food", note: "🥡 外帶模式（Takeout Only），停留 25 分鐘", coords: [37.9255, 127.7812] },
+                    { id: "d3-e6", time: "14:20", location: "明洞辣炒雞排街", map_term: "Myeongdong Dakgalbi Street", category: "food", note: "🕒 停留：1 小時\n⚠️ 提醒：15:25 前務必上車離開", tags: ["死線"], coords: [37.8797, 127.7283] },
+                    { id: "d3-e7", time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", map_term: "Gimyujeong Station", category: "transport", note: "🛑 包車結束，現金支付司機費用", tags: ["現金"], coords: [37.8164, 127.7135] },
+                    { id: "d3-e8", time: "15:45", location: "報到緩衝（45分鐘）", category: "alert", note: "🚻 換實體票，16:10 前抵達搭乘區集合", coords: [37.8164, 127.7135] },
+                    { id: "d3-e9", time: "16:30", location: "江村鐵路自行車（夕陽場）", category: "activity", note: "🕒 體驗：約 1.5 小時（騎行 + 火車 + 接駁車）", coords: [37.8164, 127.7135] },
+                    { id: "d3-e10", time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 京春線 [金裕貞] ➔ [南春川]（1站）", coords: [37.8164, 127.7135] },
+                    { id: "d3-e11", time: "18:25", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ 出站休息候車", coords: [37.8638, 127.7239] },
+                    { id: "d3-e12", time: "18:56", location: "回程首爾（ITX-青春號）", category: "transport", note: "🚄 【Plan A】南春川 18:56 發 ➔ 20:11 抵達龍山\n🚄 【Plan B】南春川 19:56 發 ➔ 21:14 抵達龍山\n💰 票價：單程 9,800 韓元/人", coords: [37.5298, 126.9647] }
                 ]
             },
             {
                 date: "06/04 (四) Day 4",
-                title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車(1.5h)",
-                lunch: "明洞辣炒雞排", lunchId: "d4-e6", tea: "馬鈴薯麵包 (外帶)", teaId: "d4-e5", dinner: "_______", dinnerId: null,
-                notice: "====== ⚠️ 行前準備確認 ======\n1. [火車] 5/4 早上 07:00 準時開搶 ITX (去:龍山09:17 / 回:南春川18:56左右)。\n2. [預約] 出發前完成「春川外國人觀光計程車」線上預約。\n3. [體驗] 出發前 2 週預約江村鐵路自行車 (16:30 場次)。\n4. [現金] 錢包準備 80,000 韓元現金 (專付計程車費)。\n5. [證件] 務必攜帶護照。",
+                title: "合井剪髮(3.5h)＋望遠(2h)＋新村/弘大(4.5h) 👥 2人主團＋2人隊友",
+                lunch: "望遠市場小吃", lunchId: "d4-e4", tea: "_______", teaId: null, dinner: "新村 奶辣燉排骨", dinnerId: "d4-e6",
+                notice: "====== ✈️ 隊友抵達會合動線（隊友 2 人） ======\n07:05 ｜ 隊友去程起飛\n✈️ 航班：中華航空 (China Airlines) CI164\n   07:05 高雄小港機場 (KHH) 起飛\n   11:00 首爾仁川機場 T2 (ICN) 抵達\n11:00 ｜ 隊友抵達仁川機場 T2\n🕒 預估 12:00 完成通關領取行李\n12:00 ｜ 交通：仁川 T2 ➔ 弘大入口站【Plan A / B 二選一】\n🚆 【Plan A】AREX 一般列車：車程約 53 分鐘 ｜ 票價約 4,750 韓元\n🚌 【Plan B】機場巴士 6002：車程約 70-80 分鐘 ｜ 票價 17,000 韓元\n13:10 ｜ 隊友抵達弘大，前往 Nabi Hostel（3號出口）寄放行李\n💡 票券建議：隊友可購買「氣候同行卡 3 日券（10,000 韓元）」\n🕒 預估 13:30 寄放完畢，開始自由活動 / 午餐\n📍 會合時間 A：14:00-14:30 於望遠站會合\n📍 會合時間 B：16:30 於弘大站會合，一同前往新村",
                 events: [
-                    { id: "d4-e1", time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 動作：搭乘 ITX-青春號出發 (建議車上吃早餐)。\n🕒 時間：乘車約 1 小時 23 分鐘\n💰 票價：單程約 9,800 韓元 (來回約 20,000 韓元)。", coords: [37.5298, 126.9647] },
-                    { id: "d4-e2", time: "10:40", location: "抵達春川站 (Chuncheon)", category: "activity", note: "📍 動作：前往 1 號出口「Travel Island」櫃檯。\n📋 任務：出示護照、核對預約資料。", coords: [37.8844, 127.7171] },
-                    { id: "d4-e3", time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 指令：準時上車。(目標控制 5 小時，預算 7 萬韓元)", coords: [37.8844, 127.7171] },
-                    { id: "d4-e4", time: "11:40", location: "幸福草原牧場 (90分鐘)", category: "activity", note: "🕒 停留：1.5 小時 (爬坡拍小瑞士絕景、下山餵綿羊)", coords: [37.9472, 127.6703] },
-                    { id: "d4-e5", time: "13:35", location: "馬鈴薯麵包 (25分鐘)", category: "food", note: "🥡 指令：外帶模式 (Takeout Only)。\n⚠️ 重點：只拍照＋買麵包外帶，不內用。(省時關鍵)", coords: [37.9255, 127.7812] },
-                    { id: "d4-e6", time: "14:20", location: "明洞辣炒雞排街 (60分鐘)", map_term: "Myeongdong Dakgalbi Street", category: "food", note: "🕒 停留：1 小時 (從容享用午餐)\n⚠️ 死線 (GATE)：15:25 必須上車離開，前往車站。", tags: ["死線"], coords: [37.8797, 127.7283] },
-                    { id: "d4-e7", time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", map_term: "Gimyujeong Station", category: "transport", note: "🛑 動作：計程車任務結束。\n💰 付款：支付現金約 70,000 韓元給司機 (含超時費)。", tags: ["現金"], coords: [37.8164, 127.7135] },
-                    { id: "d4-e8", time: "15:45", location: "報到緩衝 (45分鐘)", category: "alert", note: "🚻 動作：上廁所、換實體票、16:10 前抵達搭乘區集合。", coords: [37.8164, 127.7135] },
-                    { id: "d4-e9", time: "16:30", location: "江村鐵路自行車 (夕陽場)", category: "activity", note: "🕒 體驗：約 1.5 小時 (騎行50分 + 火車20分 + 接駁車)\n⚠️ 時間推算：約 18:00 回到金裕貞站。", coords: [37.8164, 127.7135] },
-                    { id: "d4-e10", time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 動作：搭乘京春線地鐵 (往春川方向) 坐 1 站。", coords: [37.8164, 127.7135] },
-                    { id: "d4-e11", time: "18:25", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ 動作：出站休息、買零食候車。", coords: [37.8638, 127.7239] },
-                    { id: "d4-e12", time: "18:56", location: "回程首爾 (ITX-青春號 雙班次備案)", category: "transport", note: "🚄 【Plan A：首選】南春川 18:56 發 ➔ 20:11 抵達龍山\n   *(平日晚間為 1 小時一班，這是銜接最完美的班次)*\n🚄 【Plan B：備案】南春川 19:56 發 ➔ 21:14 抵達龍山\n   *(若錯過 Plan A 需等 1 小時，建議在車站附近吃晚餐)*\n💰 票價：單程約 9,800 韓元。", coords: [37.5298, 126.9647] }
+                    { id: "d4-e1", time: "10:20", location: "主團交通：龍山 ➔ 合井", category: "transport", note: "🚇 【主團首選】4號線 [新龍山] ➔ [三角地] 轉 6號線 ➔ [合井]\n🕒 約 20-25 分鐘\n🚕 【主團備案】計程車：約 15-25 分鐘 / 10,000-13,000 韓元", coords: [37.5488, 126.9133] },
+                    { id: "d4-e2", time: "11:00", location: "合井站髮廊（主團 2 人）", category: "activity", note: "🕒 預估停留：約 3.5 小時（剪+染/燙）", coords: [37.5488, 126.9133] },
+                    { id: "d4-e3", time: "14:30", location: "交通：合井 ➔ 望遠", category: "transport", note: "🚇 6號線 [合井] ➔ [望遠]（1站）\n🕒 約 2 分鐘 + 步行至市場約 5-8 分鐘", coords: [37.5561, 126.9064] },
+                    { id: "d4-e4", time: "14:40", location: "望遠市場（主團 2 人＋隊友 2 人會合）", category: "food", note: "🕒 預估停留：約 1 小時 50 分", coords: [37.5561, 126.9064] },
+                    { id: "d4-e5", time: "16:30", location: "交通：望遠 ➔ 弘大入口站 ➔ 新村", category: "transport", note: "🚇 6號線 [望遠] ➔ [合井]，轉 2號線 ➔ [弘大入口] ➔ [新村]\n📍 於弘大站接應會合時間 B 的隊友，再一起前往新村站", coords: [37.5551, 126.9369] },
+                    { id: "d4-e6", time: "17:00", location: "晚餐：新村 奶辣燉排骨（4 人）", map_term: "소신이쏘", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5551, 126.9369] },
+                    { id: "d4-e7", time: "18:30", location: "交通：新村 ➔ 弘大（逛街）", category: "transport", note: "🚶 步行：沿京義線書街約 15-20 分鐘\n🚇 備案：2號線 [新村] ➔ [弘大入口]（1站）", coords: [37.5575, 126.9245] },
+                    { id: "d4-e8", time: "19:00", location: "弘大商圈逛街（4 人）", category: "shopping", note: "🕒 預估停留：約 2.5 小時", coords: [37.5575, 126.9245] },
+                    { id: "d4-e9", time: "21:30", location: "交通：返回各自住宿點", category: "transport", note: "🚇 主團：京義中央線 [弘大入口] ➔ [용산 / 龍山] 直達；若班次不順則改搭 2號線轉回龍山區\n🚕 主團備案：計程車約 20 分鐘 / 10,000-15,000 韓元\n🚶 隊友：直接步行返回弘大 Nabi Hostel", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/05 (五) Day 5",
-                title: "舍堂醫美(3.5h)＋聖水洞(5h)",
-                lunch: "烤黨 (聖水店)", lunchId: "d5-e5", tea: "_______", teaId: null, dinner: "聖水馬鈴薯排骨湯", dinnerId: "d5-e7",
+                title: "夢碳(2h)＋新羅免稅店(2h)＋聖水洞(5h) 👥 4人",
+                lunch: "夢碳 (燒肉)", lunchId: "d5-e4", tea: "_______", teaId: null, dinner: "烤黨 / 馬鈴薯排骨湯（二選一）", dinnerId: "d5-e9",
                 events: [
-                    { id: "d5-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂 (醫美)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [舍堂]\n🕒 時間：乘車約 13 分鐘 + 步行約 5 分鐘 (總計 20 分鐘)", coords: [37.4765, 126.9816] },
-                    { id: "d5-e2", time: "11:00", location: "舍堂醫美療程", category: "activity", note: "🕒 預估停留：3 ~ 3.5 小時 (含諮詢、麻醉、施作、修復)", coords: [37.4765, 126.9816] },
-                    { id: "d5-e3", time: "14:30", location: "療程結束，準備移動", category: "alert", note: "", coords: null },
-                    { id: "d5-e4", time: "14:40", location: "交通：舍堂 ➔ 聖水 (烤黨)", category: "transport", note: "💳 氣候卡：地鐵 2號線 [舍堂] ➔ [聖水]\n🕒 時間：乘車約 27 分鐘 + 步行約 10 分鐘 (總計 40 分鐘)\n*週五下午必塞車，強烈建議搭地鐵", coords: [37.5445, 127.0560] },
-                    { id: "d5-e5", time: "15:20", location: "午晚餐：烤黨 (聖水店)", map_term: "Kkudang Seongsu", category: "food", note: "⚠️ 提醒：人氣名店，雖剛開門但週五仍可能需候位\n*因 15:00 第一批剛入場，若客滿可能需等第一輪用餐結束\n*策略：先去登記候位 (Catchtable)，若需久候則先逛街", coords: [37.5428, 127.0543] },
-                    { id: "d5-e6", time: "下午", location: "聖水洞逛街 (步行範圍大，建議穿好走的鞋)", category: "shopping", note: "🕒 預估停留：約 4 - 5 小時 (含用餐、咖啡廳、逛街)", coords: [37.5445, 127.0560] },
-                    { id: "d5-e7", time: "晚餐", location: "聖水馬鈴薯排骨湯 (或 咖啡廳甜點)", map_term: "Seongsu Potato Soup", category: "food", note: "", coords: [37.5445, 127.0560] },
-                    { id: "d5-e8", time: "20:30", location: "交通：聖水 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚕 建議：計程車 (術後建議舒適移動)\n🕒 時間：修正估 45-50 分鐘 (週五晚間塞車風險加權)\n💳 氣候卡：地鐵轉乘約 45 分鐘 (較累但時間穩)", coords: [37.5293, 126.9654] }
+                    { id: "d5-e1", time: "10:00", location: "交通：各自出發 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "🚌 主團：由龍山出發，藍色巴士 100 / 150 / 151 等，約 11 分鐘 ➔ [三角地站] 下車\n🚇 隊友：由弘大出發，2號線 [弘大入口] ➔ [合井]，轉 6號線 ➔ [三角地] 周邊步行會合", coords: [37.5372, 126.9698] },
+                    { id: "d5-e2", time: "10:40", location: "主團抵達現場準備候位", category: "alert", note: "⚠️ 11:00 開放現場機台登記\n📋 主團操作機台，直接登記 4 位用餐", tags: ["關鍵"], coords: [37.5372, 126.9698] },
+                    { id: "d5-e3", time: "上午", location: "附近咖啡廳等待（_______）", map_term: "Approach Coffee", category: "food", note: "", coords: [37.5288, 126.9715] },
+                    { id: "d5-e4", time: "午餐", location: "夢碳（4 人）", map_term: "몽탄", category: "food", note: "🕒 12:00 開始叫號入座\n⚠️ 提醒：4 人需到齊方可入座\n🕒 預估停留：約 1.5 - 2 小時", coords: [37.5372, 126.9698] },
+                    { id: "d5-e5", time: "14:10", location: "交通：夢碳 ➔ 新羅免稅店首爾店", category: "transport", note: "🚕 【首選】計程車：約 15-25 分鐘 / 8,000-12,000 韓元\n🚇 【備案】地鐵＋接駁車\n   1. 先搭地鐵前往 3號線 [東國大入口站 / Dongguk University]\n   2. 由 5 號出口出站\n   3. 步行前往新羅酒店正門（Hotel Shilla main gate）\n   4. 轉搭新羅酒店接駁車前往免稅店\n   5. 全程時間需另加出站步行、等車與接駁時間，依現場狀況浮動\n💡 建議：若是 4 人同行且有明確購物時段，仍以計程車最省事", coords: [37.5562, 127.0084] },
+                    { id: "d5-e6", time: "14:40", location: "新羅免稅店首爾店 / 彈性購物（4 人）", category: "shopping", note: "🕒 預估停留：約 2 小時", coords: [37.5562, 127.0084] },
+                    { id: "d5-e7", time: "16:40", location: "交通：新羅免稅店 ➔ 聖水", category: "transport", note: "🚕 【首選】計程車：約 20-30 分鐘 / 12,000-16,000 韓元\n🚇 【備案】3號線 [東國大入口] ➔ [乙支路3街]，轉 2號線 ➔ [聖水]\n🕒 地鐵總時間約 35-40 分鐘（含轉乘步行）", coords: [37.5445, 127.0560] },
+                    { id: "d5-e8", time: "17:10", location: "聖水洞逛街（4 人）", category: "shopping", note: "🕒 預估停留：約 3 小時", coords: [37.5445, 127.0560] },
+                    { id: "d5-e9", time: "18:30", location: "晚餐決策：【Plan A / B 二選一】", category: "food", note: "🍽️ 【Plan A】烤黨 聖水店\n🥣 【Plan B】聖水馬鈴薯排骨湯\n🕒 預估停留：約 1.5 小時", coords: [37.5428, 127.0543] },
+                    { id: "d5-e10", time: "20:40", location: "交通：聖水 ➔ 龍山 / 弘大（各自回防）", category: "transport", note: "🚇 主團【首選】2號線 [聖水] ➔ [往十里]，轉 京義中央線 ➔ [龍山]\n🕒 主團約 35-45 分鐘（含轉乘與步行）\n🚕 主團【備案】計程車：若路況順暢再考慮\n🚇 隊友【首選】2號線 [聖水] ➔ [弘大入口] 直達\n🕒 隊友約 35-40 分鐘\n💡 原則：週五晚間跨江回程，地鐵時間最穩", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/06 (六) Day 6",
-                title: "安國/益善洞(4.5h)＋新羅免稅/彈性(2h)",
-                lunch: "益善翠響/無招牌店", lunchId: "d6-e4", tea: "_______", teaId: null, dinner: "雞林蒜辣雞湯 (備案: 乙支精肉)", dinnerId: "d6-e8",
+                title: "首爾中央區域：安國/益善洞(4.5h) 👥 白天 4人 ➔ 晚上主團 2人",
+                lunch: "益善翠響 / 無招牌 / 雞林食堂", lunchId: "d6-e4", tea: "_______", teaId: null, dinner: "乙支精肉 / 自理", dinnerId: "d6-e7",
+                notice: "====== ✈️ 隊友回程航班（隊友 2 人） ======\n✈️ 航班：台灣虎航 (Tigerair Taiwan) IT663\n   ｜ 20:35 首爾金浦機場 (GMP) 起飛\n   ｜ 22:40 高雄小港機場 (KHH) 抵達\n====================================\n\n====== ✈️ 隊友撤離動線（隊友 2 人） ======\n💡 撤離決策：依是否回弘大拿行李，分 A / B 方案\n* 💰 交通備註：前往金浦機場時，5號線直達與 AREX 金浦機場站－首爾站覆蓋區間可用氣候同行卡\n\n▼ 【Plan A：需回弘大拿行李】\n17:00 ｜ 隊友脫隊：從益善洞 / 鐘路3街返回弘大\n17:30 ｜ 抵達 Nabi Hostel 取行李\n17:40 ｜ 隊友前往弘大入口站\n18:00 ｜ 隊友搭乘 AREX 一般列車 ➔ 金浦機場站\n18:30 ｜ 抵達金浦機場航廈，準備辦理 20:35 虎航 IT663 報到\n\n▼ 【Plan B：無大型托運行李，市區直達】\n17:30 ｜ 隊友脫隊：鐘路3街直接前往金浦機場\n      ｜ 🚇 【首選】5號線 [鐘路3街] ➔ [金浦機場] 直達（約 43 分鐘）\n      ｜ 🚇 【備案】1號線 / 4號線接首爾站，再轉 AREX 一般列車到金浦機場\n18:30 ｜ 抵達金浦機場航廈，準備辦理 20:35 虎航 IT663 報到",
                 events: [
-                    { id: "d6-e1", time: "09:00", location: "Catchtable 遠端取號 (Artist Bakery)", category: "alert", note: "", coords: null },
-                    { id: "d6-e2", time: "10:00", location: "交通：龍山 ➔ 安國站 (顯忠日地鐵為佳)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [忠武路] 轉 3號線 ➔ [安國]\n🕒 時間：乘車+轉乘約 25 分鐘 (假日地鐵最穩)", coords: [37.5766, 126.9854] },
-                    { id: "d6-e3", time: "10:30", location: "【Artist Bakery】(鹽麵包外帶/點心)", map_term: "Artist Bakery", category: "food", note: "🕒 預估停留：約 1 小時 (取號/購買/簡單吃點心)\n💡 備註：買完後可在安國站周邊稍作休息", coords: [37.5768, 126.9850] },
-                    { id: "d6-e4", time: "12:00", location: "午餐：人氣義式料理【二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時 (含排隊與用餐)\n❶ Ikseon Chwihyang (益善翠響)：益善洞內，韓式復古洋食(蛋包飯/義大利麵)\n❷ Ganpan Eopneun Gage (無招牌店)：益善洞內，知名義大利麵/燉飯(明太子/牛排)", coords: [37.5744, 126.9905] },
-                    { id: "d6-e5", time: "13:30", location: "【益善洞韓屋村】(氛圍咖啡廳/文創小物)", category: "activity", note: "🕒 預估停留：約 1.5 小時 (逛街與拍照)\n☕ 推薦：清水堂 / 樂園驛", coords: [37.5744, 126.9905] },
-                    { id: "d6-e6", time: "15:15", location: "【下午行程二選一】(依體力與購物需求決定)", category: "activity", note: "▼ 選項 A：主攻免稅品 (原定計劃)\n🚕 交通：計程車前往新羅免稅店 (約 20-25 分鐘)\n🛍️ 行程：新羅免稅店 首爾店 (預估停留 2 小時)\n\n▼ 選項 B：彈性自由時間 (備案購物/補逛/休息)\n💡 建議：續逛益善洞、安國站周邊，或前往明洞/乙支路\n☕ 行程：找間韓屋咖啡廳休息，或提早前往晚餐區域", coords: [37.5562, 127.0084] },
-                    { id: "d6-e7", time: "17:40", location: "交通：前往鐘路3街 (晚餐)", category: "transport", note: "🚕 建議：從新羅出發約 15-20 分鐘；或從備案地點步行前往", coords: [37.5714, 126.9915] },
-                    { id: "d6-e8", time: "18:00", location: "晚餐：雞林蒜辣雞湯 (雞林食堂 本店 / 계림식당)", map_term: "계림식당", category: "food", note: "🕒 預估停留：約 1.5 小時\n📍 位置：鐘路3街站 12 號出口附近\n💡 【備案 Plan B】乙支精肉 (Eulji Jeong-yuk / 을지정육)\n   *位置：乙支路3街站附近 (步行約 5-8 分鐘)\n   *特色：韓式烤肉 (若不想吃蒜辣雞的替代方案)", coords: [37.5714, 126.9915] },
-                    { id: "d6-e9", time: "20:00", location: "交通：鐘路3街 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "💳 氣候卡：地鐵 1號線 [鐘路3街] ➔ [龍山站] (直達)\n🕒 時間：乘車約 12 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
+                    { id: "d6-e1", time: "09:00", location: "Catchtable 遠端取號（Artist Bakery）", category: "alert", note: "", coords: null },
+                    { id: "d6-e2", time: "10:00", location: "交通：龍山 / 弘大 ➔ 安國站", category: "transport", note: "🚇 主團：4號線 [新龍山] ➔ [忠武路]，轉 3號線 ➔ [安國]\n🚇 隊友：2號線 [弘大入口] ➔ [乙支路3街]，轉 3號線 ➔ [安國]\n🕒 時間：主團約 25 分鐘；隊友約 25-30 分鐘（含轉乘與步行）\n💡 建議：安國站集合後再一起步行前往 Artist Bakery", coords: [37.5766, 126.9854] },
+                    { id: "d6-e3", time: "10:30", location: "【Artist Bakery】（鹽麵包外帶）", map_term: "Artist Bakery", category: "food", note: "📍 安國站 1 號出口\n🕒 預估停留：約 1 小時", coords: [37.5768, 126.9850] },
+                    { id: "d6-e4", time: "12:00", location: "午餐：人氣美食【三選一】（4 人）", category: "food", note: "🕒 預估停留：約 1.5 小時\n❶ Ikseon Chwihyang（益善翠響）\n❷ Ganpan Eopneun Gage（無招牌店）\n❸ 雞林食堂 本店（계림식당）", coords: [37.5744, 126.9905] },
+                    { id: "d6-e5", time: "13:30", location: "【益善洞韓屋村】（4 人）", category: "activity", note: "🕒 預估停留：約 1.5 小時", coords: [37.5744, 126.9905] },
+                    { id: "d6-e6", time: "15:30", location: "交通：主團周邊彈性逛街 / 前往晚餐區域", category: "transport", note: "🚶 步行：益善洞周邊至鐘路3街 / 乙支路3街商圈", coords: [37.5714, 126.9915] },
+                    { id: "d6-e7", time: "18:00", location: "晚餐：乙支精肉（韓式烤肉）或周邊自理（主團 2 人）", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5674, 126.9921] },
+                    { id: "d6-e8", time: "20:00", location: "交通：鐘路3街（或乙支路3街）➔ 九樹 ROKAUS 龍山（主團 2 人）", category: "transport", note: "🚇 1號線 [鐘路3街] ➔ [龍山]\n🕒 約 12-15 分鐘 + 步行回飯店 5 分鐘", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/07 (日) Day 7",
-                title: "合井剪髮(4h)＋望遠/弘大/新村(4.5h)",
-                lunch: "望遠市場小吃", lunchId: "d7-e4", tea: "_______", teaId: null, dinner: "新村 奶辣燉排骨", dinnerId: "d7-e8",
+                title: "舍堂醫美(3.5h)＋狎鷗亭/羅德奧(3.5h)＋漢南洞(3h) 👥 2人",
+                lunch: "_______", lunchId: null, tea: "Milestone Coffee", teaId: "d7-e6", dinner: "漢南洞 24H 馬鈴薯湯", dinnerId: "d7-e8",
                 events: [
-                    { id: "d7-e1", time: "10:20", location: "交通：龍山 ➔ 合井 (地鐵轉乘最順)", category: "transport", note: "💳 氣候卡：地鐵 4號線 [新龍山] ➔ [三角地] 轉 6號線 ➔ [合井]\n🕒 時間：乘車+轉乘約 20-25 分鐘 (飯店門口進站，轉乘1站，最省力)\n🚕 備案：計程車直達合井 (約 15-20 分鐘 / 10,000 韓元)", coords: [37.5488, 126.9133] },
-                    { id: "d7-e2", time: "11:00", location: "合井站髮廊", category: "activity", note: "🕒 預估停留：約 4 小時 (剪+染/燙，含溝通時間)", coords: [37.5488, 126.9133] },
-                    { id: "d7-e3", time: "15:00", location: "交通：合井 ➔ 望遠", category: "transport", note: "💳 地鐵 6號線 (僅 1 站)\n🕒 時間：乘車 2 分鐘 + 步行至市場約 5-8 分鐘", coords: [37.5561, 126.9064] },
-                    { id: "d7-e4", time: "15:20", location: "望遠市場 (吃雨耳樂炸辣椒、可樂餅)", category: "food", note: "🕒 預估停留：約 1.5 小時 (吃小吃 + 逛市場)", coords: [37.5561, 126.9064] },
-                    { id: "d7-e6", time: "16:40", location: "交通：望遠 ➔ 弘大", category: "transport", note: "💳 氣候卡：地鐵 6號線轉 2號線\n🕒 時間：乘車+轉乘約 15 分鐘", coords: [37.5575, 126.9245] },
-                    { id: "d7-e7", time: "17:00", location: "弘大入口站 8 號出口 (藥局/美妝)", category: "shopping", note: "🕒 預估停留：約 1.5 小時 (快速補貨)", coords: [37.5575, 126.9245] },
-                    { id: "d7-e7-transport", time: "19:00", location: "交通：弘大 ➔ 新村 (晚餐)", category: "transport", note: "🚶 步行：沿京義線書街散步約 15-20 分鐘\n💳 地鐵：2號線 (1 站) 約 5 分鐘", coords: [37.5551, 126.9369] },
-                    { id: "d7-e8", time: "19:30", location: "晚餐：新村 奶辣燉排骨", map_term: "소신이쏘", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5551, 126.9369] },
-                    { id: "d7-e9", time: "21:00", location: "交通：新村 ➔ 九樹 ROKAUS 龍山 (回程)", category: "transport", note: "💡 策略：週日晚間弘大/新村區易塞車，建議優先搭地鐵\n🚇 地鐵：2號線 [新村] ➔ [市廳] 轉 1號線 ➔ [龍山]\n🕒 時間：全程約 25-30 分鐘 (時間最穩，免塞車)\n🚌 公車：藍色巴士 750A / 750B / 752 (直達新龍山站)\n🚕 備案：計程車 (若太累不想走) 約 20-25 分鐘 / 12,000 韓元", coords: [37.5293, 126.9654] }
+                    { id: "d7-e1", time: "10:15", location: "交通：龍山 ➔ 舍堂（主團 2 人）", category: "transport", note: "🚇 【首選】4號線 [新龍山] ➔ [舍堂]\n🕒 約 13 分鐘 + 步行約 5 分鐘", coords: [37.4765, 126.9816] },
+                    { id: "d7-e2", time: "11:00", location: "舍堂醫美療程", category: "activity", note: "🕒 預估停留：3 ~ 3.5 小時（含諮詢、麻醉、施作、修復）", coords: [37.4765, 126.9816] },
+                    { id: "d7-e3", time: "14:45", location: "交通：舍堂 ➔ 狎鷗亭 / 羅德奧", category: "transport", note: "🚕 【首選】計程車：約 25-35 分鐘 / 12,000-16,000 韓元\n🚇 【備案】地鐵：依最終目的地是「狎鷗亭站」或「狎鷗亭羅德奧站」再決定轉乘", coords: [37.5273, 127.0392] },
+                    { id: "d7-e4", time: "15:15", location: "狎鷗亭 / 羅德奧（島山公園周邊）", category: "shopping", note: "🕒 預估停留：約 3.5 - 4 小時", coords: [37.5273, 127.0392] },
+                    { id: "d7-e5", time: "18:30", location: "交通：狎鷗亭 ➔ 漢南洞", category: "transport", note: "🚌 【首選】公車 142 / 144 / 472（約 15-20 分鐘）\n🚕 【備案】計程車：約 5-10 分鐘 / 6,000-8,000 韓元", coords: [37.5348, 127.0012] },
+                    { id: "d7-e6", time: "19:00", location: "漢南洞逛街", category: "shopping", note: "🕒 預估停留：約 3 小時\n☕ 推薦：Milestone Coffee Hannam", coords: [37.5348, 127.0012] },
+                    { id: "d7-e7", time: "20:20", location: "步行前往：漢南洞 24小時馬鈴薯排骨湯", category: "transport", note: "", coords: [37.5332, 127.0028] },
+                    { id: "d7-e8", time: "20:30", location: "晚餐：漢南洞 24小時馬鈴薯排骨湯", map_term: "24시뼈다귀감자탕", category: "food", note: "", coords: [37.5332, 127.0028] },
+                    { id: "d7-e9", time: "21:50", location: "交通：漢南洞 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚌 【首選】公車 400 / 110B（約 20-25 分鐘）\n🚕 【備案】計程車：約 10-15 分鐘 / 8,000-11,000 韓元", coords: [37.5293, 126.9654] }
                 ]
             },
             {
                 date: "06/08 (一) Day 8",
-                title: "龍山最後掃貨(4h)＋金浦機場(3h)",
+                title: "龍山最後掃貨(4h)＋金浦機場(3h) 👥 2人",
                 lunch: "_______", lunchId: null, tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
                 events: [
                     { id: "d8-e1", time: "10:00", location: "整理行李 & 準備 Check-out", category: "hotel", note: "", coords: [37.5293, 126.9654] },
-                    { id: "d8-e2", time: "11:00", location: "辦理退房 (Check-out)", category: "hotel", note: "🧳 動作：將行李寄放在飯店櫃台", coords: [37.5293, 126.9654] },
-                    { id: "d8-e3", time: "11:15", location: "【空窗期：11:15-16:30】(最後掃貨)", category: "shopping", note: "🕒 可用時間：約 4 - 5 小時\n💡 建議 A：Emart 龍山店 (步行可達)\n💡 建議 B：iPark Mall (Gundam Base / Living Park)", coords: [37.5286, 126.9640] },
-                    { id: "d8-e4", time: "16:30", location: "回到飯店領取行李", category: "hotel", note: "", coords: [37.5293, 126.9654] },
-                    { id: "d8-e5", time: "17:00", location: "交通：九樹 ROKAUS 龍山 ➔ 金浦機場 (GMP)", category: "transport", note: "🚕 建議：計程車 (務必預留塞車緩衝)\n🕒 時間：修正估 50-60 分鐘 (下班尖峰時段風險)\n💰 車資：約 25,000-30,000 韓元", coords: [37.5587, 126.8028] },
-                    { id: "d8-e6", time: "17:50", location: "抵達金浦機場 & 辦理登機", category: "flight", note: "1. 航空公司櫃檯：託運行李 (Check-in)\n2. 辦理退稅 (Tax Refund)：\n   • 海關蓋章：2樓 1 Gate 附近\n   • 現金/櫃台：3樓 36 Gate 附近 (或自助機)\n*⚠️ 註：金浦退稅機通常在安檢前 (2樓)，若需人工查驗亦同", coords: [37.5587, 126.8028] },
-                    { id: "d8-e7", time: "18:30", location: "通過安全檢查 & 證照查驗 (Immigration)", category: "alert", note: "🕒 預估時間：約 20-30 分鐘 (視現場排隊狀況)", coords: null },
-                    { id: "d8-e8", time: "19:00", location: "領取線上免稅品 & 領取退稅金", category: "shopping", note: "🕒 預估停留：約 50 分鐘 (包含排隊與整理免稅品)\n📍 提貨位置：通過安檢後 (Airside) 3樓，34號登機門附近\n*註：所有免稅店 (新羅/樂天等) 皆在同一處綜合提貨", coords: null },
-                    { id: "d8-e9", time: "19:55", location: "【登機時間 Boarding】(起飛前 40 分鐘)", category: "alert", note: "📍 動作：前往登機門準備排隊\n⚠️ 提醒：請確保已領完免稅品，避免壓線被廣播", coords: null },
-                    { id: "d8-e10", time: "20:35", location: "起飛返程 (回高雄小港)", category: "flight", note: "Tigerair to KHH", coords: null },
+                    { id: "d8-e2", time: "11:00", location: "辦理退房（Check-out）", category: "hotel", note: "🧳 行李寄放在飯店櫃台", coords: [37.5293, 126.9654] },
+                    { id: "d8-e3", time: "11:15", location: "【空窗期：11:15-17:00】（最後掃貨）", category: "shopping", note: "🕒 可用時間：約 5.5 小時\n💡 選項 A：Emart 龍山店（步行可達）\n💡 選項 B：iPark Mall", coords: [37.5286, 126.9640] },
+                    { id: "d8-e4", time: "17:00", location: "回到飯店領取行李", category: "hotel", note: "", coords: [37.5293, 126.9654] },
+                    { id: "d8-e5", time: "17:30", location: "交通：九樹 ROKAUS 龍山 ➔ 金浦機場 (GMP)", category: "transport", note: "🚕 【首選】計程車：17:30 逢下班尖峰，預估 50-70 分鐘 / 約 25,000-30,000 韓元\n🚇 【強力備援】1號線 / 京義中央線接首爾站，再轉 AREX 一般列車 ➔ 金浦機場\n💡 若 17:00-17:15 即時地圖顯示全線紅塞，直接改搭地鐵保到達時間", coords: [37.5587, 126.8028] },
+                    { id: "d8-e6", time: "18:30", location: "抵達金浦機場 & 辦理登機", category: "flight", note: "✈️ 航班：台灣虎航 (Tigerair Taiwan) IT663\n   20:35 首爾金浦機場 (GMP) 起飛\n   22:40 高雄小港機場 (KHH) 抵達\n1. 航空公司櫃檯：託運行李（報到開櫃時間依航空公司當日公告）\n2. 退稅 / 海關查驗：依金浦機場當日現場導引處理", coords: [37.5587, 126.8028] },
+                    { id: "d8-e7", time: "19:00", location: "通過安全檢查 & 證照查驗（Immigration）", category: "alert", note: "🕒 預估約 20-30 分鐘", coords: null },
+                    { id: "d8-e8", time: "19:20", location: "領取線上免稅品 & 領取退稅金", category: "shopping", note: "🕒 免稅品點交確認\n📍 提貨位置：通過安檢後依現場指示牌前往", coords: null },
+                    { id: "d8-e9", time: "19:55", location: "登機時間 Boarding（起飛前 40 分鐘）", category: "alert", note: "📍 前往登機門準備排隊\n⚠️ 優先完成免稅品提貨與登機準備", coords: null },
+                    { id: "d8-e10", time: "20:35", location: "起飛返程（Tigerair IT663 to KHH）", category: "flight", note: "", coords: null },
                     { id: "d8-e11", time: "22:40", location: "抵達高雄小港機場 (KHH)", category: "transport", note: "", coords: [22.5768, 120.3478] }
                 ]
             }
@@ -769,6 +970,20 @@
                     }
                 }, 600);
 
+                const syncDefaultTripSchedule = (existingData = null) => {
+                    if (activeTripId.value !== 'SEOUL_2026') return;
+                    const nextData = existingData || {};
+                    localStorage.setItem(`${activeTripId.value}_data`, JSON.stringify({
+                        notes: nextData.notes || "",
+                        schedule: clone(DEFAULT_SCHEDULE),
+                        tripMeta: clone(DEFAULT_TRIP_META),
+                        meta: {
+                            title: "Seoul Travel Guide",
+                            country: 'KR'
+                        }
+                    }));
+                };
+
                 const fallbackCopy = (text) => {
                     try {
                         const textArea = document.createElement("textarea");
@@ -803,6 +1018,59 @@
                     processed = processed.replace(/([0-9]{2}:[0-9]{2})/g, '<span class="font-mono font-bold text-typo-title bg-gray-100 px-1 rounded">$1</span>');
                     return processed;
                 };
+                const formatNoticeInline = (line) => {
+                    let processed = escapeHtml(line || '');
+                    processed = processed.replace(REGEX_KEYWORDS, '<span class="font-bold text-typo-title bg-yellow-100 px-1 rounded">$1</span>');
+                    processed = processed.replace(/([0-9,]+)\s*(韓元|元|KRW)/g, '<span class="font-mono font-bold text-s-green">$1 $2</span>');
+                    processed = processed.replace(/([0-9]{2}:[0-9]{2})/g, '<span class="font-mono font-bold text-typo-title bg-gray-100 px-1 rounded">$1</span>');
+                    return processed;
+                };
+                const formatDayNotice = (note) => {
+                    if (!note) return '';
+                    const lines = String(note).split('\n');
+                    const sections = [];
+                    let current = { title: '', lines: [] };
+                    const pushCurrent = () => {
+                        if (current.title || current.lines.length) sections.push(current);
+                        current = { title: '', lines: [] };
+                    };
+
+                    lines.forEach((rawLine) => {
+                        const line = rawLine.trim();
+                        if (!line) return;
+                        if (/^=+$/.test(line) || /^[-_]{4,}$/.test(line)) {
+                            pushCurrent();
+                            return;
+                        }
+                        if (/^=+.*[^=].*=+$/.test(line)) {
+                            pushCurrent();
+                            current.title = line.replace(/^=+/, '').replace(/=+$/, '').trim();
+                            return;
+                        }
+                        current.lines.push(line);
+                    });
+                    pushCurrent();
+
+                    return sections.map((section) => {
+                        const titleHtml = section.title
+                            ? `<div class="notice-section-title">${formatNoticeInline(section.title)}</div>`
+                            : '';
+                        const bodyHtml = section.lines.map((line) => {
+                            if (/^▼/.test(line)) {
+                                return `<div class="notice-line notice-decision-line">${formatNoticeInline(line)}</div>`;
+                            }
+                            if (/^[*＊]/.test(line)) {
+                                return `<div class="notice-line">${formatNoticeInline(line)}</div>`;
+                            }
+                            const scheduleMatch = line.match(/^([0-9]{1,2}:[0-9]{2})\s*｜\s*(.+)$/);
+                            if (scheduleMatch) {
+                                return `<div class="notice-line notice-schedule-line"><div class="notice-schedule-time">${scheduleMatch[1]}</div><div>${formatNoticeInline(scheduleMatch[2])}</div></div>`;
+                            }
+                            return `<div class="notice-line">${formatNoticeInline(line)}</div>`;
+                        }).join('');
+                        return `<div class="notice-section-card">${titleHtml}${bodyHtml}</div>`;
+                    }).join('<div class="notice-divider-line"></div>');
+                };
 
                 const getDotColor = (cat) => (CATEGORY_CONFIG[cat] || CATEGORY_CONFIG.default).icon;
                 const getCategoryBadge = (cat) => (CATEGORY_CONFIG[cat] || CATEGORY_CONFIG.default).icon;
@@ -812,6 +1080,11 @@
                     if (tag === '現金') return 'bg-s-green/20 text-s-green';
                     return 'bg-m-border text-m-sub';
                 };
+                const extractCrowdBadge = (title) => {
+                    const match = String(title || '').match(/(👥\s*.+)$/);
+                    return match ? match[1] : '';
+                };
+                const cleanDayTitle = (title) => String(title || '').replace(/\s*👥\s*.+$/, '').trim();
 
                 const getCleanQuery = (rawLocation) => {
                     if (!rawLocation) return "";
@@ -1131,11 +1404,16 @@
                         const savedData = localStorage.getItem(`${activeTripId.value}_data`) || localStorage.getItem('seoul2026_data');
                         if (savedData) {
                             const parsed = JSON.parse(savedData);
+                            syncDefaultTripSchedule(parsed);
                             userNotes.value = parsed.notes || "";
-                            if (parsed.schedule) schedule.value = parsed.schedule;
-                            if (parsed.tripMeta) tripMeta.value = parsed.tripMeta;
-                            currentTripTitle.value = parsed.meta?.title || "Seoul Travel Guide";
-                            countrySetting.value = parsed.meta?.country || 'KR';
+                            schedule.value = clone(DEFAULT_SCHEDULE);
+                            tripMeta.value = clone(DEFAULT_TRIP_META);
+                            currentTripTitle.value = "Seoul Travel Guide";
+                            countrySetting.value = 'KR';
+                        } else if (activeTripId.value === 'SEOUL_2026') {
+                            syncDefaultTripSchedule();
+                            schedule.value = clone(DEFAULT_SCHEDULE);
+                            tripMeta.value = clone(DEFAULT_TRIP_META);
                         }
                         validateSchedule();
                         handleKrwInput();
@@ -1213,7 +1491,10 @@
                     getDotColor,
                     getCategoryBadge,
                     getTagStyle,
+                    extractCrowdBadge,
+                    cleanDayTitle,
                     formatNote,
+                    formatDayNotice,
                     trapFocus,
                     openMapService,
                     openMealMap,

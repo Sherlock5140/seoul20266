@@ -319,6 +319,13 @@
             margin-bottom: 0.7rem;
             flex-wrap: wrap;
         }
+        .day-meta-title-group {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            min-width: 0;
+            flex-wrap: wrap;
+        }
         .day-meta-title-date {
             font-size: 2rem;
             font-weight: 500;
@@ -369,7 +376,12 @@
                 align-items: center;
             }
             .day-meta-title-row {
+                justify-content: space-between;
+                align-items: center;
                 margin-bottom: 0.55rem;
+            }
+            .day-meta-title-group {
+                gap: 0.65rem;
             }
             .day-meta-summary {
                 max-width: 34rem;
@@ -533,6 +545,10 @@
             .day-meta-title-row {
                 gap: 0.45rem 0.7rem;
                 margin-bottom: 0.75rem;
+                align-items: center;
+            }
+            .day-meta-title-group {
+                gap: 0.45rem 0.7rem;
             }
             .day-meta-title-date {
                 font-size: 1.7rem;
@@ -611,13 +627,15 @@
                         <div class="day-meta-header">
                             <div class="min-w-0">
                                 <div class="day-meta-title-row">
-                                    <h2 class="day-meta-title-date">{{ currentDay.date?.split(' ')[0] }}</h2>
-                                    <span class="day-meta-title-sub">{{ currentDay.date?.split(' ').slice(1).join(' ') }}</span>
+                                    <div class="day-meta-title-group">
+                                        <h2 class="day-meta-title-date">{{ currentDay.date?.split(' ')[0] }}</h2>
+                                        <span class="day-meta-title-sub">{{ currentDay.date?.split(' ').slice(1).join(' ') }}</span>
+                                    </div>
+                                    <div v-if="extractCrowdBadge(currentDay.title)" class="day-crowd-badge px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap">
+                                        {{ extractCrowdBadge(currentDay.title) }}
+                                    </div>
                                 </div>
                                 <p class="day-meta-summary">{{ cleanDayTitle(currentDay.title) }}</p>
-                            </div>
-                            <div v-if="extractCrowdBadge(currentDay.title)" class="day-crowd-badge px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap">
-                                {{ extractCrowdBadge(currentDay.title) }}
                             </div>
                         </div>
                     </div>

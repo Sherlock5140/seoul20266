@@ -39,34 +39,31 @@
       <stop offset="0%" stop-color="#d8cec4" />
       <stop offset="100%" stop-color="#c9bfb4" />
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#8f8176" flood-opacity="0.2" />
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#8f8176" flood-opacity="0.16" />
     </filter>
   </defs>
   <rect width="512" height="512" rx="118" fill="url(#bg)" />
   <rect width="512" height="512" rx="118" fill="url(#glow)" />
   <rect width="512" height="512" rx="118" fill="url(#sunGlow)" />
-  <g filter="url(#shadow)">
-    <rect x="74" y="74" width="364" height="364" rx="96" fill="url(#card)" />
-    <rect x="74" y="74" width="364" height="364" rx="96" fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="3" />
-  </g>
   <g opacity="0.96">
-    <circle cx="338" cy="154" r="46" fill="#f6cfb9" fill-opacity="0.8" />
-    <path d="M122 320c34-30 68-46 104-46 46 0 74 18 111 18 29 0 58-10 90-32v74H117Z" fill="url(#hill)" />
-    <path d="M112 356c44-19 81-26 117-26 54 0 88 18 136 18 23 0 46-4 71-13" fill="none" stroke="url(#river)" stroke-width="24" stroke-linecap="round" />
-    <path d="M134 389c32-10 58-14 84-14 30 0 62 10 94 10 23 0 50-4 83-13" fill="none" stroke="#d9d2ca" stroke-width="10" stroke-linecap="round" />
+    <circle cx="350" cy="148" r="56" fill="#f6cfb9" fill-opacity="0.82" />
+    <path d="M84 326c42-36 84-55 129-55 57 0 92 21 138 21 35 0 69-11 111-36v93H80Z" fill="url(#hill)" />
+    <path d="M76 372c53-22 96-31 140-31 64 0 104 21 162 21 29 0 58-5 92-16" fill="none" stroke="url(#river)" stroke-width="28" stroke-linecap="round" />
+    <path d="M108 412c38-12 69-17 99-17 36 0 72 12 111 12 28 0 59-5 98-16" fill="none" stroke="#d9d2ca" stroke-width="11" stroke-linecap="round" />
   </g>
-  <g transform="translate(0 6)">
-    <circle cx="236" cy="179" r="54" fill="none" stroke="url(#towerBody)" stroke-width="18" />
-    <circle cx="236" cy="179" r="15" fill="url(#towerAccent)" />
-    <path d="M236 110v42" fill="none" stroke="url(#towerBody)" stroke-width="18" stroke-linecap="round" />
-    <path d="M236 240v88" fill="none" stroke="url(#towerBody)" stroke-width="20" stroke-linecap="round" />
-    <path d="M203 334h66" fill="none" stroke="#73849d" stroke-width="15" stroke-linecap="round" />
-    <path d="M214 327l22-92 22 92" fill="none" stroke="url(#towerBody)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M200 220c14 5 23 7 36 7 13 0 27-3 42-11" fill="none" stroke="#f0c5b6" stroke-width="8" stroke-linecap="round" opacity="0.92" />
+  <g transform="translate(0 8)" filter="url(#softShadow)">
+    <circle cx="218" cy="176" r="66" fill="url(#card)" fill-opacity="0.34" />
+    <circle cx="218" cy="176" r="58" fill="none" stroke="url(#towerBody)" stroke-width="18" />
+    <circle cx="218" cy="176" r="16" fill="url(#towerAccent)" />
+    <path d="M218 100v48" fill="none" stroke="url(#towerBody)" stroke-width="18" stroke-linecap="round" />
+    <path d="M218 244v104" fill="none" stroke="url(#towerBody)" stroke-width="20" stroke-linecap="round" />
+    <path d="M180 356h76" fill="none" stroke="#73849d" stroke-width="15" stroke-linecap="round" />
+    <path d="M192 348l26-104 26 104" fill="none" stroke="url(#towerBody)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M178 222c16 5 26 7 40 7 15 0 30-4 47-12" fill="none" stroke="#f0c5b6" stroke-width="8" stroke-linecap="round" opacity="0.92" />
   </g>
-  <g transform="translate(312 276)">
-    <path d="M0 0c0-29 24-52 52-52s52 23 52 52c0 39-52 95-52 95S0 39 0 0Z" fill="url(#pin)" />
-    <circle cx="52" cy="52" r="14" fill="#fbf7f2" />
+  <g transform="translate(318 270)" filter="url(#softShadow)">
+    <path d="M0 0c0-31 25-56 56-56s56 25 56 56c0 42-56 101-56 101S0 42 0 0Z" fill="url(#pin)" />
+    <circle cx="56" cy="56" r="15" fill="#fbf7f2" />
   </g>
 </svg>

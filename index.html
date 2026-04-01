@@ -91,6 +91,9 @@
             -webkit-backdrop-filter: blur(30px) saturate(150%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
+        .mobile-map-panel {
+            position: relative;
+        }
         .header-toolbar {
             display: inline-flex;
             align-items: center;
@@ -486,16 +489,20 @@
             min-height: 2.8em;
         }
         @media (max-width: 640px) {
+            .mobile-map-panel {
+                margin-top: calc(env(safe-area-inset-top) * -1);
+                padding-top: env(safe-area-inset-top);
+            }
             .glass-header {
-                padding-left: 1.25rem;
-                padding-right: 1.25rem;
+                padding-left: 1.2rem;
+                padding-right: 1.2rem;
             }
             .header-main-row {
                 align-items: flex-start;
-                gap: 0.62rem;
+                gap: 0.68rem;
             }
             .header-mobile-top {
-                gap: 0.08rem;
+                gap: 0.04rem;
             }
             .header-title-block {
                 flex: 1 1 auto;
@@ -512,42 +519,43 @@
                 box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 12px 20px -18px rgba(47,47,45,0.12);
             }
             .header-icon-button {
-                width: 1.88rem;
-                height: 1.88rem;
+                width: 1.82rem;
+                height: 1.82rem;
             }
             .header-icon-glyph {
-                font-size: 0.66rem;
+                font-size: 0.64rem;
             }
             .notes-button {
-                min-height: 1.88rem;
-                padding-left: 0.56rem;
-                padding-right: 0.66rem;
+                min-height: 1.82rem;
+                padding-left: 0.52rem;
+                padding-right: 0.62rem;
             }
             .header-title-main {
-                font-size: 1.28rem;
-                line-height: 0.88;
-                letter-spacing: -0.045em;
+                font-size: 1.38rem;
+                line-height: 0.9;
+                letter-spacing: -0.048em;
                 max-width: none;
             }
             .header-title-year {
-                font-size: 1.1rem;
+                font-size: 0.98rem;
+                line-height: 0.9;
                 transform: translateY(0);
             }
             .header-notes-label {
-                font-size: 0.6rem;
+                font-size: 0.58rem;
             }
             .header-heading-row {
-                gap: 0.02rem;
+                gap: 0.05rem;
                 align-items: flex-start;
                 flex-wrap: nowrap;
             }
             .header-title-kicker {
-                margin-bottom: 0.04rem;
-                font-size: 0.44rem;
-                letter-spacing: 0.14em;
+                margin-bottom: 0;
+                font-size: 0.48rem;
+                letter-spacing: 0.16em;
             }
             .header-title-block {
-                padding-top: 0.04rem;
+                padding-top: 0.02rem;
             }
             .day-meta-shell {
                 padding: 1.15rem;
@@ -596,7 +604,7 @@
 
     <div id="app" class="w-full h-full flex flex-col-reverse md:flex-row relative">
         <!-- Left Panel: Itinerary -->
-        <div class="w-full h-[65%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-m-card relative z-20 shadow-ios-sheet md:shadow-2xl rounded-t-[2.5rem] md:rounded-none overflow-hidden transition-all duration-300">
+        <div class="w-full h-[60%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-m-card relative z-20 shadow-ios-sheet md:shadow-2xl rounded-t-[2.5rem] md:rounded-none overflow-hidden transition-all duration-300">
             <!-- Mobile Handle -->
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-m-card/90 backdrop-blur-sm z-50 no-select"><div class="w-10 h-1 bg-m-border rounded-full"></div></div>
             
@@ -713,7 +721,7 @@
         </div>
 
         <!-- Right Panel: Map -->
-        <div class="w-full flex-1 relative z-0 md:z-auto bg-m-bg overflow-hidden relative">
+        <div class="mobile-map-panel w-full flex-1 relative z-0 md:z-auto bg-m-bg overflow-hidden relative">
             <div id="map"></div>
             <div v-if="mapError" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-m-bg/90 p-6 text-center animate-fade-in">
                 <i class="fa-solid fa-map-location-dot text-4xl text-m-sub mb-4"></i>

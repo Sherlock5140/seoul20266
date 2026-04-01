@@ -94,6 +94,10 @@
         .mobile-map-panel {
             position: relative;
         }
+        .itinerary-panel {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+        }
         .standalone-mode .mobile-map-panel {
             margin-top: calc(env(safe-area-inset-top) * -1 - 2.4rem);
             padding-top: calc(env(safe-area-inset-top) + 2.4rem);
@@ -648,7 +652,7 @@
 
     <div id="app" class="w-full h-full flex flex-col-reverse md:flex-row relative">
         <!-- Left Panel: Itinerary -->
-        <div class="w-full h-[67%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-m-card relative z-20 shadow-ios-sheet md:shadow-2xl rounded-t-[2.5rem] md:rounded-none overflow-hidden transition-all duration-300">
+        <div id="itinerary-panel" class="itinerary-panel w-full h-[67%] md:h-full md:w-[480px] lg:w-[550px] flex flex-col bg-m-card relative z-20 shadow-ios-sheet md:shadow-2xl rounded-t-[2.5rem] md:rounded-none overflow-hidden transition-all duration-300">
             <!-- Mobile Handle -->
             <div class="w-full flex justify-center pt-2.5 pb-1.5 md:hidden bg-m-card/90 backdrop-blur-sm z-50 no-select"><div class="w-10 h-1 bg-m-border rounded-full"></div></div>
             
@@ -1149,6 +1153,7 @@
                 let isHydrating = true;
                 let saveStatusTimer = null;
                 let rateErrorTimer = null;
+                let lastItineraryTapAt = 0;
 
                 const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
                 const displayEvents = computed(() => currentDay.value.events || []);
@@ -1653,6 +1658,20 @@
                     }
                 };
 
+                const handleItineraryTouchEnd = (e) => {
+                    if (window.innerWidth >= 768) return;
+                    const target = e.target;
+                    if (!(target instanceof Element)) return;
+                    if (target.closest('#map')) return;
+                    if (target.closest('input, textarea, select, option, button[label], [contenteditable="true"]')) return;
+
+                    const now = Date.now();
+                    if (now - lastItineraryTapAt < 320) {
+                        e.preventDefault();
+                    }
+                    lastItineraryTapAt = now;
+                };
+
                 const resetMap = () => {
                     if (map) {
                         if (getVisibleMarkers().length > 0) fitBounds();
@@ -1700,6 +1719,10 @@
                         };
                         nextTick(checkMap);
                         window.addEventListener('keydown', handleGlobalKeydown);
+                        const itineraryPanel = document.getElementById('itinerary-panel');
+                        if (itineraryPanel) {
+                            itineraryPanel.addEventListener('touchend', handleItineraryTouchEnd, { passive: false });
+                        }
                         if ('serviceWorker' in navigator) {
                             const hostname = window.location.hostname;
                             const isLocalPreview = hostname === 'localhost'
@@ -1744,6 +1767,10 @@
                     }
                     if (resizeRaf) cancelAnimationFrame(resizeRaf);
                     window.removeEventListener('keydown', handleGlobalKeydown);
+                    const itineraryPanel = document.getElementById('itinerary-panel');
+                    if (itineraryPanel) {
+                        itineraryPanel.removeEventListener('touchend', handleItineraryTouchEnd);
+                    }
                 });
 
                 return {

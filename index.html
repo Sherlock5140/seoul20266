@@ -107,35 +107,48 @@
             min-width: 0;
             flex: 1;
         }
+        .header-main-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .header-mobile-top {
+            display: flex;
+            flex-direction: column;
+            gap: 0.12rem;
+        }
         .header-heading-row {
             display: flex;
-            align-items: flex-end;
-            gap: 0.75rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.02rem;
             min-width: 0;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
         .header-title-kicker {
             font-size: 0.62rem;
             font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
             font-weight: 600;
-            letter-spacing: 0.24em;
-            color: #adb0aa;
+            letter-spacing: 0.18em;
+            color: #bcc0ba;
             text-transform: uppercase;
         }
         .header-title-main {
-            font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
-            font-size: clamp(2rem, 6.1vw, 2.5rem);
-            line-height: 0.98;
-            letter-spacing: -0.045em;
-            font-weight: 600;
+            font-family: 'Avenir Next', 'SF Pro Display', 'Segoe UI', sans-serif;
+            font-size: clamp(1.58rem, 4.6vw, 2.02rem);
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            font-weight: 650;
+            color: #2f3133;
         }
         .header-title-year {
             font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
-            font-size: 1.92rem;
-            line-height: 1;
-            letter-spacing: -0.03em;
-            font-weight: 500;
-            color: #4a4a47;
+            font-size: 1.66rem;
+            line-height: 0.94;
+            letter-spacing: 0;
+            font-weight: 650;
+            color: #555551;
         }
         .header-icon-button {
             width: 2.6rem;
@@ -477,50 +490,64 @@
                 padding-left: 1.25rem;
                 padding-right: 1.25rem;
             }
+            .header-main-row {
+                align-items: flex-start;
+                gap: 0.62rem;
+            }
+            .header-mobile-top {
+                gap: 0.08rem;
+            }
             .header-title-block {
-                flex: 1;
+                flex: 1 1 auto;
+                width: auto;
+                min-width: 0;
             }
             .header-toolbar {
-                gap: 0.38rem;
-                padding: 0.3rem;
-                align-self: center;
+                gap: 0.2rem;
+                padding: 0.18rem 0.2rem;
+                align-self: flex-start;
                 margin-left: auto;
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 14px 24px -20px rgba(47,47,45,0.14);
+                justify-content: flex-end;
+                flex-shrink: 0;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 12px 20px -18px rgba(47,47,45,0.12);
             }
             .header-icon-button {
-                width: 2.22rem;
-                height: 2.22rem;
+                width: 1.88rem;
+                height: 1.88rem;
             }
             .header-icon-glyph {
-                font-size: 0.78rem;
+                font-size: 0.66rem;
             }
             .notes-button {
-                min-height: 2.28rem;
-                padding-left: 0.76rem;
-                padding-right: 0.82rem;
+                min-height: 1.88rem;
+                padding-left: 0.56rem;
+                padding-right: 0.66rem;
             }
             .header-title-main {
-                font-size: 1.62rem;
+                font-size: 1.28rem;
+                line-height: 0.88;
+                letter-spacing: -0.045em;
                 max-width: none;
             }
             .header-title-year {
-                font-size: 1.24rem;
+                font-size: 1.1rem;
                 transform: translateY(0);
             }
             .header-notes-label {
-                font-size: 0.72rem;
+                font-size: 0.6rem;
             }
             .header-heading-row {
-                gap: 0.36rem;
-                align-items: baseline;
+                gap: 0.02rem;
+                align-items: flex-start;
                 flex-wrap: nowrap;
             }
             .header-title-kicker {
-                margin-bottom: 0.22rem;
+                margin-bottom: 0.04rem;
+                font-size: 0.44rem;
+                letter-spacing: 0.14em;
             }
-            .header-title-block .header-title-main,
-            .header-title-block .header-title-year {
-                white-space: nowrap;
+            .header-title-block {
+                padding-top: 0.04rem;
             }
             .day-meta-shell {
                 padding: 1.15rem;
@@ -575,25 +602,29 @@
             
             <!-- Header -->
             <div class="glass-header px-6 flex-none z-40 pt-safe-top no-select">
-                <div class="pt-2 md:pt-6 flex flex-row justify-between items-end gap-3 md:gap-5 mb-4 md:mb-5">
-                    <div class="header-title-block flex flex-col min-w-0">
-                        <div class="header-title-kicker mb-1">
-                            {{ currentTripTitle || 'SEOUL TRAVEL GUIDE' }}
+                <div class="pt-2 md:pt-6 mb-4 md:mb-5">
+                    <div class="header-main-row">
+                        <div class="header-title-block flex flex-col min-w-0">
+                            <div class="header-mobile-top">
+                                <div class="header-heading-row">
+                                    <span class="header-title-year leading-none whitespace-nowrap">
+                                        {{ activeTripId?.split('_')[1] || '2026' }}
+                                    </span>
+                                    <h1 class="header-title-main text-typo-title md:max-w-none">
+                                        {{ currentTripDisplayName }}
+                                    </h1>
+                                    <div class="header-title-kicker mb-1">
+                                        {{ currentTripTitle || 'SEOUL TRAVEL GUIDE' }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="header-heading-row">
-                            <h1 class="header-title-main text-typo-title truncate md:max-w-none">
-                                {{ activeTripId?.split('_')[0] || 'Seoul' }}
-                            </h1>
-                            <span class="header-title-year leading-none whitespace-nowrap">
-                                {{ activeTripId?.split('_')[1] || '2026' }}
-                            </span>
+                        <div class="header-toolbar mb-0.5 flex-none self-stretch md:self-auto">
+                            <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
+                            <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
+                            <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
+                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                         </div>
-                    </div>
-                    <div class="header-toolbar mb-0.5 flex-none">
-                        <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
-                        <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
-                        <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
-                        <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                     </div>
                 </div>
                 <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center">
@@ -1048,6 +1079,10 @@
                 const countrySetting = ref(savedTripData?.meta?.country || 'KR');
                 const schedule = ref(clone(savedTripData?.schedule || DEFAULT_SCHEDULE));
                 const userNotes = ref(savedTripData?.notes || "");
+                const currentTripDisplayName = computed(() => {
+                    const raw = activeTripId.value?.split('_')[0] || 'SEOUL';
+                    return raw === 'SEOUL' ? 'SEOUL' : raw;
+                });
 
                 const timelineContainerRef = ref(null);
                 const dayRefs = ref({});
@@ -1678,6 +1713,7 @@
                     noteTextarea,
                     closeNoteBtn,
                     currentTripTitle,
+                    currentTripDisplayName,
                     activeTripId,
                     countrySetting,
                     ratesLoading,

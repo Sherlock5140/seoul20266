@@ -1023,7 +1023,7 @@
                 const mapError = ref(false);
                 const initLoading = ref(false);
                 const ratesLoading = ref(false);
-                const rateDirection = ref(localStorage.getItem('travelguide_rate_direction') || 'krw_to_twd');
+                const rateDirection = ref(localStorage.getItem('travelguide_rate_direction') || 'twd_to_krw');
                 const exchangeRates = ref({
                     krwToTwd: Number(localStorage.getItem('travelguide_krw_to_twd')) || 0.023,
                     usdToTwd: Number(localStorage.getItem('travelguide_usd_to_twd')) || 32.5

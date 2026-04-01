@@ -17,7 +17,7 @@
         img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-        script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
     ">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
@@ -820,6 +820,47 @@
 
     <script>
         const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
+        const DEBUG_ENABLED = (() => {
+            const hostname = window.location.hostname;
+            const isLocalPreview = hostname === 'localhost'
+                || hostname === '127.0.0.1'
+                || /^192\.168\./.test(hostname)
+                || /^10\./.test(hostname)
+                || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
+            return isLocalPreview || new URLSearchParams(window.location.search).get('debug') === '1';
+        })();
+        const APP_VERSION = '2026-04-01-debug-safe';
+
+        const showDebugOverlay = (payload) => {
+            if (!DEBUG_ENABLED) return;
+            const existing = document.getElementById('debug-error-overlay');
+            if (existing) existing.remove();
+            const overlay = document.createElement('div');
+            overlay.id = 'debug-error-overlay';
+            overlay.style.cssText = 'position:fixed;inset:auto 16px 16px 16px;z-index:99999;padding:18px;background:rgba(255,255,255,0.96);color:#2E2E2E;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;border-radius:18px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 20px 40px rgba(0,0,0,0.12);max-height:45vh;';
+            const title = document.createElement('div');
+            title.style.cssText = 'font:700 16px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;margin-bottom:10px;';
+            title.textContent = 'Debug Error';
+            const body = document.createElement('pre');
+            body.style.cssText = 'white-space:pre-wrap;word-break:break-word;font-size:12px;line-height:1.55;margin:0;';
+            body.textContent = typeof payload === 'string' ? payload : [
+                payload?.name ? `name: ${payload.name}` : '',
+                payload?.message ? `message: ${payload.message}` : '',
+                payload?.stack ? `stack:\n${payload.stack}` : String(payload)
+            ].filter(Boolean).join('\n\n');
+            overlay.append(title, body);
+            document.body.appendChild(overlay);
+        };
+
+        if (DEBUG_ENABLED) {
+            console.info(`[Seoul 2026] debug enabled (${APP_VERSION})`);
+            window.addEventListener('error', (event) => {
+                showDebugOverlay(event.error || event.message);
+            });
+            window.addEventListener('unhandledrejection', (event) => {
+                showDebugOverlay(event.reason || 'Unhandled promise rejection');
+            });
+        }
 
         const CATEGORY_CONFIG = {
             transport: { color: '#8FA39D', icon: 'bg-s-green', label: 'Transport', markerColor: '#8FA39D' },
@@ -973,7 +1014,7 @@
             }
         ];
 
-        createApp({
+        const app = createApp({
             setup() {
                 const showNotebook = ref(false);
                 const showSync = ref(false);
@@ -1573,9 +1614,28 @@
                         nextTick(checkMap);
                         window.addEventListener('keydown', handleGlobalKeydown);
                         if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.register('./sw.js').catch((err) => {
-                                console.warn('Service worker registration failed', err);
-                            });
+                            const hostname = window.location.hostname;
+                            const isLocalPreview = hostname === 'localhost'
+                                || hostname === '127.0.0.1'
+                                || /^192\.168\./.test(hostname)
+                                || /^10\./.test(hostname)
+                                || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
+
+                            if (isLocalPreview) {
+                                navigator.serviceWorker.getRegistrations()
+                                    .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+                                    .then(() => {
+                                        if (!('caches' in window)) return;
+                                        return caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))));
+                                    })
+                                    .catch((err) => {
+                                        console.warn('Local service worker cleanup failed', err);
+                                    });
+                            } else {
+                                navigator.serviceWorker.register('./sw.js').catch((err) => {
+                                    console.warn('Service worker registration failed', err);
+                                });
+                            }
                         }
                     } catch (error) {
                         isHydrating = false;
@@ -1653,7 +1713,16 @@
                     refreshRates
                 };
             }
-        }).mount('#app');
+        });
+
+        if (DEBUG_ENABLED) {
+            app.config.errorHandler = (error) => {
+                console.error('[Vue error]', error);
+                showDebugOverlay(error);
+            };
+        }
+
+        app.mount('#app');
     </script>
 </body>
 </html>

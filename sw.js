@@ -70,12 +70,15 @@ self.addEventListener('fetch', (event) => {
     caches.match(request).then((cachedResponse) => {
       const networkFetch = fetch(request)
         .then((response) => {
-          if (!response || !response.ok) return response;
+          if (!response || !response.ok) return cachedResponse || response;
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
           return response;
         })
-        .catch(() => cachedResponse);
+        .catch(() => {
+          if (cachedResponse) return cachedResponse;
+          return new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' });
+        });
 
       return cachedResponse || networkFetch;
     })

@@ -568,7 +568,7 @@
             line-height: 1.45;
             min-height: 2.8em;
         }
-        @media (max-width: 640px) {
+        @media (max-width: 767px) {
             .mobile-map-panel {
                 margin-top: calc(env(safe-area-inset-top) * -1 - 1.7rem);
                 padding-top: calc(env(safe-area-inset-top) + 1.7rem);
@@ -835,7 +835,7 @@
                                 </div>
                             </div>
                             <div v-if="event.note" class="timeline-note-box text-[13.5px] text-m-text leading-[1.85] p-4 rounded-xl select-text" v-html="formatNote(event.note)"></div>
-                            <div v-if="event.tags" class="mt-4 flex flex-wrap gap-2 no-select"><span v-for="tag in event.tags" class="text-[10px] px-2.5 py-1 rounded-md font-bold tracking-wide" :class="getTagStyle(tag)">#{{ tag }}</span></div>
+                            <div v-if="event.tags" class="mt-4 flex flex-wrap gap-2 no-select"><span v-for="tag in event.tags" :key="tag" class="text-[10px] px-2.5 py-1 rounded-md font-bold tracking-wide" :class="getTagStyle(tag)">#{{ tag }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -878,7 +878,7 @@
                 <div class="bg-white w-[92%] max-w-[560px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[88vh] flex flex-col">
                     <div class="flex justify-between items-center mb-4 flex-none">
                         <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">設定</span></div>
-                        <button @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
+                        <button aria-label="Close Settings" @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <div class="flex-1 overflow-y-auto hide-scroll space-y-6">
@@ -996,13 +996,13 @@
                                                     <i class="fa-solid fa-ellipsis"></i>
                                                 </summary>
                                                 <div class="trip-menu-panel absolute right-0 top-[calc(100%+0.55rem)] w-36 rounded-2xl p-2 z-10">
-                                                    <button type="button" @click="copyShareLink(trip.tripId)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
+                                                    <button type="button" @click="copyShareLink(trip.tripId); $event.target.closest('details').open = false" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
                                                         分享
                                                     </button>
-                                                    <button type="button" @click="startRenameTrip(trip)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
+                                                    <button type="button" @click="startRenameTrip(trip); $event.target.closest('details').open = false" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
                                                         改名
                                                     </button>
-                                                    <button type="button" @click="deleteTrip(trip)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-s-alert hover:bg-black/5 transition-colors" :disabled="trip.tripId === activeTripId || isCatalogTrip(trip.tripId)">
+                                                    <button type="button" @click="deleteTrip(trip); $event.target.closest('details').open = false" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-s-alert hover:bg-black/5 transition-colors" :disabled="trip.tripId === activeTripId || isCatalogTrip(trip.tripId)">
                                                         刪除
                                                     </button>
                                                 </div>
@@ -1026,7 +1026,7 @@
                             <i class="fa-solid fa-coins text-typo-title"></i>
                             <span class="text-xl font-bold text-typo-title">匯率資訊</span>
                         </div>
-                        <button @click="showRates = false" class="w-8 h-8 rounded-full flex items-center justify-center text-m-sub hover:text-typo-title">
+                        <button aria-label="Close Rates" @click="showRates = false" class="w-8 h-8 rounded-full flex items-center justify-center text-m-sub hover:text-typo-title">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>

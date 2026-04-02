@@ -62,6 +62,9 @@
       const decoded = decodeBase64Url(match[1]);
       const parsed = JSON.parse(decoded);
       if (!parsed?.tripId || !Array.isArray(parsed?.schedule)) return null;
+      if (!parsed.meta || typeof parsed.meta !== 'object') {
+        parsed.meta = { title: parsed.tripId, country: 'KR', schemaVersion: 1 };
+      }
       return parsed;
     } catch (error) {
       console.warn('Share snapshot decode failed', error);

@@ -2,7 +2,7 @@
   const clone = (value) => JSON.parse(JSON.stringify(value));
 
   const escapeHtml = (text) => {
-    if (typeof text !== 'string') return text;
+    if (typeof text !== 'string') return String(text ?? '');
     const htmlEntities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
     return text.replace(/[&<>"']/g, (match) => htmlEntities[match]);
   };

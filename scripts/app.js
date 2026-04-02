@@ -637,8 +637,6 @@
 
       const openRatesPanel = () => {
         showRates.value = true;
-        rateDirection.value = 'local_to_twd';
-        persistRateDirection(rateDirection.value);
         lastRateInput.value = 'local';
         if (!localCurrencyInput.value) {
           localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);

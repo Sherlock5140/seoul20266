@@ -715,8 +715,8 @@
                         <div class="header-toolbar mb-0.5 flex-none self-stretch md:self-auto">
                             <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
                             <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
-                            <button v-if="!isReadOnlyMode" type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
-                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">{{ isReadOnlyMode ? 'View Notes' : 'Notes' }}</span></button>
+                            <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
+                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                         </div>
                     </div>
                 </div>
@@ -725,7 +725,7 @@
                         <div class="min-w-0">
                             <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-s-blue mb-1">Share View</div>
                             <div class="text-sm font-bold text-typo-title">{{ shareModeLabel }}</div>
-                            <div class="text-xs text-m-sub mt-1">此連結只顯示目前行程，無法切換或編輯內容。</div>
+                            <div class="text-xs text-m-sub mt-1">此連結會直接打開指定行程，保留原本 APP 瀏覽節奏，僅隱藏跨行程管理功能。</div>
                         </div>
                         <button type="button" @click="copyShareLink(activeTripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform shrink-0">
                             <i class="fa-regular fa-copy mr-2"></i>複製連結
@@ -842,7 +842,7 @@
                             <button ref="closeNoteBtn" type="button" aria-label="Close Notes" @click="closeNotebook" class="w-9 h-9 rounded-full bg-black/5 flex items-center justify-center text-m-text hover:bg-black/10 transition-colors focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
-                    <div class="flex-1 notebook-modal p-8 overflow-y-auto"><textarea ref="noteTextarea" v-model="userNotes" @input="!isReadOnlyMode && saveNotes()" :readonly="isReadOnlyMode" class="notebook-textarea" :placeholder="isReadOnlyMode ? 'Read-only notes' : 'Type here...'"></textarea></div>
+                    <div class="flex-1 notebook-modal p-8 overflow-y-auto"><textarea ref="noteTextarea" v-model="userNotes" @input="!isReadOnlyMode && saveNotes()" :readonly="isReadOnlyMode" class="notebook-textarea" :placeholder="isReadOnlyMode ? 'Shared trip notes' : 'Type here...'"></textarea></div>
                 </div>
             </div>
         </transition>
@@ -886,11 +886,12 @@
                                 <div class="flex items-center justify-between gap-3 pt-1">
                                     <div>
                                         <div class="text-sm font-bold text-typo-title">Trips</div>
-                                        <div class="text-xs text-m-sub mt-1">切換、建立與整理你的行程資料</div>
+                                        <div class="text-xs text-m-sub mt-1">{{ isShareMode ? '此分享連結已固定在指定 trip' : '切換、建立與整理你的行程資料' }}</div>
                                     </div>
-                                    <button type="button" @click="openCreateTripForm" class="trip-primary-button px-4 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
+                                    <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button px-4 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
                                         <i class="fa-solid fa-plus mr-2"></i>新增行程
                                     </button>
+                                    <span v-else class="trip-badge px-3 py-2 rounded-full text-xs font-bold text-s-blue">Locked to this trip</span>
                                 </div>
                                 <transition name="save-indicator">
                                     <div v-if="tripManagerNotice.text" class="mt-4 text-[12px] font-bold px-3 py-2 rounded-2xl" :class="tripNoticeClass">
@@ -899,7 +900,7 @@
                                 </transition>
                             </div>
 
-                            <div v-if="showCreateTripForm" class="trip-panel-shell rounded-2xl p-5 mb-6">
+                            <div v-if="showCreateTripForm && !isShareMode" class="trip-panel-shell rounded-2xl p-5 mb-6">
                                 <div class="flex items-center justify-between gap-3 mb-4">
                                     <div>
                                         <div class="text-base font-bold text-typo-title">建立新行程</div>
@@ -962,10 +963,10 @@
                                             </div>
                                         </div>
                                         <div v-if="renamingTripId !== trip.tripId" class="flex flex-wrap gap-2 justify-end">
-                                            <button type="button" @click="switchTrip(trip.tripId)" class="trip-primary-button px-3.5 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId">開啟</button>
+                                            <button v-if="!isShareMode" type="button" @click="switchTrip(trip.tripId)" class="trip-primary-button px-3.5 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId">開啟</button>
                                             <button type="button" @click="copyShareLink(trip.tripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">分享</button>
-                                            <button type="button" @click="startRenameTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">改名</button>
-                                            <button type="button" @click="deleteTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-s-alert active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId || trip.tripId === 'SEOUL_2026'">刪除</button>
+                                            <button v-if="!isShareMode" type="button" @click="startRenameTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">改名</button>
+                                            <button v-if="!isShareMode" type="button" @click="deleteTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-s-alert active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId || trip.tripId === 'SEOUL_2026'">刪除</button>
                                         </div>
                                     </div>
                                 </div>

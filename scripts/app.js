@@ -135,8 +135,21 @@
         const match = String(activeTripId.value || '').match(/(20\d{2})$/);
         return match ? match[1] : String(new Date().getFullYear());
       });
-      const activeTripSummary = computed(() => tripSummaries.value.find((trip) => trip.tripId === activeTripId.value) || null);
-      const visibleTripSummaries = computed(() => tripSummaries.value);
+      const activeTripSummary = computed(() => (
+        tripSummaries.value.find((trip) => trip.tripId === activeTripId.value)
+        || (isShareMode.value ? {
+          tripId: activeTripId.value,
+          title: currentTripTitle.value || activeTripId.value,
+          country: countrySetting.value || 'KR',
+          updatedAt: '',
+          source: 'share'
+        } : null)
+      ));
+      const visibleTripSummaries = computed(() => (
+        isShareMode.value
+          ? (activeTripSummary.value ? [activeTripSummary.value] : [])
+          : tripSummaries.value
+      ));
 
       const timelineContainerRef = ref(null);
       const dayRefs = ref({});
@@ -195,7 +208,7 @@
         if (tripManagerNotice.value.tone === 'error') return 'text-s-alert bg-s-alert/10';
         return 'text-m-sub bg-black/5';
       });
-      const shareModeLabel = computed(() => isShareMode.value ? 'Read-only share view' : '');
+      const shareModeLabel = computed(() => isShareMode.value ? 'Scoped trip view' : '');
 
       const persistTrip = debounce(() => {
         if (isReadOnlyMode.value) return;

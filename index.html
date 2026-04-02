@@ -21,14 +21,14 @@
     ">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <meta name="apple-mobile-web-app-title" content="Seoul 2026">
-    <meta name="application-name" content="Seoul 2026">
+    <meta name="apple-mobile-web-app-title" content="Travel Guide">
+    <meta name="application-name" content="Travel Guide">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#ECEDEA">
     <link rel="manifest" href="./manifest.webmanifest">
-    <title>Seoul 2026</title>
+    <title>Travel Guide</title>
 
     <!-- Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
@@ -823,7 +823,7 @@
                 <div v-if="displayEvents.length" class="relative pl-2 space-y-10">
                     <div class="absolute left-[19px] top-4 bottom-4 w-[2px] timeline-line rounded-full opacity-50"></div>
                     <div v-for="event in displayEvents" :key="event.id" :id="'event-' + event.id" @click="focusEvent(event.id)" @keydown.enter.prevent="focusEvent(event.id)" @keydown.space.prevent="focusEvent(event.id)" tabindex="0" role="button" :aria-label="`${event.time} ${event.location}`" class="relative pl-10 group cursor-pointer active:scale-[0.99] transition-transform duration-300 rounded-[1.8rem] outline-none focus-visible:outline-none">
-                        <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" :class="[getDotColor(event.category), activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
+                        <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" :style="activeEventId === event.id ? null : getDotColor(event.category)" :class="[activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
                         <div class="timeline-card p-6 rounded-[1.8rem] relative overflow-hidden transition-all duration-400 group-focus-visible:ring-2 group-focus-visible:ring-typo-title/20 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-m-card" :class="activeEventId === event.id ? 'ring-1 ring-typo-title/10 bg-white' : ''">
                             <div class="flex justify-between items-center mb-3 no-select">
                                 <span class="event-time-chip font-mono text-[11px] font-bold text-m-sub px-2.5 py-1 rounded-lg tracking-tight">{{ event.time }}</span>
@@ -1041,7 +1041,7 @@
                                         <i class="fa-solid fa-right-left"></i>
                                     </span>
                                 </div>
-                                <div class="rate-big-number font-semibold text-typo-title font-mono mt-6">{{ displayKrwRate }}</div>
+                                <div class="rate-big-number font-semibold text-typo-title font-mono mt-6">{{ displayPrimaryRate }}</div>
                             </button>
                             <div class="min-w-0 rate-summary-card rounded-[1.45rem] px-4 pt-4 pb-3.5 shadow-ios-card">
                                 <div class="text-[11px] font-bold text-m-sub tracking-[0.18em] uppercase mb-2">USD → TWD</div>
@@ -1059,7 +1059,7 @@
 
                     <div class="grid grid-cols-2 gap-3.5 mb-5">
                         <div class="rate-calc-input rounded-[1.45rem] px-4 pt-4 pb-3.5" :class="{ 'is-active': lastRateInput === 'krw' }">
-                            <div class="text-[11px] font-bold text-m-sub tracking-[0.18em] uppercase mb-3">KRW</div>
+                            <div class="text-[11px] font-bold text-m-sub tracking-[0.18em] uppercase mb-3">{{ primaryCurrencyCode }}</div>
                             <input
                                 v-model="krwInput"
                                 @input="handleKrwInput"

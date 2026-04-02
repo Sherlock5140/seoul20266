@@ -4,6 +4,7 @@
     countrySettingRef,
     escapeHtml,
     focusEvent,
+    getActiveTripId,
     getDisplayEvents,
     getSchedule
   }) => {
@@ -13,6 +14,12 @@
     let resizeRaf = 0;
     let retryCount = 0;
     let tileErrorTimestamps = [];
+    const getMarkerKey = (eventId) => `${String(getActiveTripId?.() || 'TRIP')}::${String(eventId || '')}`;
+    const getDefaultCenter = () => (
+      countrySettingRef.value === 'KR'
+        ? { coords: [37.5665, 126.9780], zoom: 13 }
+        : { coords: [22.3193, 114.1694], zoom: 12 }
+    );
 
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
 
@@ -39,9 +46,12 @@
     const ensureMarkers = () => {
       if (!map) return;
 
+      const scheduleKeys = new Set();
       getSchedule().forEach((day) => {
         day.events.forEach((event) => {
-          if (!event.coords || markersMap.has(event.id)) return;
+          const markerKey = getMarkerKey(event.id);
+          scheduleKeys.add(markerKey);
+          if (!event.coords || markersMap.has(markerKey)) return;
 
           const config = categoryConfig[event.category] || categoryConfig.default;
           const iconHtml = `<div class="custom-marker-pin" style="background-color: ${config.markerColor};"><div class="marker-icon-inner"></div></div>`;
@@ -55,6 +65,7 @@
 
           const marker = L.marker(event.coords, { icon });
           marker.eventId = event.id;
+          marker.tripScopedId = markerKey;
           marker.bindPopup(`
             <div class="font-sans p-1 min-w-[120px]">
               <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${escapeHtml(event.category)}</div>
@@ -62,8 +73,17 @@
             </div>
           `, { closeButton: false, className: 'rounded-xl shadow-lg border-none', offset: [0, -5] });
           marker.on('click', () => focusEvent(event.id));
-          markersMap.set(event.id, marker);
+          markersMap.set(markerKey, marker);
         });
+      });
+
+      markersMap.forEach((marker, markerKey) => {
+        if (scheduleKeys.has(markerKey)) return;
+        if (map.hasLayer(marker)) {
+          marker.closePopup();
+          map.removeLayer(marker);
+        }
+        markersMap.delete(markerKey);
       });
     };
 
@@ -74,7 +94,7 @@
       const visibleIds = new Set(
         getDisplayEvents()
           .filter((event) => event.coords)
-          .map((event) => event.id)
+          .map((event) => getMarkerKey(event.id))
       );
 
       markersMap.forEach((marker, markerId) => {
@@ -127,7 +147,8 @@
       }
 
       try {
-        map = L.map('map', { zoomControl: false, zoomAnimation: true, fadeAnimation: true }).setView([37.5665, 126.9780], 13);
+        const defaultView = getDefaultCenter();
+        map = L.map('map', { zoomControl: false, zoomAnimation: true, fadeAnimation: true }).setView(defaultView.coords, defaultView.zoom);
         const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
           maxZoom: 20,
@@ -176,7 +197,7 @@
       markersMap.forEach((marker, markerId) => {
         const icon = marker.getElement();
         if (!icon) return;
-        if (event && event.coords && markerId === eventId) {
+        if (event && event.coords && markerId === getMarkerKey(eventId)) {
           icon.classList.add('active');
           marker.openPopup();
         } else {
@@ -195,7 +216,8 @@
       if (getVisibleMarkers().length > 0) {
         fitBounds();
       } else {
-        map.flyTo([37.5665, 126.9780], 13, { animate: true, duration: 1 });
+        const defaultView = getDefaultCenter();
+        map.flyTo(defaultView.coords, defaultView.zoom, { animate: true, duration: 1 });
       }
 
       markersMap.forEach((marker) => {

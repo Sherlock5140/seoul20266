@@ -118,19 +118,6 @@
     });
   };
 
-  const renameTrip = (tripId, title) => {
-    const current = loadTripState(tripId);
-    saveTripState({
-      tripId,
-      notes: current.notes,
-      schedule: current.schedule || [],
-      meta: {
-        ...current.meta,
-        title
-      }
-    });
-  };
-
   const deleteTripState = (tripId) => {
     localStorage.removeItem(getTripStorageKey(tripId));
     writeTripIndex(readTripIndex().filter((entry) => entry.tripId !== tripId));
@@ -150,7 +137,6 @@
     getActiveTripId,
     listTrips,
     loadTripState,
-    renameTrip,
     saveTripState,
     setActiveTripId
   };

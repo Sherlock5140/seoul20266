@@ -2,21 +2,33 @@
   const RATE_KEYS = {
     direction: 'travelguide_rate_direction',
     krwToTwd: 'travelguide_krw_to_twd',
+    hkdToTwd: 'travelguide_hkd_to_twd',
     usdToTwd: 'travelguide_usd_to_twd',
     updatedAt: 'travelguide_rate_updated_at'
   };
 
-  const getStoredRateState = () => ({
-    rateDirection: localStorage.getItem(RATE_KEYS.direction) || 'twd_to_krw',
-    exchangeRates: {
-      krwToTwd: Number(localStorage.getItem(RATE_KEYS.krwToTwd)) || 0.023,
-      usdToTwd: Number(localStorage.getItem(RATE_KEYS.usdToTwd)) || 32.5
-    },
-    rateUpdatedAt: localStorage.getItem(RATE_KEYS.updatedAt) || ''
-  });
+  const getStoredRateState = () => {
+    const storedDirection = localStorage.getItem(RATE_KEYS.direction) || 'twd_to_krw';
+    const normalizedDirection = storedDirection === 'krw_to_twd'
+      ? 'local_to_twd'
+      : storedDirection === 'twd_to_krw'
+        ? 'twd_to_local'
+        : storedDirection;
+
+    return {
+      rateDirection: normalizedDirection || 'twd_to_local',
+      exchangeRates: {
+        krwToTwd: Number(localStorage.getItem(RATE_KEYS.krwToTwd)) || 0.023,
+        hkdToTwd: Number(localStorage.getItem(RATE_KEYS.hkdToTwd)) || 4.16,
+        usdToTwd: Number(localStorage.getItem(RATE_KEYS.usdToTwd)) || 32.5
+      },
+      rateUpdatedAt: localStorage.getItem(RATE_KEYS.updatedAt) || ''
+    };
+  };
 
   const persistRates = (exchangeRates, rateUpdatedAt) => {
     localStorage.setItem(RATE_KEYS.krwToTwd, String(exchangeRates.krwToTwd || ''));
+    localStorage.setItem(RATE_KEYS.hkdToTwd, String(exchangeRates.hkdToTwd || ''));
     localStorage.setItem(RATE_KEYS.usdToTwd, String(exchangeRates.usdToTwd || ''));
     localStorage.setItem(RATE_KEYS.updatedAt, rateUpdatedAt || '');
   };
@@ -36,13 +48,14 @@
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const data = await response.json();
-    if (!data?.rates?.TWD || !data?.rates?.KRW) {
+    if (!data?.rates?.TWD || !data?.rates?.KRW || !data?.rates?.HKD) {
       throw new Error('Invalid rate payload');
     }
 
     return {
       usdToTwd: Number(data.rates.TWD),
       krwToTwd: Number(data.rates.TWD) / Number(data.rates.KRW),
+      hkdToTwd: Number(data.rates.TWD) / Number(data.rates.HKD),
       updatedAt: new Date().toISOString()
     };
   };

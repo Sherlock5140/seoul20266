@@ -8,7 +8,6 @@
     getActiveTripId,
     listTrips,
     loadTripState,
-    renameTrip,
     saveTripState,
     setActiveTripId
   } = global.Seoul2026Storage;
@@ -86,6 +85,19 @@
     dinnerId: null,
     events: []
   }]);
+  const resolveTripId = (candidateTripId) => {
+    const candidate = String(candidateTripId || '').trim().toUpperCase();
+    if (!candidate) return tripCatalog.defaultTripId;
+    if (tripCatalog.trips[candidate]) return candidate;
+
+    const saved = loadTripState(candidate);
+    const hasSavedState = Boolean(
+      saved?.notes
+      || Array.isArray(saved?.schedule)
+      || saved?.meta?.title
+    );
+    return hasSavedState ? candidate : tripCatalog.defaultTripId;
+  };
 
   const app = createApp({
     setup() {
@@ -106,7 +118,7 @@
       const twdInput = ref('');
       const lastRateInput = ref('krw');
 
-      const initialTripId = sharedTripSnapshot?.tripId || requestedTripId || getActiveTripId(tripCatalog.defaultTripId);
+      const initialTripId = resolveTripId(sharedTripSnapshot?.tripId || requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
       const activeTripId = ref(initialTripId);
       const template = getTripTemplate(activeTripId.value);
       const savedTripData = sharedTripSnapshot || loadTripState(activeTripId.value);
@@ -166,22 +178,32 @@
 
       const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
       const displayEvents = computed(() => currentDay.value.events || []);
-      const rateDirectionLabel = computed(() => rateDirection.value === 'krw_to_twd' ? 'KRW → TWD' : 'TWD → KRW');
-      const displayKrwRate = computed(() => {
-        const rate = exchangeRates.value.krwToTwd || 0;
+      const primaryCurrencyCode = computed(() => (countrySetting.value === 'GLOBAL' ? 'HKD' : 'KRW'));
+      const primaryRate = computed(() => (
+        primaryCurrencyCode.value === 'HKD'
+          ? (exchangeRates.value.hkdToTwd || 0)
+          : (exchangeRates.value.krwToTwd || 0)
+      ));
+      const rateDirectionLabel = computed(() => (
+        rateDirection.value === 'local_to_twd'
+          ? `${primaryCurrencyCode.value} → TWD`
+          : `TWD → ${primaryCurrencyCode.value}`
+      ));
+      const displayPrimaryRate = computed(() => {
+        const rate = primaryRate.value || 0;
         if (!rate) return '--';
-        return rateDirection.value === 'krw_to_twd' ? rate.toFixed(5) : (1 / rate).toFixed(2);
+        return rateDirection.value === 'local_to_twd' ? rate.toFixed(primaryCurrencyCode.value === 'HKD' ? 3 : 5) : (1 / rate).toFixed(2);
       });
       const displayUsdRate = computed(() => {
         const rate = exchangeRates.value.usdToTwd || 0;
         return rate ? rate.toFixed(2) : '--';
       });
       const rateHintText = computed(() => {
-        const rate = exchangeRates.value.krwToTwd || 0;
+        const rate = primaryRate.value || 0;
         if (!rate) return '匯率資料尚未更新';
-        return rateDirection.value === 'krw_to_twd'
-          ? `1 KRW ≈ ${rate.toFixed(5)} TWD`
-          : `1 TWD ≈ ${(1 / rate).toFixed(2)} KRW`;
+        return rateDirection.value === 'local_to_twd'
+          ? `1 ${primaryCurrencyCode.value} ≈ ${rate.toFixed(primaryCurrencyCode.value === 'HKD' ? 3 : 5)} TWD`
+          : `1 TWD ≈ ${(1 / rate).toFixed(2)} ${primaryCurrencyCode.value}`;
       });
       const rateUpdatedLabel = computed(() => {
         if (!rateUpdatedAt.value) return '尚未更新';
@@ -435,7 +457,20 @@
           setTripNotice('error', '行程名稱不可空白');
           return;
         }
-        renameTrip(tripId, title);
+
+        const existing = loadTripState(tripId);
+        const templateTrip = getTripTemplate(tripId);
+        saveTripState({
+          tripId,
+          notes: existing.notes || '',
+          schedule: clone(existing.schedule ?? templateTrip.schedule ?? createBlankSchedule()),
+          meta: {
+            title,
+            country: existing.meta?.country || templateTrip.meta?.country || 'KR',
+            schemaVersion: existing.meta?.schemaVersion || templateTrip.meta?.schemaVersion || 1
+          }
+        });
+
         if (tripId === activeTripId.value) {
           currentTripTitle.value = title;
         }
@@ -463,12 +498,18 @@
         setTripNotice('success', '已刪除行程');
       };
 
+      const highlightCurrency = (text) => (
+        text
+          .replace(/((?:HKD|TWD|KRW)\$?)\s*([0-9,]+(?:\.[0-9]+)?)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
+          .replace(/([0-9,]+(?:\.[0-9]+)?)\s*(韓元|港幣|台幣|元|KRW|HKD|TWD|HK\$)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
+      );
+
       const formatNote = (note) => {
         if (!note) return '';
         let processed = escapeHtml(note);
         processed = processed.replace(REGEX_NEWLINE, '<br>');
         processed = processed.replace(REGEX_KEYWORDS, '<span class="font-bold text-typo-title bg-yellow-100 px-1 rounded">$1</span>');
-        processed = processed.replace(/([0-9,]+)\s*(韓元|元|KRW)/g, '<span class="font-mono font-bold text-s-green">$1 $2</span>');
+        processed = highlightCurrency(processed);
         processed = processed.replace(/\b([01]\d|2[0-3]):([0-5]\d)\b/g, '<span class="font-mono font-bold text-typo-title bg-gray-100 px-1 rounded">$&</span>');
         return processed;
       };
@@ -476,7 +517,7 @@
       const formatNoticeInline = (line) => {
         let processed = escapeHtml(line || '');
         processed = processed.replace(REGEX_KEYWORDS, '<span class="font-bold text-typo-title bg-yellow-100 px-1 rounded">$1</span>');
-        processed = processed.replace(/([0-9,]+)\s*(韓元|元|KRW)/g, '<span class="font-mono font-bold text-s-green">$1 $2</span>');
+        processed = highlightCurrency(processed);
         processed = processed.replace(/\b([01]\d|2[0-3]):([0-5]\d)\b/g, '<span class="font-mono font-bold text-typo-title bg-gray-100 px-1 rounded">$&</span>');
         return processed;
       };
@@ -529,7 +570,7 @@
         }).join('<div class="notice-divider-line"></div>');
       };
 
-      const getDotColor = (category) => (CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default).icon;
+      const getDotColor = (category) => ({ backgroundColor: (CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default).color });
       const getCategoryBadge = (category) => (CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default).icon;
       const getTagStyle = (tag) => {
         if (tag === '死線' || tag === '風險') return 'bg-s-alert/20 text-s-alert';
@@ -556,12 +597,13 @@
         countrySettingRef: countrySetting,
         escapeHtml,
         focusEvent: (eventId) => focusEvent(eventId),
+        getActiveTripId: () => activeTripId.value,
         getDisplayEvents: () => displayEvents.value,
         getSchedule: () => schedule.value
       });
 
       const handleKrwInput = () => {
-        const rate = exchangeRates.value.krwToTwd || 0;
+        const rate = primaryRate.value || 0;
         const value = Number(krwInput.value);
         if (!krwInput.value || !Number.isFinite(value) || !rate) {
           twdInput.value = '';
@@ -571,7 +613,7 @@
       };
 
       const handleTwdInput = () => {
-        const rate = exchangeRates.value.krwToTwd || 0;
+        const rate = primaryRate.value || 0;
         const value = Number(twdInput.value);
         if (!twdInput.value || !Number.isFinite(value) || !rate) {
           krwInput.value = '';
@@ -581,7 +623,7 @@
       };
 
       const toggleRateDirection = () => {
-        rateDirection.value = rateDirection.value === 'krw_to_twd' ? 'twd_to_krw' : 'krw_to_twd';
+        rateDirection.value = rateDirection.value === 'local_to_twd' ? 'twd_to_local' : 'local_to_twd';
         persistRateDirection(rateDirection.value);
       };
 
@@ -593,14 +635,14 @@
           const nextRates = await refreshRates();
           exchangeRates.value = {
             usdToTwd: nextRates.usdToTwd,
-            krwToTwd: nextRates.krwToTwd
+            krwToTwd: nextRates.krwToTwd,
+            hkdToTwd: nextRates.hkdToTwd
           };
           rateUpdatedAt.value = nextRates.updatedAt;
           persistRates(exchangeRates.value, rateUpdatedAt.value);
         } catch (error) {
           console.warn('Rate refresh failed', error);
           rateError.value = true;
-          clearTimeout(rateErrorTimer);
           rateErrorTimer = setTimeout(() => {
             rateError.value = false;
           }, 3000);
@@ -689,7 +731,7 @@
         const target = event.target;
         if (!(target instanceof Element)) return;
         if (target.closest('#map')) return;
-        if (target.closest('input, textarea, select, option, button[label], [contenteditable="true"]')) return;
+        if (target.closest('input, textarea, select, option, button[aria-label], [contenteditable="true"]')) return;
 
         const now = Date.now();
         if (now - lastItineraryTapAt < 320) {
@@ -845,10 +887,11 @@
         twdInput,
         lastRateInput,
         rateDirectionLabel,
-        displayKrwRate,
+        displayPrimaryRate,
         displayUsdRate,
         rateHintText,
         rateUpdatedLabel,
+        primaryCurrencyCode,
         selectDay,
         focusEvent,
         openNotebook,

@@ -47,21 +47,39 @@
     return value.toFixed(2).replace(/\.?0+$/, '');
   };
 
-  const refreshRates = async () => {
-    const response = await fetch('https://open.er-api.com/v6/latest/USD');
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const data = await response.json();
-    if (!data?.rates?.TWD || !data?.rates?.KRW || !data?.rates?.HKD) {
-      throw new Error('Invalid rate payload');
+  const fetchRatesOnce = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch('https://open.er-api.com/v6/latest/USD', { signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!data?.rates?.TWD || !data?.rates?.KRW || !data?.rates?.HKD) {
+        throw new Error('Invalid rate payload');
+      }
+      return data;
+    } finally {
+      clearTimeout(timeoutId);
     }
+  };
 
-    return {
-      usdToTwd: Number(data.rates.TWD),
-      krwToTwd: Number(data.rates.TWD) / Number(data.rates.KRW),
-      hkdToTwd: Number(data.rates.TWD) / Number(data.rates.HKD),
-      updatedAt: new Date().toISOString()
-    };
+  const refreshRates = async () => {
+    let lastError;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const data = await fetchRatesOnce();
+        return {
+          usdToTwd: Number(data.rates.TWD),
+          krwToTwd: Number(data.rates.TWD) / Number(data.rates.KRW),
+          hkdToTwd: Number(data.rates.TWD) / Number(data.rates.HKD),
+          updatedAt: new Date().toISOString()
+        };
+      } catch (err) {
+        lastError = err;
+        if (attempt < 1) await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+    }
+    throw lastError;
   };
 
   global.Seoul2026Rates = {

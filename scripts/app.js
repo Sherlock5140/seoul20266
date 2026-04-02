@@ -1,6 +1,6 @@
 (function bootSeoul2026App(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
-  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
+  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
   const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml } = global.Seoul2026Utils;
   const {
     createTripState,
@@ -735,6 +735,7 @@
       const trapFocus = (event) => {
         if (!showNotebook.value) return;
         const focusable = [noteTextarea.value, closeNoteBtn.value].filter(Boolean);
+        if (focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
         if (event.shiftKey) {
@@ -753,6 +754,7 @@
         if (showNotebook.value) closeNotebook();
         else if (showSync.value) showSync.value = false;
         else if (showRates.value) showRates.value = false;
+        else if (activeEventId.value) resetMap();
       };
 
       const handleItineraryTouchEnd = (event) => {
@@ -763,7 +765,7 @@
         if (target.closest('input, textarea, select, option, button[aria-label], [contenteditable="true"]')) return;
 
         const now = Date.now();
-        if (now - lastItineraryTapAt < 320) {
+        if (now - lastItineraryTapAt < DOUBLE_TAP_THRESHOLD_MS) {
           event.preventDefault();
         }
         lastItineraryTapAt = now;
@@ -821,14 +823,7 @@
           }
 
           if ('serviceWorker' in navigator && navigator.serviceWorker) {
-            const hostname = window.location.hostname;
-            const isLocalPreview = hostname === 'localhost'
-              || hostname === '127.0.0.1'
-              || /^192\.168\./.test(hostname)
-              || /^10\./.test(hostname)
-              || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
-
-            if (isLocalPreview) {
+            if (IS_LOCAL_PREVIEW) {
               navigator.serviceWorker.getRegistrations()
                 .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
                 .then(() => {

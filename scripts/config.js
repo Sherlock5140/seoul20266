@@ -8,6 +8,7 @@
 
   global.Seoul2026Config = {
     APP_NAME: 'Travel Guide',
+    IS_LOCAL_PREVIEW: isLocalPreview,
     DEBUG_ENABLED: isLocalPreview || new URLSearchParams(window.location.search).get('debug') === '1',
     APP_VERSION: '2026-04-02-hong-kong-share-fix',
     COUNTRY_CONFIG: {
@@ -24,6 +25,7 @@
       alert: { color: '#B0726B', icon: 'bg-s-alert', label: 'Important', markerColor: '#B0726B' },
       default: { color: '#757573', icon: 'bg-m-sub', label: 'Other', markerColor: '#8E8E8C' }
     },
+    DOUBLE_TAP_THRESHOLD_MS: 320,
     REGEX_NEWLINE: /\n/g,
     REGEX_KEYWORDS: /(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g
   };

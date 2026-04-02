@@ -131,6 +131,7 @@
         if (titleSource) return titleSource.toUpperCase();
         return String(activeTripId.value || 'SEOUL').replace(/_(20\d{2})$/, '').replace(/_/g, ' ');
       });
+      const modeLabel = computed(() => (isShareMode.value ? '分享檢視' : '管理模式'));
       const currentTripYear = computed(() => {
         const match = String(activeTripId.value || '').match(/(20\d{2})$/);
         return match ? match[1] : String(new Date().getFullYear());
@@ -209,6 +210,15 @@
         return 'text-m-sub bg-black/5';
       });
       const shareModeLabel = computed(() => isShareMode.value ? 'Scoped trip view' : '');
+      const quickTripButtons = computed(() => {
+        const preferredOrder = ['SEOUL_2026', 'HONGKONG_2026'];
+        return preferredOrder
+          .map((tripId) => tripCatalog.trips[tripId] ? {
+            tripId,
+            label: tripId === 'SEOUL_2026' ? '首爾' : tripId === 'HONGKONG_2026' ? '香港' : tripId.replace(/_(20\d{2})$/, '')
+          } : null)
+          .filter(Boolean);
+      });
 
       const persistTrip = debounce(() => {
         if (isReadOnlyMode.value) return;
@@ -798,6 +808,7 @@
         closeNoteBtn,
         currentTripTitle,
         currentTripDisplayName,
+        modeLabel,
         currentTripYear,
         activeTripId,
         activeTripSummary,
@@ -809,6 +820,7 @@
         tripManagerNotice,
         tripNoticeClass,
         formatTripUpdatedAt,
+        quickTripButtons,
         buildShareUrl,
         copyShareLink,
         showCreateTripForm,

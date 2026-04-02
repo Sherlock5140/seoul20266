@@ -103,6 +103,9 @@
             padding-top: calc(env(safe-area-inset-top) + 2.4rem);
         }
         .header-toolbar {
+            position: relative;
+            z-index: 3;
+            pointer-events: auto;
             display: inline-flex;
             align-items: center;
             gap: 0.62rem;
@@ -117,6 +120,7 @@
         .header-title-block {
             min-width: 0;
             flex: 1;
+            pointer-events: none;
         }
         .header-main-row {
             display: flex;

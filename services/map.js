@@ -26,12 +26,12 @@
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
     const getHighlightOffset = () => {
       const isMobile = window.innerWidth < 768;
-      return isMobile ? 170 : 110;
+      return isMobile ? 220 : 130;
     };
     const getPopupPadding = () => {
       const isMobile = window.innerWidth < 768;
       return {
-        topLeft: isMobile ? [20, 140] : [24, 96],
+        topLeft: isMobile ? [20, 180] : [24, 112],
         bottomRight: isMobile ? [20, 24] : [24, 32]
       };
     };

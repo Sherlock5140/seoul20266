@@ -86,6 +86,8 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
         .glass-header {
+            position: relative;
+            z-index: 6;
             background: rgba(244, 245, 242, 0.75); 
             backdrop-filter: blur(30px) saturate(150%);
             -webkit-backdrop-filter: blur(30px) saturate(150%);
@@ -123,6 +125,7 @@
             pointer-events: none;
         }
         .header-main-row {
+            pointer-events: none;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
@@ -166,6 +169,8 @@
             color: #555551;
         }
         .header-icon-button {
+            pointer-events: auto;
+            touch-action: manipulation;
             width: 2.82rem;
             height: 2.82rem;
             border-radius: 9999px;
@@ -193,6 +198,8 @@
             font-size: 0.92rem;
         }
         .notes-button {
+            pointer-events: auto;
+            touch-action: manipulation;
             min-height: 2.82rem;
             padding-left: 0.86rem;
             padding-right: 0.96rem;
@@ -227,6 +234,9 @@
             justify-content: center;
         }
         .day-tab-row {
+            position: relative;
+            z-index: 5;
+            pointer-events: auto;
             gap: 0.6rem;
             padding-top: 0.15rem;
             padding-bottom: 1.1rem;
@@ -1083,12 +1093,12 @@
         </transition>
     </div>
 
-    <script src="./scripts/config.js?v=20260402b"></script>
-    <script src="./scripts/utils.js?v=20260402b"></script>
-    <script src="./services/storage.js?v=20260402b"></script>
-    <script src="./services/rates.js?v=20260402b"></script>
-    <script src="./services/map.js?v=20260402b"></script>
-    <script src="./data/seoul-2026.js?v=20260402b"></script>
-    <script src="./scripts/app.js?v=20260402b"></script>
+    <script src="./scripts/config.js?v=20260402c"></script>
+    <script src="./scripts/utils.js?v=20260402c"></script>
+    <script src="./services/storage.js?v=20260402c"></script>
+    <script src="./services/rates.js?v=20260402c"></script>
+    <script src="./services/map.js?v=20260402c"></script>
+    <script src="./data/seoul-2026.js?v=20260402c"></script>
+    <script src="./scripts/app.js?v=20260402c"></script>
 </body>
 </html>

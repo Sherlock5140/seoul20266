@@ -387,6 +387,15 @@
             align-items: stretch;
             gap: 0.85rem;
         }
+        .share-settings-banner {
+            background: linear-gradient(180deg, rgba(142,154,175,0.16) 0%, rgba(255,255,255,0.88) 100%);
+            border: 1px solid rgba(142,154,175,0.18);
+            box-shadow: 0 16px 28px -24px rgba(47,47,45,0.12);
+        }
+        .share-settings-copy {
+            justify-content: center;
+            min-height: 3rem;
+        }
         .share-mode-banner {
             background: linear-gradient(180deg, rgba(142,154,175,0.14) 0%, rgba(255,255,255,0.82) 100%);
             border: 1px solid rgba(142,154,175,0.22);
@@ -563,6 +572,10 @@
                 align-items: center;
                 justify-content: space-between;
                 gap: 1rem;
+            }
+            .share-settings-copy {
+                justify-content: flex-start;
+                min-height: 2.75rem;
             }
         }
         .notice-panel {
@@ -971,6 +984,16 @@
                     <div class="flex-1 overflow-y-auto hide-scroll space-y-5 md:space-y-6">
                         <div>
                             <div class="trip-panel-shell p-4 md:p-5 rounded-[1.7rem] md:rounded-2xl mb-5 md:mb-6">
+                                <div v-if="isShareMode" class="share-settings-banner rounded-[1.4rem] md:rounded-[1.55rem] px-4 py-3 mb-4">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div>
+                                            <div class="mode-pill inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold text-m-sub uppercase tracking-[0.18em] mb-2">Share View</div>
+                                            <div class="text-sm font-bold text-typo-title">此連結目前鎖定在單一行程</div>
+                                            <div class="text-xs text-m-sub mt-1 leading-5">你可以瀏覽內容與再次複製分享連結，但不會修改原始行程資料。</div>
+                                        </div>
+                                        <div class="trip-badge px-3 py-1.5 rounded-full text-[10px] font-bold text-m-sub shrink-0">唯讀</div>
+                                    </div>
+                                </div>
                                 <div class="settings-current-card rounded-[1.55rem] md:rounded-2xl px-4 py-4 mb-4">
                                     <div class="settings-current-top">
                                         <div class="min-w-0">
@@ -1028,8 +1051,8 @@
                                     <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button w-full md:w-auto px-4 py-3 md:py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
                                         <i class="fa-solid fa-plus mr-2"></i>新增行程
                                     </button>
-                                    <button v-else type="button" @click="copyShareLink(activeTripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">
-                                        <i class="fa-regular fa-copy mr-2"></i>複製分享連結
+                                    <button v-else type="button" @click="copyShareLink(activeTripId)" class="trip-action-button share-settings-copy w-full md:w-auto px-4 py-3 md:px-4 md:py-2.5 rounded-full text-sm md:text-xs font-bold text-m-text active:scale-95 transition-transform inline-flex items-center gap-2">
+                                        <i class="fa-regular fa-copy text-[0.95rem] md:text-[0.8rem]"></i><span>複製分享連結</span>
                                     </button>
                                 </div>
                                 <transition name="save-indicator">

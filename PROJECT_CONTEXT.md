@@ -80,8 +80,8 @@ UI logic:
 - Country dropdowns are now generated from config instead of hardcoded options.
 
 Cache:
-- Service worker cache version is currently `travel-guide-v9`.
-- Frontend asset query version is currently `20260402d`.
+- Service worker cache version is currently `travel-guide-v10`.
+- Frontend asset query version is currently `20260402e`.
 
 ## Rules Future AI Should Follow
 

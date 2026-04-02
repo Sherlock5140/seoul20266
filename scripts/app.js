@@ -82,6 +82,7 @@
   const sharedTripSnapshot = readShareSnapshot();
   const sharedTripId = String(sharedTripSnapshot?.tripId || '').trim().toUpperCase();
   const requestedTripId = String(urlParams.get('trip') || '').trim().toUpperCase();
+  const RATE_REFRESH_MAX_AGE_MS = 1000 * 60 * 60 * 6;
   const SHARE_VIEW_ENABLED = urlParams.get('view') === 'share'
     || urlParams.get('readonly') === '1'
     || urlParams.get('share') === '1';
@@ -98,6 +99,13 @@
   }]);
   const getCountryMeta = (countryCode) => COUNTRY_CONFIG[normalizeCountryCode(countryCode)] || COUNTRY_CONFIG.KR;
   const getLocalCurrencyDefaultAmount = (countryCode) => getCountryMeta(countryCode).defaultAmount || '100';
+  const scheduleBackgroundTask = (callback, timeout = 450) => {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => callback(), { timeout });
+      return;
+    }
+    window.setTimeout(callback, 0);
+  };
   const resolveTripId = (candidateTripId) => {
     const candidate = String(candidateTripId || '').trim().toUpperCase();
     if (!candidate) return tripCatalog.defaultTripId;
@@ -687,6 +695,13 @@
         }
       };
 
+      const shouldRefreshRatesOnLaunch = () => {
+        if (!rateUpdatedAt.value) return true;
+        const updatedAtMs = new Date(rateUpdatedAt.value).getTime();
+        if (Number.isNaN(updatedAtMs)) return true;
+        return Date.now() - updatedAtMs > RATE_REFRESH_MAX_AGE_MS;
+      };
+
       const selectDay = (index) => {
         currentDayIndex.value = index;
         activeEventId.value = null;
@@ -817,11 +832,17 @@
           }
           refreshTripSummaries();
           handleLocalCurrencyInput();
-          refreshRateData();
+          if (shouldRefreshRatesOnLaunch()) {
+            scheduleBackgroundTask(() => {
+              refreshRateData();
+            }, 1200);
+          }
           nextTick(() => {
-            if (document.getElementById('map')) {
-              mapService.initMap(setMapError);
-            }
+            scheduleBackgroundTask(() => {
+              if (document.getElementById('map')) {
+                mapService.initMap(setMapError);
+              }
+            }, 700);
           });
           window.addEventListener('keydown', handleGlobalKeydown);
           const itineraryPanel = document.getElementById('itinerary-panel');

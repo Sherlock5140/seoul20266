@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v9';
+const CACHE_NAME = 'travel-guide-v10';
 const APP_SHELL = [
   './',
   './index.html',
@@ -7,13 +7,13 @@ const APP_SHELL = [
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
-  './scripts/config.js?v=20260402d',
-  './scripts/utils.js?v=20260402d',
-  './scripts/app.js?v=20260402d',
-  './services/storage.js?v=20260402d',
-  './services/rates.js?v=20260402d',
-  './services/map.js?v=20260402d',
-  './data/seoul-2026.js?v=20260402d'
+  './scripts/config.js?v=20260402e',
+  './scripts/utils.js?v=20260402e',
+  './scripts/app.js?v=20260402e',
+  './services/storage.js?v=20260402e',
+  './services/rates.js?v=20260402e',
+  './services/map.js?v=20260402e',
+  './data/seoul-2026.js?v=20260402e'
 ];
 
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));
@@ -45,15 +45,19 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response && response.ok) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', responseClone));
-          }
-          return response;
-        })
-        .catch(() => caches.match('./index.html'))
+      caches.match('./index.html').then((cachedIndex) => {
+        const networkFetch = fetch(request)
+          .then((response) => {
+            if (response && response.ok) {
+              const responseClone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', responseClone));
+            }
+            return response;
+          })
+          .catch(() => cachedIndex || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' }));
+
+        return cachedIndex || networkFetch;
+      })
     );
     return;
   }

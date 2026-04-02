@@ -1,8 +1,17 @@
 (function bootSeoul2026App(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
   const { DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
-  const { clone, copyText, debounce, escapeHtml } = global.Seoul2026Utils;
-  const { getActiveTripId, loadTripState, saveTripState } = global.Seoul2026Storage;
+  const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml } = global.Seoul2026Utils;
+  const {
+    createTripState,
+    deleteTripState,
+    getActiveTripId,
+    listTrips,
+    loadTripState,
+    renameTrip,
+    saveTripState,
+    setActiveTripId
+  } = global.Seoul2026Storage;
   const { formatConvertedValue, getStoredRateState, persistRateDirection, persistRates, refreshRates } = global.Seoul2026Rates;
   const { createMapService } = global.Seoul2026Map;
   const tripCatalog = global.Seoul2026TripData;
@@ -45,6 +54,38 @@
   }
 
   const getTripTemplate = (tripId) => tripCatalog.trips[tripId] || tripCatalog.trips[tripCatalog.defaultTripId];
+  const urlParams = new URLSearchParams(window.location.search);
+  const readShareSnapshot = () => {
+    const match = String(window.location.hash || '').match(/(?:^#|&)share=([^&]+)/);
+    if (!match?.[1]) return null;
+
+    try {
+      const decoded = decodeBase64Url(match[1]);
+      const parsed = JSON.parse(decoded);
+      if (!parsed?.tripId || !Array.isArray(parsed?.schedule)) return null;
+      return parsed;
+    } catch (error) {
+      console.warn('Share snapshot decode failed', error);
+      return null;
+    }
+  };
+
+  const sharedTripSnapshot = readShareSnapshot();
+  const requestedTripId = String(urlParams.get('trip') || sharedTripSnapshot?.tripId || '').trim().toUpperCase();
+  const SHARE_VIEW_ENABLED = urlParams.get('view') === 'share'
+    || urlParams.get('readonly') === '1'
+    || urlParams.get('share') === '1';
+  const createBlankSchedule = () => ([{
+    date: '',
+    title: 'New Trip',
+    lunch: '_______',
+    lunchId: null,
+    tea: '_______',
+    teaId: null,
+    dinner: '_______',
+    dinnerId: null,
+    events: []
+  }]);
 
   const app = createApp({
     setup() {
@@ -65,18 +106,37 @@
       const twdInput = ref('');
       const lastRateInput = ref('krw');
 
-      const activeTripId = ref(getActiveTripId(tripCatalog.defaultTripId));
+      const initialTripId = sharedTripSnapshot?.tripId || requestedTripId || getActiveTripId(tripCatalog.defaultTripId);
+      const activeTripId = ref(initialTripId);
       const template = getTripTemplate(activeTripId.value);
-      const savedTripData = loadTripState(activeTripId.value);
+      const savedTripData = sharedTripSnapshot || loadTripState(activeTripId.value);
+      const isShareMode = ref(Boolean(SHARE_VIEW_ENABLED && (requestedTripId || sharedTripSnapshot?.tripId)));
+      const isReadOnlyMode = computed(() => isShareMode.value);
 
       const currentTripTitle = ref(savedTripData.meta.title || template.meta.title);
       const countrySetting = ref(savedTripData.meta.country || template.meta.country);
       const schedule = ref(clone(savedTripData.schedule || template.schedule));
       const userNotes = ref(savedTripData.notes || '');
+      const tripSummaries = ref(listTrips(tripCatalog.trips));
+      const tripManagerNotice = ref({ tone: '', text: '' });
+      const showCreateTripForm = ref(false);
+      const newTripTitle = ref('');
+      const newTripYear = ref(String((activeTripId.value.match(/(20\d{2})$/) || [])[1] || new Date().getFullYear()));
+      const newTripCountry = ref(countrySetting.value || 'KR');
+      const newTripStarter = ref('clone_current');
+      const renamingTripId = ref('');
+      const renameTitle = ref('');
       const currentTripDisplayName = computed(() => {
-        const raw = activeTripId.value?.split('_')[0] || 'SEOUL';
-        return raw === 'SEOUL' ? 'SEOUL' : raw;
+        const titleSource = String(currentTripTitle.value || '').replace(/\s*travel guide\s*$/i, '').trim();
+        if (titleSource) return titleSource.toUpperCase();
+        return String(activeTripId.value || 'SEOUL').replace(/_(20\d{2})$/, '').replace(/_/g, ' ');
       });
+      const currentTripYear = computed(() => {
+        const match = String(activeTripId.value || '').match(/(20\d{2})$/);
+        return match ? match[1] : String(new Date().getFullYear());
+      });
+      const activeTripSummary = computed(() => tripSummaries.value.find((trip) => trip.tripId === activeTripId.value) || null);
+      const visibleTripSummaries = computed(() => tripSummaries.value);
 
       const timelineContainerRef = ref(null);
       const dayRefs = ref({});
@@ -87,6 +147,7 @@
       let isHydrating = true;
       let saveStatusTimer = null;
       let rateErrorTimer = null;
+      let tripNoticeTimer = null;
       let lastItineraryTapAt = 0;
 
       const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
@@ -129,8 +190,15 @@
         });
         return items;
       });
+      const tripNoticeClass = computed(() => {
+        if (tripManagerNotice.value.tone === 'success') return 'text-s-green bg-s-green/10';
+        if (tripManagerNotice.value.tone === 'error') return 'text-s-alert bg-s-alert/10';
+        return 'text-m-sub bg-black/5';
+      });
+      const shareModeLabel = computed(() => isShareMode.value ? 'Read-only share view' : '');
 
       const persistTrip = debounce(() => {
+        if (isReadOnlyMode.value) return;
         saveStatus.value = 'Saving...';
         try {
           saveTripState({
@@ -158,6 +226,218 @@
           }, 4000);
         }
       }, 600);
+
+      const refreshTripSummaries = () => {
+        tripSummaries.value = listTrips(tripCatalog.trips);
+      };
+
+      const setTripNotice = (tone, text) => {
+        tripManagerNotice.value = { tone, text };
+        clearTimeout(tripNoticeTimer);
+        tripNoticeTimer = setTimeout(() => {
+          if (tripManagerNotice.value.text === text) {
+            tripManagerNotice.value = { tone: '', text: '' };
+          }
+        }, 2600);
+      };
+
+      const formatTripUpdatedAt = (updatedAt) => {
+        if (!updatedAt) return 'Template';
+        const parsedDate = new Date(updatedAt);
+        if (Number.isNaN(parsedDate.getTime())) return updatedAt;
+        return parsedDate.toLocaleString('zh-TW', {
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+      };
+
+      const buildShareUrl = (tripId) => {
+        const url = new URL(window.location.href);
+        const sourceTemplate = getTripTemplate(tripId);
+        const sourceState = tripId === activeTripId.value
+          ? {
+              tripId,
+              notes: userNotes.value,
+              schedule: schedule.value,
+              meta: {
+                title: currentTripTitle.value,
+                country: countrySetting.value
+              }
+            }
+          : loadTripState(tripId);
+        const sharePayload = {
+          tripId,
+          notes: sourceState.notes || '',
+          schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
+          meta: {
+            title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
+            country: sourceState.meta?.country || sourceTemplate.meta?.country || 'KR',
+            schemaVersion: sourceState.meta?.schemaVersion || 1
+          }
+        };
+
+        url.searchParams.set('trip', tripId);
+        url.searchParams.set('view', 'share');
+        url.searchParams.set('readonly', '1');
+        url.hash = `share=${encodeBase64Url(sharePayload)}`;
+        return url.toString();
+      };
+
+      const copyShareLink = (tripId) => {
+        copyText(buildShareUrl(tripId));
+        setTripNotice('success', '已複製分享連結');
+      };
+
+      const applyTripState = (tripId) => {
+        if (isReadOnlyMode.value) return;
+        const nextTemplate = getTripTemplate(tripId);
+        const nextSaved = loadTripState(tripId);
+        activeTripId.value = tripId;
+        setActiveTripId(tripId);
+        currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
+        countrySetting.value = nextSaved.meta.country || nextTemplate.meta.country;
+        schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
+        userNotes.value = nextSaved.notes || '';
+        currentDayIndex.value = 0;
+        activeEventId.value = null;
+        validateSchedule();
+        refreshTripSummaries();
+        nextTick(() => {
+          if (timelineContainerRef.value) timelineContainerRef.value.scrollTop = 0;
+          mapService.renderMarkers();
+          resetMap();
+        });
+      };
+
+      const slugifyTripName = (title) => String(title || '')
+        .trim()
+        .replace(/[\s\-]+/g, '_')
+        .replace(/[^\p{L}\p{N}_]+/gu, '')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '')
+        .toUpperCase();
+
+      const buildTripId = (title, year) => {
+        const slug = slugifyTripName(title);
+        return slug && year ? `${slug}_${year}` : '';
+      };
+
+      const openCreateTripForm = () => {
+        if (isReadOnlyMode.value) return;
+        showCreateTripForm.value = true;
+        newTripTitle.value = '';
+        newTripYear.value = currentTripYear.value;
+        newTripCountry.value = countrySetting.value || 'KR';
+        newTripStarter.value = 'clone_current';
+      };
+
+      const cancelCreateTrip = () => {
+        showCreateTripForm.value = false;
+      };
+
+      const switchTrip = (tripId) => {
+        if (isReadOnlyMode.value) return;
+        if (!tripId || tripId === activeTripId.value) return;
+        persistTrip.flush?.();
+        applyTripState(tripId);
+        setTripNotice('success', '已切換行程');
+      };
+
+      const createTrip = () => {
+        if (isReadOnlyMode.value) return;
+        const title = newTripTitle.value.trim();
+        const year = String(newTripYear.value || '').trim();
+        const tripId = buildTripId(title, year);
+
+        if (!title) {
+          setTripNotice('error', '請先輸入行程名稱');
+          return;
+        }
+        if (!/^\d{4}$/.test(year)) {
+          setTripNotice('error', '年份請使用 4 位數');
+          return;
+        }
+        if (!tripId) {
+          setTripNotice('error', '行程代碼無法建立，請調整名稱');
+          return;
+        }
+        if (tripSummaries.value.some((trip) => trip.tripId === tripId)) {
+          setTripNotice('error', '此行程已存在，請更換名稱或年份');
+          return;
+        }
+
+        persistTrip.flush?.();
+
+        const starterSchedule = newTripStarter.value === 'blank'
+          ? createBlankSchedule()
+          : newTripStarter.value === 'seoul_template'
+            ? clone(getTripTemplate(tripCatalog.defaultTripId).schedule || createBlankSchedule())
+            : clone(schedule.value);
+
+        createTripState({
+          tripId,
+          notes: '',
+          schedule: starterSchedule,
+          meta: {
+            title,
+            country: newTripCountry.value
+          }
+        });
+
+        refreshTripSummaries();
+        applyTripState(tripId);
+        showCreateTripForm.value = false;
+        setTripNotice('success', '已建立新行程');
+      };
+
+      const startRenameTrip = (trip) => {
+        if (isReadOnlyMode.value) return;
+        renamingTripId.value = trip.tripId;
+        renameTitle.value = trip.title;
+      };
+
+      const cancelRenameTrip = () => {
+        renamingTripId.value = '';
+        renameTitle.value = '';
+      };
+
+      const saveTripRename = (tripId) => {
+        if (isReadOnlyMode.value) return;
+        const title = renameTitle.value.trim();
+        if (!title) {
+          setTripNotice('error', '行程名稱不可空白');
+          return;
+        }
+        renameTrip(tripId, title);
+        if (tripId === activeTripId.value) {
+          currentTripTitle.value = title;
+        }
+        refreshTripSummaries();
+        cancelRenameTrip();
+        setTripNotice('success', '已更新行程名稱');
+      };
+
+      const deleteTrip = (trip) => {
+        if (isReadOnlyMode.value) return;
+        if (!trip || trip.tripId === tripCatalog.defaultTripId) {
+          setTripNotice('error', '預設行程不可刪除');
+          return;
+        }
+        if (!window.confirm(`確定要刪除「${trip.title}」嗎？`)) return;
+
+        const fallbackTrip = tripSummaries.value.find((item) => item.tripId !== trip.tripId);
+        deleteTripState(trip.tripId);
+        refreshTripSummaries();
+
+        if (trip.tripId === activeTripId.value && fallbackTrip) {
+          applyTripState(fallbackTrip.tripId);
+        }
+
+        setTripNotice('success', '已刪除行程');
+      };
 
       const formatNote = (note) => {
         if (!note) return '';
@@ -417,7 +697,7 @@
       };
 
       watch(countrySetting, () => {
-        if (isHydrating) return;
+        if (isHydrating || isReadOnlyMode.value) return;
         persistTrip();
       });
 
@@ -425,9 +705,10 @@
         try {
           validateSchedule();
           isHydrating = false;
-          if (!savedTripData.schedule || !savedTripData.meta.title) {
+          if (!isReadOnlyMode.value && (!savedTripData.schedule || !savedTripData.meta.title)) {
             persistTrip();
           }
+          refreshTripSummaries();
           handleKrwInput();
           refreshRateData();
           nextTick(() => {
@@ -441,7 +722,7 @@
             itineraryPanel.addEventListener('touchend', handleItineraryTouchEnd, { passive: false });
           }
 
-          if ('serviceWorker' in navigator) {
+          if ('serviceWorker' in navigator && navigator.serviceWorker) {
             const hostname = window.location.hostname;
             const isLocalPreview = hostname === 'localhost'
               || hostname === '127.0.0.1'
@@ -475,6 +756,7 @@
         persistTrip.flush?.();
         clearTimeout(saveStatusTimer);
         clearTimeout(rateErrorTimer);
+        clearTimeout(tripNoticeTimer);
         mapService.destroy();
         window.removeEventListener('keydown', handleGlobalKeydown);
         const itineraryPanel = document.getElementById('itinerary-panel');
@@ -503,8 +785,34 @@
         closeNoteBtn,
         currentTripTitle,
         currentTripDisplayName,
+        currentTripYear,
         activeTripId,
+        activeTripSummary,
+        isShareMode,
+        isReadOnlyMode,
+        shareModeLabel,
         countrySetting,
+        tripSummaries: visibleTripSummaries,
+        tripManagerNotice,
+        tripNoticeClass,
+        formatTripUpdatedAt,
+        buildShareUrl,
+        copyShareLink,
+        showCreateTripForm,
+        newTripTitle,
+        newTripYear,
+        newTripCountry,
+        newTripStarter,
+        renamingTripId,
+        renameTitle,
+        openCreateTripForm,
+        cancelCreateTrip,
+        createTrip,
+        switchTrip,
+        startRenameTrip,
+        cancelRenameTrip,
+        saveTripRename,
+        deleteTrip,
         ratesLoading,
         rateError,
         krwInput,

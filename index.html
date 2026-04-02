@@ -263,6 +263,40 @@
         .notebook-textarea { background: transparent; width: 100%; height: 100%; border: none; outline: none; resize: none; line-height: 2.2rem; font-family: 'Noto Sans TC', sans-serif; font-size: 1.05rem; color: #484846; padding-top: 0.2rem; }
         .sync-input { background: #F4F5F2; border: 1px solid #D6D8D4; padding: 10px 14px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; color: #2E2E2E; width: 100%; outline: none; transition: border-color 0.2s; }
         .sync-input:focus { border-color: #C9A6A1; }
+        .trip-panel-shell {
+            background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(244,245,242,0.92) 100%);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: 0 18px 34px -26px rgba(47,47,45,0.14);
+        }
+        .trip-row-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(250,250,247,0.92) 100%);
+            border: 1px solid rgba(226,228,223,0.95);
+            box-shadow: 0 14px 28px -24px rgba(47,47,45,0.14);
+        }
+        .trip-action-button {
+            background: rgba(244,245,242,0.95);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .trip-primary-button {
+            background: linear-gradient(180deg, rgba(47,47,45,0.94) 0%, rgba(47,47,45,0.86) 100%);
+            color: #F4F5F2;
+            border: 1px solid rgba(47,47,45,0.92);
+            box-shadow: 0 18px 30px -22px rgba(47,47,45,0.32);
+        }
+        .trip-secondary-button {
+            background: rgba(255,255,255,0.84);
+            border: 1px solid rgba(214,216,212,0.92);
+        }
+        .trip-badge {
+            background: rgba(244,245,242,0.96);
+            border: 1px solid rgba(214,216,212,0.92);
+        }
+        .share-mode-banner {
+            background: linear-gradient(180deg, rgba(142,154,175,0.14) 0%, rgba(255,255,255,0.82) 100%);
+            border: 1px solid rgba(142,154,175,0.22);
+            box-shadow: 0 16px 28px -24px rgba(47,47,45,0.12);
+        }
         .save-indicator-enter-active, .save-indicator-leave-active { transition: opacity 0.3s; }
         .save-indicator-enter-from, .save-indicator-leave-to { opacity: 0; }
         
@@ -667,7 +701,7 @@
                             <div class="header-mobile-top">
                                 <div class="header-heading-row">
                                     <span class="header-title-year leading-none whitespace-nowrap">
-                                        {{ activeTripId?.split('_')[1] || '2026' }}
+                                        {{ currentTripYear || '2026' }}
                                     </span>
                                     <h1 class="header-title-main text-typo-title md:max-w-none">
                                         {{ currentTripDisplayName }}
@@ -681,9 +715,21 @@
                         <div class="header-toolbar mb-0.5 flex-none self-stretch md:self-auto">
                             <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
                             <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
-                            <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
-                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
+                            <button v-if="!isReadOnlyMode" type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
+                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">{{ isReadOnlyMode ? 'View Notes' : 'Notes' }}</span></button>
                         </div>
+                    </div>
+                </div>
+                <div v-if="isShareMode" class="share-mode-banner mx-0 mb-3 rounded-[1.6rem] px-4 py-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-s-blue mb-1">Share View</div>
+                            <div class="text-sm font-bold text-typo-title">{{ shareModeLabel }}</div>
+                            <div class="text-xs text-m-sub mt-1">此連結只顯示目前行程，無法切換或編輯內容。</div>
+                        </div>
+                        <button type="button" @click="copyShareLink(activeTripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform shrink-0">
+                            <i class="fa-regular fa-copy mr-2"></i>複製連結
+                        </button>
                     </div>
                 </div>
                 <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center">
@@ -796,7 +842,7 @@
                             <button ref="closeNoteBtn" type="button" aria-label="Close Notes" @click="closeNotebook" class="w-9 h-9 rounded-full bg-black/5 flex items-center justify-center text-m-text hover:bg-black/10 transition-colors focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
-                    <div class="flex-1 notebook-modal p-8 overflow-y-auto"><textarea ref="noteTextarea" v-model="userNotes" @input="saveNotes" class="notebook-textarea" placeholder="Type here..."></textarea></div>
+                    <div class="flex-1 notebook-modal p-8 overflow-y-auto"><textarea ref="noteTextarea" v-model="userNotes" @input="!isReadOnlyMode && saveNotes()" :readonly="isReadOnlyMode" class="notebook-textarea" :placeholder="isReadOnlyMode ? 'Read-only notes' : 'Type here...'"></textarea></div>
                 </div>
             </div>
         </transition>
@@ -804,7 +850,7 @@
         <!-- Settings Modal -->
         <transition name="slide-up">
             <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showSync = false">
-                <div class="bg-white w-[90%] max-w-[420px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[85vh] flex flex-col">
+                <div class="bg-white w-[92%] max-w-[560px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[88vh] flex flex-col">
                     <div class="flex justify-between items-center mb-4 flex-none">
                         <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">設定</span></div>
                         <button @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
@@ -812,11 +858,23 @@
 
                     <div class="flex-1 overflow-y-auto hide-scroll space-y-6">
                         <div>
-                            <div class="bg-m-card p-5 rounded-2xl border border-m-border mb-6">
-                                <div class="bg-white rounded-2xl border border-m-border px-4 py-3 mb-4">
-                                    <div class="text-[10px] font-bold text-typo-label uppercase tracking-widest mb-2">目前行程</div>
-                                    <div class="text-base font-bold text-typo-title truncate">{{ currentTripTitle }}</div>
-                                    <div class="text-xs font-mono text-m-sub mt-1">{{ activeTripId || '尚未設定' }}</div>
+                            <div class="trip-panel-shell p-5 rounded-2xl mb-6">
+                                <div class="bg-white rounded-2xl border border-m-border px-4 py-4 mb-4 shadow-sm">
+                                    <div class="flex flex-wrap items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <div class="text-[10px] font-bold text-typo-label uppercase tracking-widest mb-2">目前行程</div>
+                                            <div class="text-lg font-bold text-typo-title truncate">{{ currentTripTitle }}</div>
+                                            <div class="text-xs font-mono text-m-sub mt-1">{{ activeTripId || '尚未設定' }}</div>
+                                        </div>
+                                        <div class="trip-badge px-3 py-2 rounded-2xl text-right shrink-0">
+                                            <div class="text-[10px] font-bold text-typo-label uppercase tracking-[0.16em] mb-1">Year</div>
+                                            <div class="text-sm font-bold text-typo-title">{{ currentTripYear }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex flex-wrap gap-2 text-[11px]">
+                                        <span v-if="activeTripSummary" class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">Last update · {{ formatTripUpdatedAt(activeTripSummary.updatedAt) }}</span>
+                                        <span class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">Country · {{ countrySetting === 'KR' ? 'Korea' : 'Global' }}</span>
+                                    </div>
                                 </div>
                                 <div class="mb-4">
                                     <div class="text-sm font-bold text-m-sub mb-1">地圖區域</div>
@@ -824,6 +882,92 @@
                                         <option value="KR">韓國（NAVER Map）</option>
                                         <option value="GLOBAL">全球（Google Maps）</option>
                                     </select>
+                                </div>
+                                <div class="flex items-center justify-between gap-3 pt-1">
+                                    <div>
+                                        <div class="text-sm font-bold text-typo-title">Trips</div>
+                                        <div class="text-xs text-m-sub mt-1">切換、建立與整理你的行程資料</div>
+                                    </div>
+                                    <button type="button" @click="openCreateTripForm" class="trip-primary-button px-4 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
+                                        <i class="fa-solid fa-plus mr-2"></i>新增行程
+                                    </button>
+                                </div>
+                                <transition name="save-indicator">
+                                    <div v-if="tripManagerNotice.text" class="mt-4 text-[12px] font-bold px-3 py-2 rounded-2xl" :class="tripNoticeClass">
+                                        {{ tripManagerNotice.text }}
+                                    </div>
+                                </transition>
+                            </div>
+
+                            <div v-if="showCreateTripForm" class="trip-panel-shell rounded-2xl p-5 mb-6">
+                                <div class="flex items-center justify-between gap-3 mb-4">
+                                    <div>
+                                        <div class="text-base font-bold text-typo-title">建立新行程</div>
+                                        <div class="text-xs text-m-sub mt-1">先建立本地 trip，之後可再接 GAS 或 Notion</div>
+                                    </div>
+                                    <button type="button" @click="cancelCreateTrip" class="trip-action-button w-9 h-9 rounded-full text-m-sub hover:text-typo-title flex items-center justify-center">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <div class="text-sm font-bold text-m-sub mb-1">行程名稱</div>
+                                        <input v-model="newTripTitle" type="text" class="sync-input" placeholder="Hong Kong Travel Guide">
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-m-sub mb-1">年份</div>
+                                        <input v-model="newTripYear" type="text" inputmode="numeric" class="sync-input" placeholder="2026">
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-m-sub mb-1">地圖區域</div>
+                                        <select v-model="newTripCountry" class="sync-input">
+                                            <option value="KR">韓國（NAVER Map）</option>
+                                            <option value="GLOBAL">全球（Google Maps）</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-m-sub mb-1">起始內容</div>
+                                        <select v-model="newTripStarter" class="sync-input">
+                                            <option value="clone_current">複製目前行程</option>
+                                            <option value="seoul_template">使用 Seoul 範本</option>
+                                            <option value="blank">建立空白行程</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <button type="button" @click="createTrip" class="trip-primary-button px-4 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">建立並切換</button>
+                                    <button type="button" @click="cancelCreateTrip" class="trip-secondary-button px-4 py-2.5 rounded-full text-sm font-bold text-m-text active:scale-95 transition-transform">取消</button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div v-for="trip in tripSummaries" :key="trip.tripId" class="trip-row-card rounded-2xl p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                        <div v-if="renamingTripId !== trip.tripId">
+                                            <div class="text-base font-bold text-typo-title truncate">{{ trip.title }}</div>
+                                            <div class="text-xs font-mono text-m-sub mt-1">{{ trip.tripId }}</div>
+                                        </div>
+                                            <div v-else class="space-y-2">
+                                                <input v-model="renameTitle" type="text" class="sync-input" placeholder="Trip title">
+                                                <div class="flex flex-wrap gap-2">
+                                                    <button type="button" @click="saveTripRename(trip.tripId)" class="trip-primary-button px-3 py-2 rounded-full text-xs font-bold">儲存名稱</button>
+                                                    <button type="button" @click="cancelRenameTrip" class="trip-secondary-button px-3 py-2 rounded-full text-xs font-bold text-m-text">取消</button>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex flex-wrap gap-2 text-[11px]">
+                                                <span class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">{{ trip.country === 'KR' ? 'Korea' : 'Global' }}</span>
+                                                <span class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">{{ formatTripUpdatedAt(trip.updatedAt) }}</span>
+                                                <span v-if="trip.tripId === activeTripId" class="trip-badge px-3 py-1.5 rounded-full font-bold text-s-green">目前使用中</span>
+                                            </div>
+                                        </div>
+                                        <div v-if="renamingTripId !== trip.tripId" class="flex flex-wrap gap-2 justify-end">
+                                            <button type="button" @click="switchTrip(trip.tripId)" class="trip-primary-button px-3.5 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId">開啟</button>
+                                            <button type="button" @click="copyShareLink(trip.tripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">分享</button>
+                                            <button type="button" @click="startRenameTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">改名</button>
+                                            <button type="button" @click="deleteTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-s-alert active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId || trip.tripId === 'SEOUL_2026'">刪除</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

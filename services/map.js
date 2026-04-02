@@ -24,6 +24,12 @@
     };
 
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
+    const isAirportEvent = (event) => /機場|airport/i.test(`${event?.location || ''} ${event?.note || ''}`);
+    const getOverviewEvents = () => {
+      const events = (getDisplayEvents?.() || []).filter((event) => event.coords);
+      const nonAirportEvents = events.filter((event) => !isAirportEvent(event));
+      return nonAirportEvents.length >= 2 ? nonAirportEvents : events;
+    };
     const getHighlightOffset = () => {
       const isMobile = window.innerWidth < 768;
       return isMobile ? 220 : 130;
@@ -113,8 +119,7 @@
 
       ensureMarkers();
       const visibleIds = new Set(
-        getDisplayEvents()
-          .filter((event) => event.coords)
+        getOverviewEvents()
           .map((event) => getMarkerKey(event.id))
       );
 
@@ -215,6 +220,10 @@
 
     const highlightEvent = (eventId, event) => {
       if (!map) return;
+      const targetMarker = markersMap.get(getMarkerKey(eventId));
+      if (targetMarker && !map.hasLayer(targetMarker)) {
+        targetMarker.addTo(map);
+      }
       markersMap.forEach((marker, markerId) => {
         const icon = marker.getElement();
         if (!icon) return;

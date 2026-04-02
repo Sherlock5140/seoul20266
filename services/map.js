@@ -26,7 +26,14 @@
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
     const getHighlightOffset = () => {
       const isMobile = window.innerWidth < 768;
-      return isMobile ? 120 : 80;
+      return isMobile ? 170 : 110;
+    };
+    const getPopupPadding = () => {
+      const isMobile = window.innerWidth < 768;
+      return {
+        topLeft: isMobile ? [20, 140] : [24, 96],
+        bottomRight: isMobile ? [20, 24] : [24, 32]
+      };
     };
 
     const fitBounds = () => {
@@ -72,12 +79,20 @@
           const marker = L.marker(event.coords, { icon });
           marker.eventId = event.id;
           marker.tripScopedId = markerKey;
+          const popupPadding = getPopupPadding();
           marker.bindPopup(`
             <div class="font-sans p-1 min-w-[120px]">
               <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${escapeHtml(event.category)}</div>
               <div class="font-bold text-sm leading-tight text-[#2F2F2D]">${escapeHtml(event.location)}</div>
             </div>
-          `, { closeButton: false, className: 'rounded-xl shadow-lg border-none', offset: [0, -5] });
+          `, {
+            closeButton: false,
+            className: 'rounded-xl shadow-lg border-none',
+            offset: [0, -5],
+            autoPan: true,
+            autoPanPaddingTopLeft: popupPadding.topLeft,
+            autoPanPaddingBottomRight: popupPadding.bottomRight
+          });
           marker.on('click', () => focusEvent(event.id));
           markersMap.set(markerKey, marker);
         });

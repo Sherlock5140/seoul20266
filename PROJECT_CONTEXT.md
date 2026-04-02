@@ -10,6 +10,12 @@ Read this file before:
 
 If you are continuing work in this repo, use this file as the first source of truth.
 
+Primary AI editors for this repo:
+- Claude Code
+- Codex
+
+This file is the shared handoff log between Claude Code and Codex.
+
 Last updated: 2026-04-02
 Project: Travel Guide
 Type: Static PWA travel itinerary app
@@ -83,6 +89,11 @@ Cache:
 - Service worker cache version is currently `travel-guide-v10`.
 - Frontend asset query version is currently `20260402e`.
 
+Recent UI changes:
+- Header toolbar buttons and `Notes` control were enlarged for safer tapping.
+- Settings modal was reworked several times to improve desktop and mobile proportions.
+- Current settings modal should now use a larger content scale, larger controls, and a centered content column instead of tiny controls inside a wide shell.
+
 ## Rules Future AI Should Follow
 
 1. Do not reintroduce `GLOBAL` as a real country code.
@@ -93,6 +104,8 @@ Cache:
 - `sw.js` cache version and shell asset list
 5. Keep backward compatibility for existing localStorage data unless the user explicitly asks to break/reset it.
 6. Do not assume `data/seoul-2026.js` only contains Seoul.
+7. If you change UI proportions, modal layout, header controls, trip management flow, map behavior, share behavior, cache behavior, or trip data, update this file before finishing.
+8. When updating this file, prefer editing the relevant section plus the update log below instead of dumping a long changelog.
 
 ## Known Project Conventions
 
@@ -158,3 +171,22 @@ If the user mentions maps or wrong destination behavior:
 If the user mentions exchange rates:
 - Check `services/rates.js`
 - Confirm the trip country maps to the expected currency
+
+## Update Log
+
+- 2026-04-02
+  Multi-country foundation added: `KR`, `HK`, `JP`, `TH`, `INTL`, with legacy `GLOBAL -> HK` normalization.
+- 2026-04-02
+  Rate handling generalized to support `HKD`, `JPY`, `THB`, and generic currency-to-TWD storage.
+- 2026-04-02
+  PWA relaunch performance improved. Navigation now favors cached shell behavior. Current versions: `travel-guide-v10` and `20260402e`.
+- 2026-04-02
+  Settings trip management simplified into direct dropdown switching inside the settings panel.
+- 2026-04-02
+  Mobile settings and shared settings presentation were polished for clearer spacing and hierarchy.
+- 2026-04-02
+  Airport markers were fixed so airports remain visible on the map while overview fit-bounds can still prefer non-airport points.
+- 2026-04-02
+  Header controls were enlarged and rebalanced for safer desktop/mobile tapping.
+- 2026-04-02
+  Settings modal proportions were adjusted multiple times. Current intent is: larger controls, larger typography, better desktop scale, and a mobile layout that does not feel like a shrunken desktop modal.

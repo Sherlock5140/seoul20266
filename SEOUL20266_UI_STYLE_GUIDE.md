@@ -1,8 +1,73 @@
 # Seoul20266 UI Style Guide
 
-這份文件整理 `seoul20266` 的 UI 語言，目標是讓另一個專案可以直接套用同一套視覺邏輯，而不是只複製幾個顏色或圓角。
+這份文件不是單純的視覺備忘錄。
 
-## 1. 設計核心
+它是給 Claude Code 與 Codex 使用的 UI / interaction / bug-fix 說明書，用來回答三件事：
+
+1. 這個 app 的畫面應該長什麼樣
+2. 這個 app 的 UI 應該怎麼運作
+3. 當 UI 跑掉、比例怪、功能錯位時，應該先檢查哪裡
+
+如果另一個 AI 要修這個專案的 UI、互動、版面比例、modal、header、map 面板、trip 切換、share mode，它不能只看畫面，必須同時讀這份文件與 `PROJECT_CONTEXT.md`。
+
+## 1. 文件定位
+
+這份檔案負責：
+
+- UI 視覺語言
+- 元件比例
+- 響應式規則
+- 互動邏輯預期
+- 常見 UI bug 的排查方向
+- 哪些檔案才是 UI 真正來源
+
+這份檔案不負責：
+
+- trip data 詳細內容本身
+- 匯率 API 細節
+- localStorage schema 全文說明
+- service worker 技術細節
+
+那些內容請回頭看 `PROJECT_CONTEXT.md`。
+
+## 2. AI 使用規則
+
+如果你是 Claude Code 或 Codex，遇到以下任務時要先讀這份檔案：
+
+- UI 跑版
+- 桌機 / 手機比例不對
+- header 太小或太大
+- 設定視窗、分享視窗、notes modal 排版異常
+- trip 切換後畫面狀態不一致
+- map 與 itinerary panel 的比例怪異
+- 想做視覺優化，但不能破壞現有產品語言
+
+如果任務涉及 UI 改動，完成後要同步更新：
+
+- `PROJECT_CONTEXT.md`
+- 本檔案中對應的「Recent UI Logic Changes」或「Update Notes」
+
+## 3. Source Of Truth
+
+UI 真正來源檔案如下：
+
+- `index.html`
+  單頁 UI、CSS、template 幾乎都在這裡
+- `scripts/app.js`
+  Vue app 狀態、modal 開關、trip 切換、share mode、notes、rates
+- `services/map.js`
+  Leaflet marker、focus、fitBounds、外部地圖打開方式
+- `scripts/config.js`
+  不同國家對應的地圖供應商、幣別、中心點
+
+如果畫面看起來有 bug，不要只改 CSS class 名稱，要先確認：
+
+1. 是純視覺比例問題
+2. 是 template 結構問題
+3. 是 state / computed / data flow 導致顯示錯誤
+4. 是不同模式共用同一組樣式而互相污染
+
+## 4. 產品 UI 核心
 
 `seoul20266` 的風格不是高對比科技感，也不是花俏旅遊廣告感，而是：
 
@@ -13,13 +78,22 @@
 - 清楚層級，但避免刺眼色塊
 - 行動裝置優先，桌面版再展開
 
-可以把它理解成：
+一句話定義：
 
 `iOS sheet + travel notebook + calm editorial dashboard`
 
-## 2. 色彩系統
+如果之後另一個 AI 做出：
 
-來自 [`index.html`](/Users/peter/Documents/New project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L56)。
+- 太像 SaaS 後台
+- 太像暗色科技產品
+- 太像旅遊廣告 landing page
+- 太多高彩功能色塊
+
+那就是偏離原始方向。
+
+## 5. 色彩系統
+
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L56)。
 
 ### 基礎色
 
@@ -43,14 +117,14 @@
 
 ### 使用原則
 
-- 大面積一律用低彩度中性色，不要直接整塊用功能色當背景。
-- 功能色只拿來做分類、狀態、局部圖示、badge、tag。
-- 純黑不用真黑，主深色固定落在 `#2E2E2E` 到 `#484846`。
-- 白色多半不是實心白，而是帶透明度的白。
+- 大面積以低彩度中性色為主
+- 功能色只拿來做分類、狀態、圖示、badge、局部提示
+- 主深色固定落在 `#2E2E2E` 到 `#484846`
+- 白色通常帶透明度與漸層，而不是死白
 
-## 3. 字體語言
+## 6. 字體語言
 
-來自 [`index.html`](/Users/peter/Documents/New project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L48)。
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L48)。
 
 - 主字體：`Avenir Next`, `SF Pro Display`, `Segoe UI`, `Noto Sans TC`, `sans-serif`
 - 展示字：同主字體
@@ -58,292 +132,286 @@
 
 ### 排版原則
 
-- 標題偏緊，常用負字距：`letter-spacing: -0.03em ~ -0.05em`
-- 小標與 kicker 偏大字距：`0.12em ~ 0.22em`
-- 內文行高偏寬鬆：`1.5 ~ 1.85`
-- 數字、時間、匯率適合用 `font-mono`
+- 標題偏緊，常用負字距：`-0.03em ~ -0.06em`
+- kicker / label 偏大字距：`0.12em ~ 0.22em`
+- 內文行高偏寬：`1.5 ~ 1.85`
+- 時間、代碼、trip id 適合用 `font-mono`
 
-### 套用建議
+## 7. 比例原則
 
-- App 主標題用英數字體感較強的 sans。
-- 中文內容保留 `Noto Sans TC`，避免整體太硬。
-- 只有少量情緒化元素才用手寫字，不要大量使用。
+這一段是修 bug 最常用的，不只是設計規則。
 
-## 4. 形狀與空間
+### Header 比例
 
-可參考 [`index.html`](/Users/peter/Documents/New project/index.html#L658), [`index.html`](/Users/peter/Documents/New project/index.html#L697), [`index.html`](/Users/peter/Documents/New project/index.html#L755)。
+Header 必須符合：
 
-### 圓角策略
+- 左側品牌區要有明確主次：`year -> destination -> TRAVEL GUIDE`
+- 右側工具列不能比左側品牌小到像附件
+- 按鈕命中區必須可點，不可只剩 icon 大小
+- `Notes` 不能小到像文字標籤，它是主操作之一
 
-- 主面板：`2.5rem` 左右
-- 區塊卡片：`1.45rem ~ 1.9rem`
-- 小卡片：`1.2rem ~ 1.65rem`
-- 按鈕與 tabs：`9999px`
+如果看到以下狀況，就是 bug：
 
-### 間距策略
+- 右上按鈕太小，容易誤觸其他區域
+- `Notes` 看起來像小字而不是按鈕
+- `year` 太大把主標題壓縮
+- header 左右視覺重量失衡
 
-- 區塊之間以 `mb-5 ~ mb-8` 為主
-- 卡片內距偏寬：`p-4 ~ p-6`
-- 手機版縮但不擠，優先保留留白感
+### Settings Modal 比例
 
-### 套用原則
+設定視窗應該：
 
-- 每層容器都應該讓人感覺是「被包起來的 sheet」
-- 避免銳角、細碎分隔線、過多邊框
-- 靠圓角、淡陰影、透明白去建立層次
+- 桌機版像置中的大面板，但不是超寬白板
+- 手機版像大型 sheet，而不是縮小版桌機視窗
+- 內容本身要有足夠字級與控制尺寸，不可只放大外框
+- `目前行程` 卡片要是主視覺重點
+- `地圖區域` / `行程切換` 應該一眼可操作
+- 底部 `新增行程` 應該像主要 CTA
 
-## 5. 材質感
+如果看到以下狀況，就是 bug：
 
-重點樣式可看 [`index.html`](/Users/peter/Documents/New project/index.html#L93), [`index.html`](/Users/peter/Documents/New project/index.html#L109), [`index.html`](/Users/peter/Documents/New project/index.html#L226)。
+- modal 外框很大，但內容很小
+- 桌機版左右空白過多，像表單被縮在中間
+- 手機版字太小、按鈕太擠、像桌機縮圖
+- `YEAR` badge 過大或過小，把卡片比例拉壞
+
+### Action Button 比例
+
+可操作按鈕至少要滿足：
+
+- 主要按鈕比次要按鈕更重
+- 同一排按鈕高度一致
+- 文字不能小到像備註
+- 手機上要優先確保命中區，再談精緻
+
+## 8. 材質感
+
+重點樣式可看 [`index.html`](/Users/peter/Documents/New%20project/index.html#L93), [`index.html`](/Users/peter/Documents/New%20project/index.html#L112), [`index.html`](/Users/peter/Documents/New%20project/index.html#L350) 附近。
 
 ### 視覺質地
 
-- 玻璃感 header：半透明淺底 + 大模糊 + 淡白邊
-- 卡片：白色漸層，不用純平面色塊
-- 邊框：幾乎都非常淡，接近白霧色
-- 陰影：大範圍、低濃度、偏柔軟
-
-### 公式
-
-- 背景多用 `linear-gradient(...)`
-- `backdrop-filter: blur(20px~30px) saturate(150%)`
-- 邊框常用 `rgba(255,255,255,0.7~0.9)`
-- 陰影避免重黑，傾向 `rgba(47,47,45,0.08~0.22)`
+- glass header：半透明淺底 + 大模糊 + 淡白邊
+- card：白色漸層，不用純平色塊
+- border：很淡，接近霧白色
+- shadow：大範圍、低濃度、柔軟
 
 ### 禁忌
 
-- 不要用厚重投影
-- 不要用高飽和霓虹色
-- 不要用實心深色大面板壓住整個畫面
+- 厚重黑影
+- 高飽和霓虹色
+- 大面積深色實心面板
+- 為了「看起來明顯」而把邊框拉很黑
 
-## 6. 元件語言
+## 9. 主要元件語言
 
 ### Header
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L663) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L689)。
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L832) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L862)。
 
-- 左側是主品牌與年份
-- 右側是膠囊工具列
-- 工具按鈕都是圓形、淡白、可縮放
-- Header 本身像浮在內容上方的 glass bar
+規則：
 
-適合移植到：
+- 左側是品牌 / trip identity
+- 右側是主操作群
+- 工具按鈕都是圓形
+- `Notes` 是大型膠囊主操作
+- 整組 header 是浮在內容上的 glass bar
 
-- Dashboard 頂部
-- App overview header
-- Mobile 首屏工具列
+### Day Tabs
 
-### Segment / Day Tabs
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L864) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L866)。
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L184) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L193) 與 [`index.html`](/Users/peter/Documents/New project/index.html#L689) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L690)。
+規則：
 
-- Active tab 是亮面膠囊
-- Inactive 幾乎透明，只保留文字
-- 用 scale 和陰影微幅凸顯 active
+- active 是亮面膠囊
+- inactive 幾乎透明
+- 用 scale 和陰影做微小差異
+- tabs 必須可滑動，不應壓縮到擠在一起
 
-適合移植到：
+### Day Meta Card
 
-- 切換不同頁籤
-- 多步驟流程
-- Filter chips
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L870) 之後。
 
-### 資訊摘要卡
+規則：
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L697) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L711)。
+- 日期最大
+- day title 與 crowd badge 次之
+- 摘要要易讀，不可壓太窄
 
-- 標題大、摘要短、狀態 badge 小
-- 一個卡片只承載一段主要資訊
-- 層級順序非常清楚：日期 > 副標 > 摘要 > badge
+### Settings Modal
 
-適合移植到：
+來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L1029) 之後。
 
-- 專案摘要
-- 用戶狀態總覽
-- 任務卡片頂部
+規則：
 
-### 功能小卡
+- `目前行程` 卡片固定為第一層焦點
+- `地圖區域` 與 `行程切換` 都是直接操作
+- 分享模式與一般模式視覺上要有差異，但不能像兩個產品
+- `新增行程` 是底部主 CTA
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L716) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L737)。
+### Share Settings
 
-- 三欄小卡片
-- 每張卡只放一個圖示、一個 label、一個簡短值
-- hover / active 只做輕縮放
+分享版設定不是一般設定去掉功能而已。
 
-適合移植到：
+它應該：
 
-- 快捷入口
-- KPI 縮圖卡
-- 操作中心
+- 明確顯示唯讀狀態
+- 讓使用者知道目前連結固定在某個 trip
+- 主操作是複製分享連結，而不是編輯
 
-### Timeline Card
+### Notebook / Notes
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L750) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L765)。
+規則：
 
-- 外層有 timeline 線與節點
-- 卡片本身是高質感白卡
-- 上排放時間與分類
-- 中間放主標題
-- 下方補充說明與 tags
+- Notes 是主要功能，不是附屬功能
+- modal 要像筆記本，不是普通 textarea dialog
+- 唯讀模式與可編輯模式需有清楚差異
 
-適合移植到：
+## 10. 響應式邏輯
 
-- 活動流
-- 任務歷史
-- 訂單時間軸
-- 更新紀錄
+### 手機版
 
-### Notice Panel
+- 主內容像 sheet 疊在地圖之上
+- Header 比例要緊湊但不能小氣
+- 設定 modal 要優先保證按得到與讀得懂
+- 三個次要按鈕可用等寬排列，但不可因此縮成小貼紙
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L739) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L747)。
+### 桌機版
 
-- 外框是淺色提醒板
-- 內層再包一層白底 notice body
-- 警示不是用大紅底，而是低彩暖紅點綴
+- 左右雙欄清楚
+- 設定 modal 不能過度貼近手機比例，也不能寬到像空白簡報
+- 內容欄寬應有 readable max-width
 
-適合移植到：
+## 11. 功能與 UI 的對應邏輯
 
-- 系統提醒
-- 注意事項
-- 狀態異常提示
+這一段是讓 AI 修 bug 時知道哪些畫面不是純裝飾。
 
-### Modal / Sheet
+### Trip 切換
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L790) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L806)。
+UI 上的 `行程切換`：
 
-- 手機像 bottom sheet
-- 桌面版像置中的大圓角面板
-- 遮罩用低濃度深色加些微 blur
+- 不是單純切 label
+- 必須同步切換 active trip state
+- 必須帶出該 trip 的 country / map config / notes / schedule
 
-適合移植到：
+如果切換行程後只是標題改了，但地圖、內容、筆記沒換，那是 bug。
 
-- 設定視窗
-- 編輯表單
-- 詳細資訊面板
+### 地圖區域
 
-## 7. 動效風格
+UI 上的 `地圖區域`：
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L265) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L268)。
+- 是目前 trip 的屬性
+- 不是全域設定
+- 切到另一個 trip 時，應該回到該 trip 自己的 country 設定
 
-### 原則
+### Share Mode
 
-- 動作短、柔和、位移小
-- 以 `opacity`、`translateY`、`scale` 為主
-- 不做誇張彈跳或旋轉
+分享模式：
 
-### 常用效果
+- 是唯讀視圖
+- 不應讓使用者誤以為能改資料
+- 但可以複製 share link
 
-- 卡片進場：`fade-in-up`
-- Modal：`slide-up`
-- 按鈕按下：`scale(0.95 ~ 0.99)`
-- 卡片 hover：陰影略增
+### Airport Marker Logic
 
-### 節奏建議
+地圖邏輯目前已修正成：
 
-- `0.18s` 給按鈕
-- `0.3s` 給 modal / 狀態切換
-- `0.5s` 給內容進場
+- 有座標的機場事件也要顯示 marker
+- 但 fitBounds 可以優先用非機場點位，避免畫面被拉太遠
 
-## 8. 版面策略
+如果之後機場又消失，先查 `services/map.js`，不要先改 trip data。
 
-參考 [`index.html`](/Users/peter/Documents/New project/index.html#L654) 到 [`index.html`](/Users/peter/Documents/New project/index.html#L658)。
+## 12. 常見 Bug 排查指南
 
-### 結構
+### A. Modal 太大但內容太小
 
-- 行動版：上方是 map / hero，下方是主要內容 sheet
-- 桌面版：左右雙欄
-- 主要資訊永遠在一個獨立 panel 裡
+先檢查：
 
-### 可複製原則
+- `.settings-shell`
+- `.settings-body`
+- `.settings-current-card`
+- `.sync-input`
+- `.trip-inline-action`
+- template 裡的 `text-*` class 是否仍太小
 
-- 若另一個專案是 dashboard，可改為：
-  - 左欄導航或摘要
-  - 右欄主內容
-- 若另一個專案是 content app，可改為：
-  - 上方 hero 或篩選區
-  - 下方內容卡片流
+### B. 手機版像桌機縮圖
 
-## 9. 直接套用規範
+先檢查：
 
-另一個專案若要「套這個味道」，請直接遵守下面幾條：
+- `@media (max-width: 767px)`
+- 是否只調整外框、沒調文字與按鈕
+- action buttons 是否仍沿用桌機 padding / font-size
 
-- 背景先換成 `#ECEDEA`
-- 所有主卡片改成 `#F4F5F2` 或白色半透明漸層
-- 大區塊圓角至少 `24px`
-- 按鈕優先做成膠囊或圓形
-- 文字顏色改成深灰，不要純黑
-- 狀態色只做局部點綴，不做整塊底色
-- modal 改成 sheet 感，不要傳統硬框對話框
-- 區塊陰影改成柔和、低對比、範圍大
-- 手機版保留安全區與底部 sheet 思維
+### C. 桌機版太空、像白板
 
-## 10. 可直接複用的 Tailwind Token
+先檢查：
 
-```js
-theme: {
-  extend: {
-    fontFamily: {
-      sans: ['Avenir Next', '-apple-system', 'SF Pro Display', 'Segoe UI', 'Noto Sans TC', 'sans-serif'],
-      display: ['Avenir Next', '-apple-system', 'SF Pro Display', 'Segoe UI', 'Noto Sans TC', 'sans-serif'],
-      hand: ['Nanum Pen Script', 'cursive'],
-    },
-    colors: {
-      'm-bg': '#ECEDEA',
-      'm-card': '#F4F5F2',
-      'typo-label': '#B6B8B3',
-      'typo-title': '#2E2E2E',
-      'typo-accent': '#C9A6A1',
-      'm-text': '#484846',
-      'm-sub': '#757573',
-      'm-border': 'rgba(200,204,199,0.3)',
-      's-pin': '#C8A7A1',
-      's-alert': '#B0726B',
-      's-warn': '#C9B56A',
-      's-green': '#8FA39D',
-      's-blue': '#8E9AAF',
-      's-sand': '#D6C0B3',
-    },
-    letterSpacing: {
-      context: '0.12em',
-      calm: '0.03em',
-    },
-    boxShadow: {
-      'ios-card': '0 8px 24px -6px rgba(0, 0, 0, 0.04)',
-      'ios-float': '0 20px 40px -12px rgba(47, 47, 45, 0.08)',
-      'ios-sheet': '0 -12px 30px rgba(0, 0, 0, 0.06)',
-    }
-  }
-}
-```
+- `.settings-shell` 是否過寬
+- `.settings-body` 是否缺少 max-width
+- 內容區是否沒有主次層級
 
-## 11. 複製時不要一起帶走的東西
+### D. Header 按鈕難按
 
-- 行程、地圖、旅遊語意本身
-- 針對 Seoul 行程的分類命名
-- 太多 icon 種類
-- 旅遊專屬 wording
+先檢查：
 
-要複製的是：
+- `.header-icon-button`
+- `.notes-button`
+- `.header-toolbar`
 
-- 色彩邏輯
-- 材質感
-- 圓角與留白
-- 互動節奏
-- 卡片層級
-- 行動版 sheet 佈局
+不要只放大 icon，命中區要一起放大。
 
-## 12. 適合拿去優化另一個專案的方式
+### E. Share Mode 視覺混亂
 
-如果另一個專案是 React / Vue / HTML，都可以照這個順序改：
+先檢查：
 
-1. 先替換全域 token：顏色、字體、陰影、圓角
-2. 再把 header、button、card、modal 四種核心元件改成這套語言
-3. 最後才處理 timeline、tabs、notice 這些次元件
+- `isShareMode` 分支
+- `.share-settings-banner`
+- `.share-settings-copy`
+- 是否把一般模式按鈕殘留在 share mode
 
-如果你要最快看到效果，優先改這四塊：
+### F. Map 看起來錯，但其實是 state 錯
 
-- App 背景
-- 主卡片
-- 頂部 header
-- 主操作按鈕
+先檢查：
 
-只要先改這四個，整體氣質就會先接近 70%。
+- `scripts/app.js` trip switching
+- `services/map.js` marker render / fitBounds
+- `scripts/config.js` country config
+
+## 13. 修改 UI 時的原則
+
+如果你要改 UI：
+
+1. 先判斷是比例問題、階層問題、還是狀態問題
+2. 優先修結構，不要只靠單點字級補救
+3. 桌機與手機都要檢查
+4. 保持這個 app 的 calm / soft / sheet-based 語言
+5. 改完後要同步更新 `PROJECT_CONTEXT.md`
+6. 如果規則本身變了，也要更新本檔
+
+## 14. Recent UI Logic Changes
+
+- Header controls and `Notes` button were enlarged so they are easier to tap on both desktop and mobile.
+- Settings modal was changed from a tiny-content layout to a larger content-scale layout.
+- Settings content now aims for:
+  - larger typography
+  - larger form controls
+  - larger action buttons
+  - better desktop readable width
+  - mobile sheet proportions instead of desktop shrinkage
+- Share settings and normal settings should still feel like the same product, but with different interaction permissions.
+
+## 15. Update Notes
+
+Whenever Claude Code or Codex changes:
+
+- header layout
+- modal proportions
+- settings flow
+- share mode UI
+- map presentation
+- trip management UI
+
+update this file with:
+
+1. what changed
+2. which rule changed
+3. whether the change was desktop only, mobile only, or both

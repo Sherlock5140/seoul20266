@@ -16,6 +16,10 @@ Primary AI editors for this repo:
 
 This file is the shared handoff log between Claude Code and Codex.
 
+UI-specific source of truth:
+- `SEOUL20266_UI_STYLE_GUIDE.md`
+  Use this when the task involves layout, modal proportions, responsive behavior, header controls, share mode, visual hierarchy, or UI bug fixing.
+
 Last updated: 2026-04-02
 Project: Travel Guide
 Type: Static PWA travel itinerary app
@@ -158,6 +162,10 @@ Before editing:
 - Read `services/storage.js`
 - Read `sw.js`
 
+Before editing UI:
+- Read `SEOUL20266_UI_STYLE_GUIDE.md`
+- Treat it as the UI logic + style + bug-fix reference, not just a design note
+
 If the user mentions share mode or sync problems:
 - Check trip snapshot handling in `scripts/app.js`
 - Check localStorage normalization in `services/storage.js`
@@ -190,3 +198,5 @@ If the user mentions exchange rates:
   Header controls were enlarged and rebalanced for safer desktop/mobile tapping.
 - 2026-04-02
   Settings modal proportions were adjusted multiple times. Current intent is: larger controls, larger typography, better desktop scale, and a mobile layout that does not feel like a shrunken desktop modal.
+- 2026-04-02
+  `SEOUL20266_UI_STYLE_GUIDE.md` was expanded into a full UI behavior and bug-fix manual for Claude Code and Codex, not just a visual style memo.

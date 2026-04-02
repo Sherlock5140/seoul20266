@@ -8,6 +8,7 @@ If you are Claude Code or Codex, read `PROJECT_CONTEXT.md` before doing anything
 
 Priority order:
 - `PROJECT_CONTEXT.md` for current rules, recent changes, and update log requirements
+- `SEOUL20266_UI_STYLE_GUIDE.md` for UI behavior, layout rules, responsive logic, and bug-fix expectations
 - `scripts/config.js` for country and map behavior
 - `scripts/app.js` for app flow
 - `services/map.js` for marker and map behavior
@@ -16,5 +17,7 @@ Priority order:
 
 Working rules:
 - Do not start editing until you have read `PROJECT_CONTEXT.md`.
+- If the task involves layout, modal behavior, header controls, share mode, or visual bug fixes, also read `SEOUL20266_UI_STYLE_GUIDE.md`.
 - After any meaningful UI, logic, trip-data, cache, map, or sharing change, update `PROJECT_CONTEXT.md`.
+- If the UI rules or interaction expectations changed, also update `SEOUL20266_UI_STYLE_GUIDE.md`.
 - Keep `PROJECT_CONTEXT.md` concise but current. It is the shared handoff file for future Claude Code and Codex sessions.

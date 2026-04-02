@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v4';
+const CACHE_NAME = 'travel-guide-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,14 +6,7 @@ const APP_SHELL = [
   './icon.svg',
   './apple-touch-icon.png',
   './icon-192.png',
-  './icon-512.png',
-  './scripts/config.js',
-  './scripts/utils.js',
-  './scripts/app.js',
-  './services/storage.js',
-  './services/rates.js',
-  './services/map.js',
-  './data/seoul-2026.js'
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {

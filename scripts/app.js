@@ -160,7 +160,6 @@
       const newTripStarter = ref('clone_current');
       const renamingTripId = ref('');
       const renameTitle = ref('');
-      const expandedTripIds = ref([initialTripId]);
       const currentTripDisplayName = computed(() => {
         const titleSource = String(currentTripTitle.value || '').replace(/\s*travel guide\s*$/i, '').trim();
         if (titleSource) return titleSource.toUpperCase();
@@ -408,27 +407,10 @@
         showCreateTripForm.value = false;
       };
 
-      const isTripExpanded = (tripId) => expandedTripIds.value.includes(tripId);
-
-      const toggleTripExpanded = (tripId) => {
-        if (!tripId) return;
-        if (isTripExpanded(tripId)) {
-          expandedTripIds.value = expandedTripIds.value.filter((id) => id !== tripId);
-          return;
-        }
-        expandedTripIds.value = [...expandedTripIds.value, tripId];
-      };
-
-      const expandTripCard = (tripId) => {
-        if (!tripId || isTripExpanded(tripId)) return;
-        expandedTripIds.value = [...expandedTripIds.value, tripId];
-      };
-
       const switchTrip = (tripId) => {
         if (isReadOnlyMode.value) return;
         if (!tripId || tripId === activeTripId.value) return;
         persistTrip.flush?.();
-        expandTripCard(tripId);
         applyTripState(tripId);
         setTripNotice('success', '已切換行程');
       };
@@ -475,7 +457,6 @@
         });
 
         refreshTripSummaries();
-        expandedTripIds.value = [tripId];
         applyTripState(tripId);
         showCreateTripForm.value = false;
         setTripNotice('success', '已建立新行程');
@@ -483,7 +464,6 @@
 
       const startRenameTrip = (trip) => {
         if (isReadOnlyMode.value) return;
-        expandTripCard(trip.tripId);
         renamingTripId.value = trip.tripId;
         renameTitle.value = trip.title;
       };
@@ -686,7 +666,6 @@
         showSync.value = true;
         renamingTripId.value = '';
         renameTitle.value = '';
-        expandedTripIds.value = [activeTripId.value];
         if (isShareMode.value) return;
         showCreateTripForm.value = false;
       };
@@ -949,11 +928,8 @@
         newTripStarter,
         renamingTripId,
         renameTitle,
-        expandedTripIds,
         openCreateTripForm,
         cancelCreateTrip,
-        isTripExpanded,
-        toggleTripExpanded,
         createTrip,
         switchTrip,
         startRenameTrip,

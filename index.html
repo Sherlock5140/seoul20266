@@ -738,25 +738,11 @@
                         </div>
                         <div class="header-toolbar mb-0.5 flex-none self-stretch md:self-auto">
                             <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
-                            <button type="button" aria-label="Open Rates" @click="showRates = true" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
+                            <button type="button" aria-label="Open Rates" @click="openRatesPanel" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
                             <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
                             <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                         </div>
                     </div>
-                </div>
-                <div v-if="!isShareMode" class="flex flex-wrap gap-2 mb-3">
-                    <span class="mode-pill px-3 py-2 rounded-full text-[11px] font-bold text-m-sub">管理模式</span>
-                    <button
-                        v-for="quickTrip in quickTripButtons"
-                        :key="quickTrip.tripId"
-                        type="button"
-                        @click="switchTrip(quickTrip.tripId)"
-                        class="quick-trip-chip px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform"
-                        :class="quickTrip.tripId === activeTripId ? 'text-typo-title ring-1 ring-typo-title/10' : ''"
-                        :disabled="quickTrip.tripId === activeTripId"
-                    >
-                        {{ quickTrip.label }}
-                    </button>
                 </div>
                 <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center">
                     <button type="button" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="day-tab snap-start flex-shrink-0 transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.01]' : 'segment-pill-inactive'">Day {{ index + 1 }}</button>

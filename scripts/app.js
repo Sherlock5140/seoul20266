@@ -239,16 +239,6 @@
         return 'text-m-sub bg-black/5';
       });
       const shareModeLabel = computed(() => isShareMode.value ? 'Scoped trip view' : '');
-      const quickTripButtons = computed(() => {
-        const preferredOrder = ['SEOUL_2026', 'HONGKONG_2026'];
-        return preferredOrder
-          .map((tripId) => tripCatalog.trips[tripId] ? {
-            tripId,
-            label: getCountryMeta(tripCatalog.trips[tripId]?.meta?.country).label
-          } : null)
-          .filter(Boolean);
-      });
-
       const persistTrip = debounce(() => {
         if (isReadOnlyMode.value) return;
         saveStatus.value = 'Saving...';
@@ -642,6 +632,17 @@
         persistRateDirection(rateDirection.value);
       };
 
+      const openRatesPanel = () => {
+        showRates.value = true;
+        rateDirection.value = 'local_to_twd';
+        persistRateDirection(rateDirection.value);
+        lastRateInput.value = 'local';
+        if (!localCurrencyInput.value) {
+          localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
+        }
+        handleLocalCurrencyInput();
+      };
+
       const refreshRateData = async () => {
         ratesLoading.value = true;
         rateError.value = false;
@@ -886,7 +887,6 @@
         tripManagerNotice,
         tripNoticeClass,
         formatTripUpdatedAt,
-        quickTripButtons,
         buildShareUrl,
         copyShareLink,
         showCreateTripForm,
@@ -938,6 +938,7 @@
         handleLocalCurrencyInput,
         handleTwdInput,
         toggleRateDirection,
+        openRatesPanel,
         refreshRates: refreshRateData
       };
     }

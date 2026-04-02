@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v4';
+const CACHE_NAME = 'travel-guide-v5';
 const APP_SHELL = [
   './',
   './index.html',
@@ -15,6 +15,8 @@ const APP_SHELL = [
   './services/map.js',
   './data/seoul-2026.js'
 ];
+
+const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -38,6 +40,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  const requestUrl = new URL(request.url);
 
   if (request.method !== 'GET') return;
 
@@ -53,6 +56,14 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => caches.match('./index.html'))
     );
+    return;
+  }
+
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
+  if (!APP_SHELL_PATHS.has(requestUrl.pathname)) {
     return;
   }
 

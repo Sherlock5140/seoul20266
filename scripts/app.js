@@ -330,6 +330,7 @@
         refreshTripSummaries();
         nextTick(() => {
           if (timelineContainerRef.value) timelineContainerRef.value.scrollTop = 0;
+          mapService.clearMarkers();
           mapService.renderMarkers();
           resetMap();
         });

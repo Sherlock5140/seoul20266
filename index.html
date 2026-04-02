@@ -284,6 +284,17 @@
             border: 1px solid rgba(47,47,45,0.92);
             box-shadow: 0 18px 30px -22px rgba(47,47,45,0.32);
         }
+        .trip-menu-summary {
+            list-style: none;
+        }
+        .trip-menu-summary::-webkit-details-marker {
+            display: none;
+        }
+        .trip-menu-panel {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: 0 18px 32px -24px rgba(47,47,45,0.22);
+        }
         .trip-secondary-button {
             background: rgba(255,255,255,0.84);
             border: 1px solid rgba(214,216,212,0.92);
@@ -979,11 +990,24 @@
                                                 <span v-if="trip.tripId === activeTripId" class="trip-badge px-3 py-1.5 rounded-full font-bold text-s-green">目前使用中</span>
                                             </div>
                                         </div>
-                                        <div v-if="renamingTripId !== trip.tripId" class="flex flex-wrap gap-2 justify-end">
-                                            <button v-if="!isShareMode" type="button" @click="switchTrip(trip.tripId)" class="trip-primary-button px-3.5 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId">開啟</button>
-                                            <button v-if="!isShareMode" type="button" @click="copyShareLink(trip.tripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">分享</button>
-                                            <button v-if="!isShareMode" type="button" @click="startRenameTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">改名</button>
-                                            <button v-if="!isShareMode" type="button" @click="deleteTrip(trip)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-s-alert active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId || trip.tripId === 'SEOUL_2026'">刪除</button>
+                                        <div v-if="renamingTripId !== trip.tripId && !isShareMode" class="relative flex items-center gap-2 justify-end">
+                                            <button type="button" @click="switchTrip(trip.tripId)" class="trip-primary-button px-3.5 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform" :disabled="trip.tripId === activeTripId">開啟</button>
+                                            <details class="relative">
+                                                <summary class="trip-menu-summary trip-action-button w-10 h-10 rounded-full text-m-text flex items-center justify-center cursor-pointer active:scale-95 transition-transform">
+                                                    <i class="fa-solid fa-ellipsis"></i>
+                                                </summary>
+                                                <div class="trip-menu-panel absolute right-0 top-[calc(100%+0.55rem)] w-36 rounded-2xl p-2 z-10">
+                                                    <button type="button" @click="copyShareLink(trip.tripId)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
+                                                        分享
+                                                    </button>
+                                                    <button type="button" @click="startRenameTrip(trip)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-m-text hover:bg-black/5 transition-colors">
+                                                        改名
+                                                    </button>
+                                                    <button type="button" @click="deleteTrip(trip)" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-s-alert hover:bg-black/5 transition-colors" :disabled="trip.tripId === activeTripId || trip.tripId === 'SEOUL_2026'">
+                                                        刪除
+                                                    </button>
+                                                </div>
+                                            </details>
                                         </div>
                                     </div>
                                 </div>

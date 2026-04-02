@@ -92,6 +92,21 @@
       fitBounds();
     };
 
+    const clearMarkers = () => {
+      if (!map) {
+        markersMap.clear();
+        return;
+      }
+
+      markersMap.forEach((marker) => {
+        if (map.hasLayer(marker)) {
+          marker.closePopup();
+          map.removeLayer(marker);
+        }
+      });
+      markersMap.clear();
+    };
+
     const initMap = (setMapError) => {
       if (typeof L === 'undefined') {
         if (retryCount < 20) {
@@ -151,8 +166,8 @@
       if (map) {
         map.remove();
         map = null;
-        markersMap.clear();
       }
+      markersMap.clear();
       requestAnimationFrame(() => initMap(setMapError));
     };
 
@@ -238,6 +253,7 @@
 
     return {
       destroy,
+      clearMarkers,
       highlightEvent,
       initMap,
       openMap,

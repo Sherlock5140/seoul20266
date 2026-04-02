@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Seoul 2026 Icon</title>
+  <desc id="desc">A polished travel app icon inspired by N Seoul Tower, the Han River, and Seoul's warm evening skyline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7f1eb" />
+      <stop offset="48%" stop-color="#efe5dc" />
+      <stop offset="100%" stop-color="#ddcec2" />
+    </linearGradient>
+    <radialGradient id="ambientGlow" cx="18%" cy="10%" r="92%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="sunsetGlow" cx="78%" cy="18%" r="54%">
+      <stop offset="0%" stop-color="#f4c8b2" stop-opacity="0.92" />
+      <stop offset="38%" stop-color="#efb5a5" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#efb5a5" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="skyWash" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8f4ef" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#eadfd5" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="towerFrame" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#607089" />
+      <stop offset="100%" stop-color="#8191aa" />
+    </linearGradient>
+    <linearGradient id="towerGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7f4ef" />
+      <stop offset="100%" stop-color="#ddd2c7" />
+    </linearGradient>
+    <linearGradient id="ridgeFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d7c9bd" />
+      <stop offset="100%" stop-color="#c7b8aa" />
+    </linearGradient>
+    <linearGradient id="ridgeBack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e1d6ca" />
+      <stop offset="100%" stop-color="#cec0b3" />
+    </linearGradient>
+    <linearGradient id="river" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#93a8c2" stop-opacity="0.96" />
+      <stop offset="100%" stop-color="#c6d2df" stop-opacity="0.78" />
+    </linearGradient>
+    <linearGradient id="route" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d5cbc0" />
+      <stop offset="100%" stop-color="#c8beb3" />
+    </linearGradient>
+    <linearGradient id="pinBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d9a7a0" />
+      <stop offset="100%" stop-color="#bc8583" />
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#83766c" flood-opacity="0.16" />
+    </filter>
+    <filter id="towerShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#6b7688" flood-opacity="0.24" />
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="118" fill="url(#bg)" />
+  <rect width="512" height="512" rx="118" fill="url(#ambientGlow)" />
+  <rect width="512" height="512" rx="118" fill="url(#sunsetGlow)" />
+  <rect width="512" height="512" rx="118" fill="url(#skyWash)" />
+
+  <g opacity="0.34">
+    <path d="M72 130c52 20 90 24 132 8 29-11 59-31 104-31 44 0 74 11 132 41" fill="none" stroke="#eadfd5" stroke-width="14" stroke-linecap="round" />
+    <path d="M78 174c68 18 106 18 154-2 33-14 63-32 114-29 42 2 74 13 108 28" fill="none" stroke="#e4d7cb" stroke-width="10" stroke-linecap="round" />
+    <path d="M92 210c49 11 83 9 127-5 28-9 58-24 100-22 34 1 65 11 99 24" fill="none" stroke="#e0d3c7" stroke-width="7" stroke-linecap="round" />
+  </g>
+
+  <g filter="url(#softShadow)">
+    <path d="M58 350c64-54 120-78 188-78 69 0 115 22 164 22 35 0 70-10 125-34v96H60z" fill="url(#ridgeBack)" />
+    <path d="M52 382c58-24 108-34 162-34 75 0 120 22 183 22 33 0 67-5 109-16" fill="none" stroke="url(#river)" stroke-width="34" stroke-linecap="round" />
+    <path d="M86 422c34-11 65-16 96-16 40 0 74 11 115 11 35 0 69-6 121-18" fill="none" stroke="url(#route)" stroke-width="9" stroke-linecap="round" opacity="0.9" />
+    <path d="M74 374c52-34 96-49 146-49 65 0 102 18 157 18 33 0 69-8 120-28v118H74z" fill="url(#ridgeFront)" />
+  </g>
+
+  <g transform="translate(0 2)" filter="url(#towerShadow)">
+    <circle cx="208" cy="170" r="66" fill="#fbf7f2" fill-opacity="0.18" />
+    <circle cx="208" cy="170" r="60" fill="none" stroke="url(#towerFrame)" stroke-width="18" />
+    <circle cx="208" cy="170" r="16" fill="url(#towerGlow)" />
+    <path d="M208 94v50" fill="none" stroke="url(#towerFrame)" stroke-width="18" stroke-linecap="round" />
+    <path d="M208 236v112" fill="none" stroke="url(#towerFrame)" stroke-width="20" stroke-linecap="round" />
+    <path d="M176 350h66" fill="none" stroke="#72839c" stroke-width="15" stroke-linecap="round" />
+    <path d="M184 342l24-98 24 98" fill="none" stroke="url(#towerFrame)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M168 224c18 5 28 7 42 7 16 0 32-4 52-12" fill="none" stroke="#f1c6b6" stroke-width="8" stroke-linecap="round" opacity="0.95" />
+  </g>
+
+  <g transform="translate(334 270)" filter="url(#softShadow)">
+    <path d="M0 2c0-33 26-60 60-60s60 27 60 60c0 45-60 108-60 108S0 47 0 2Z" fill="url(#pinBody)" />
+    <circle cx="60" cy="58" r="16" fill="#fbf6f0" />
+  </g>
+</svg>

@@ -1,5 +1,15 @@
 # PROJECT_CONTEXT
 
+## Start Here For Any AI
+
+Read this file before:
+- editing code
+- changing trip data
+- changing service worker cache versions
+- changing country, map, or currency behavior
+
+If you are continuing work in this repo, use this file as the first source of truth.
+
 Last updated: 2026-04-02
 Project: Travel Guide
 Type: Static PWA travel itinerary app

@@ -115,12 +115,12 @@
             pointer-events: auto;
             display: inline-flex;
             align-items: center;
-            gap: 0.62rem;
-            padding: 0.52rem;
+            gap: 0.78rem;
+            padding: 0.72rem;
             border-radius: 9999px;
             background: linear-gradient(180deg, rgba(255,255,255,0.44) 0%, rgba(244,245,242,0.36) 100%);
             border: 1px solid rgba(255,255,255,0.62);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 18px 34px -26px rgba(47,47,45,0.18);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 22px 38px -26px rgba(47,47,45,0.18);
             backdrop-filter: blur(20px) saturate(150%);
             -webkit-backdrop-filter: blur(20px) saturate(150%);
         }
@@ -132,9 +132,9 @@
         .header-main-row {
             pointer-events: none;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 1.4rem;
         }
         .header-mobile-top {
             display: flex;
@@ -159,16 +159,16 @@
         }
         .header-title-main {
             font-family: 'Avenir Next', 'SF Pro Display', 'Segoe UI', sans-serif;
-            font-size: clamp(1.58rem, 4.6vw, 2.02rem);
-            line-height: 0.9;
-            letter-spacing: -0.05em;
+            font-size: clamp(1.7rem, 4.7vw, 2.3rem);
+            line-height: 0.88;
+            letter-spacing: -0.055em;
             font-weight: 650;
             color: #2f3133;
         }
         .header-title-year {
             font-family: 'Avenir Next', -apple-system, 'SF Pro Display', sans-serif;
-            font-size: 1.66rem;
-            line-height: 0.94;
+            font-size: 1.9rem;
+            line-height: 0.92;
             letter-spacing: 0;
             font-weight: 650;
             color: #555551;
@@ -176,12 +176,12 @@
         .header-icon-button {
             pointer-events: auto;
             touch-action: manipulation;
-            width: 2.82rem;
-            height: 2.82rem;
+            min-width: 3.34rem;
+            min-height: 3.34rem;
             border-radius: 9999px;
             background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,248,245,0.84) 100%);
             border: 1px solid rgba(255,255,255,0.92);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 12px 24px -18px rgba(47,47,45,0.22);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 16px 28px -18px rgba(47,47,45,0.22);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -196,21 +196,24 @@
             transform: scale(0.95);
         }
         .header-icon-glyph {
-            font-size: 0.96rem;
+            font-size: 1.12rem;
         }
         .header-notes-label {
-            letter-spacing: 0.01em;
-            font-size: 0.92rem;
+            letter-spacing: 0.005em;
+            font-size: 1rem;
         }
         .notes-button {
             pointer-events: auto;
             touch-action: manipulation;
-            min-height: 2.82rem;
-            padding-left: 0.86rem;
-            padding-right: 0.96rem;
+            min-height: 3.34rem;
+            padding-left: 1.15rem;
+            padding-right: 1.3rem;
             background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(247,247,244,0.94) 100%);
             border: 1px solid rgba(255,255,255,0.94);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 14px 28px -20px rgba(47,47,45,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 18px 30px -20px rgba(47,47,45,0.2);
+        }
+        .notes-button .header-icon-glyph {
+            font-size: 1.18rem;
         }
         
         .segment-pill-active {
@@ -518,19 +521,21 @@
         }
         @media (min-width: 768px) {
             .glass-header {
-                padding-left: 1.75rem;
-                padding-right: 1.75rem;
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
             .header-title-main {
-                font-size: 2.55rem;
-                letter-spacing: -0.05em;
+                font-size: 3rem;
+                letter-spacing: -0.058em;
             }
             .header-title-year {
-                font-size: 1.72rem;
-                transform: translateY(-0.04rem);
+                font-size: 2.1rem;
+                transform: translateY(-0.08rem);
             }
             .header-toolbar {
                 margin-left: 1.5rem;
+                padding: 0.82rem;
+                gap: 0.82rem;
             }
             .day-meta-shell {
                 padding: 1.45rem 1.5rem;
@@ -678,15 +683,15 @@
                 padding-top: calc(env(safe-area-inset-top) + 3rem);
             }
             .glass-header {
-                padding-left: 1.2rem;
-                padding-right: 1.2rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
             .header-main-row {
-                align-items: flex-start;
-                gap: 0.68rem;
+                align-items: center;
+                gap: 0.82rem;
             }
             .header-mobile-top {
-                gap: 0.04rem;
+                gap: 0.1rem;
             }
             .header-title-block {
                 flex: 1 1 auto;
@@ -694,52 +699,52 @@
                 min-width: 0;
             }
             .header-toolbar {
-                gap: 0.18rem;
-                padding: 0.16rem 0.18rem;
-                align-self: flex-start;
+                gap: 0.34rem;
+                padding: 0.34rem;
+                align-self: center;
                 margin-left: auto;
                 justify-content: flex-end;
                 flex-shrink: 0;
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 12px 20px -18px rgba(47,47,45,0.12);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 16px 24px -18px rgba(47,47,45,0.12);
             }
             .header-icon-button {
-                width: 1.76rem;
-                height: 1.76rem;
+                min-width: 2.65rem;
+                min-height: 2.65rem;
             }
             .header-icon-glyph {
-                font-size: 0.62rem;
+                font-size: 0.92rem;
             }
             .notes-button {
-                min-height: 1.76rem;
-                padding-left: 0.5rem;
-                padding-right: 0.58rem;
+                min-height: 2.65rem;
+                padding-left: 0.82rem;
+                padding-right: 0.92rem;
             }
             .header-title-main {
-                font-size: 1.46rem;
-                line-height: 0.88;
-                letter-spacing: -0.052em;
+                font-size: 1.72rem;
+                line-height: 0.9;
+                letter-spacing: -0.055em;
                 max-width: none;
             }
             .header-title-year {
-                font-size: 0.92rem;
-                line-height: 0.88;
+                font-size: 1.18rem;
+                line-height: 0.92;
                 transform: translateY(0);
             }
             .header-notes-label {
-                font-size: 0.56rem;
+                font-size: 0.82rem;
             }
             .header-heading-row {
-                gap: 0.03rem;
+                gap: 0.08rem;
                 align-items: flex-start;
                 flex-wrap: nowrap;
             }
             .header-title-kicker {
                 margin-bottom: 0;
-                font-size: 0.46rem;
+                font-size: 0.54rem;
                 letter-spacing: 0.18em;
             }
             .header-title-block {
-                padding-top: 0.02rem;
+                padding-top: 0.06rem;
             }
             .day-tab-row {
                 gap: 0.46rem;
@@ -853,7 +858,7 @@
                             <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
                             <button type="button" aria-label="Open Rates" @click="openRatesPanel" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
                             <button type="button" aria-label="Settings" @click="openSettingsPanel" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
-                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
+                            <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky header-icon-glyph text-typo-title"></i><span class="header-notes-label font-bold text-typo-title tracking-wide">Notes</span></button>
                         </div>
                     </div>
                 </div>

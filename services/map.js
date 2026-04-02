@@ -32,8 +32,29 @@
       .map(([, marker]) => marker);
     const isAirportEvent = (event) => /機場|airport/i.test(`${event?.location || ''} ${event?.note || ''}`);
     const getMapEvents = () => (getDisplayEvents?.() || []).filter((event) => event.coords);
+    const getDistanceInKm = (fromCoords, toCoords) => {
+      if (!Array.isArray(fromCoords) || !Array.isArray(toCoords)) return 0;
+      const [fromLat, fromLng] = fromCoords;
+      const [toLat, toLng] = toCoords;
+      const toRadians = (value) => value * (Math.PI / 180);
+      const earthRadiusKm = 6371;
+      const dLat = toRadians(toLat - fromLat);
+      const dLng = toRadians(toLng - fromLng);
+      const a = Math.sin(dLat / 2) ** 2
+        + Math.cos(toRadians(fromLat)) * Math.cos(toRadians(toLat)) * Math.sin(dLng / 2) ** 2;
+      return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    };
+    const shouldKeepAirportInOverview = (events) => {
+      const airportEvents = events.filter((event) => isAirportEvent(event));
+      const cityEvents = events.filter((event) => !isAirportEvent(event));
+      if (!airportEvents.length || !cityEvents.length) return false;
+      return airportEvents.some((airportEvent) => (
+        cityEvents.some((cityEvent) => getDistanceInKm(airportEvent.coords, cityEvent.coords) >= 12)
+      ));
+    };
     const getOverviewEvents = () => {
       const events = getMapEvents();
+      if (shouldKeepAirportInOverview(events)) return events;
       const nonAirportEvents = events.filter((event) => !isAirportEvent(event));
       return nonAirportEvents.length >= 2 ? nonAirportEvents : events;
     };

@@ -204,6 +204,17 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-02
+  Updated at: 2026-04-02 22:02 CST
+  Updated by: Codex
+  Type: Bug Fix, Data
+  Summary:
+  - Day-level map overview now keeps airport markers inside the overview bounds when airport and city stops are far apart, restoring the intended whole-route map effect for travel days such as Seoul Day 1 and Hong Kong airport-transfer days.
+  - Hong Kong Day 1 and Day 3 airport-linked coordinates were rechecked during the fix; no coordinate correction was needed.
+  Files:
+  - `services/map.js`
+  - `data/seoul-2026.js`
+
+- 2026-04-02
   Updated at: 2026-04-02 21:47 CST
   Updated by: Codex
   Type: Docs

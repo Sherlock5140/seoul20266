@@ -1,6 +1,6 @@
 (function bootSeoul2026App(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
-  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
+  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, COUNTRY_CODE_ALIASES, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
   const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml } = global.Seoul2026Utils;
   const {
     createTripState,
@@ -52,6 +52,12 @@
     });
   }
 
+  const normalizeCountryCode = (countryCode) => {
+    const normalized = String(countryCode || '').trim().toUpperCase();
+    if (normalized && COUNTRY_CODE_ALIASES[normalized]) return COUNTRY_CODE_ALIASES[normalized];
+    return normalized || 'KR';
+  };
+
   const getTripTemplate = (tripId) => tripCatalog.trips[tripId] || tripCatalog.trips[tripCatalog.defaultTripId];
   const urlParams = new URLSearchParams(window.location.search);
   const readShareSnapshot = () => {
@@ -65,6 +71,7 @@
       if (!parsed.meta || typeof parsed.meta !== 'object') {
         parsed.meta = { title: parsed.tripId, country: 'KR', schemaVersion: 1 };
       }
+      parsed.meta.country = normalizeCountryCode(parsed.meta.country);
       return parsed;
     } catch (error) {
       console.warn('Share snapshot decode failed', error);
@@ -89,8 +96,8 @@
     dinnerId: null,
     events: []
   }]);
-  const getCountryMeta = (countryCode) => COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.KR;
-  const getLocalCurrencyDefaultAmount = (countryCode) => (getCountryMeta(countryCode).currency === 'HKD' ? '100' : '10000');
+  const getCountryMeta = (countryCode) => COUNTRY_CONFIG[normalizeCountryCode(countryCode)] || COUNTRY_CONFIG.KR;
+  const getLocalCurrencyDefaultAmount = (countryCode) => getCountryMeta(countryCode).defaultAmount || '100';
   const resolveTripId = (candidateTripId) => {
     const candidate = String(candidateTripId || '').trim().toUpperCase();
     if (!candidate) return tripCatalog.defaultTripId;
@@ -189,11 +196,8 @@
       const countryMeta = computed(() => getCountryMeta(countrySetting.value));
       const primaryCurrencyCode = computed(() => countryMeta.value.currency);
       const primaryCountryLabel = computed(() => countryMeta.value.label);
-      const primaryRate = computed(() => (
-        primaryCurrencyCode.value === 'HKD'
-          ? (exchangeRates.value.hkdToTwd || 0)
-          : (exchangeRates.value.krwToTwd || 0)
-      ));
+      const primaryRatePrecision = computed(() => countryMeta.value.ratePrecision || 3);
+      const primaryRate = computed(() => exchangeRates.value[primaryCurrencyCode.value] || 0);
       const rateDirectionLabel = computed(() => (
         rateDirection.value === 'local_to_twd'
           ? `${primaryCurrencyCode.value} → TWD`
@@ -202,17 +206,17 @@
       const displayPrimaryRate = computed(() => {
         const rate = primaryRate.value || 0;
         if (!rate) return '--';
-        return rateDirection.value === 'local_to_twd' ? rate.toFixed(primaryCurrencyCode.value === 'HKD' ? 3 : 5) : (1 / rate).toFixed(2);
+        return rateDirection.value === 'local_to_twd' ? rate.toFixed(primaryRatePrecision.value) : (1 / rate).toFixed(2);
       });
       const displayUsdRate = computed(() => {
-        const rate = exchangeRates.value.usdToTwd || 0;
+        const rate = exchangeRates.value.USD || 0;
         return rate ? rate.toFixed(2) : '--';
       });
       const rateHintText = computed(() => {
         const rate = primaryRate.value || 0;
         if (!rate) return '匯率資料尚未更新';
         return rateDirection.value === 'local_to_twd'
-          ? `1 ${primaryCurrencyCode.value} ≈ ${rate.toFixed(primaryCurrencyCode.value === 'HKD' ? 3 : 5)} TWD`
+          ? `1 ${primaryCurrencyCode.value} ≈ ${rate.toFixed(primaryRatePrecision.value)} TWD`
           : `1 TWD ≈ ${(1 / rate).toFixed(2)} ${primaryCurrencyCode.value}`;
       });
       const rateUpdatedLabel = computed(() => {
@@ -241,6 +245,12 @@
         if (tripManagerNotice.value.tone === 'error') return 'text-s-alert bg-s-alert/10';
         return 'text-m-sub bg-black/5';
       });
+      const countryOptions = computed(() => (
+        Object.entries(COUNTRY_CONFIG).map(([code, meta]) => ({
+          code,
+          label: meta.optionLabel || meta.label
+        }))
+      ));
       const shareModeLabel = computed(() => isShareMode.value ? 'Scoped trip view' : '');
       const persistTrip = debounce(() => {
         if (isReadOnlyMode.value) return;
@@ -507,8 +517,8 @@
 
       const highlightCurrency = (text) => (
         text
-          .replace(/((?:HKD|HK\$|TWD|KRW)\$?)\s*([0-9,]+(?:\.[0-9]+)?)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
-          .replace(/([0-9,]+(?:\.[0-9]+)?)\s*(韓元|港幣|台幣|元|KRW|HKD|TWD|HK\$)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
+          .replace(/((?:HKD|HK\$|TWD|KRW|JPY|THB|USD|US\$)\$?)\s*([0-9,]+(?:\.[0-9]+)?)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
+          .replace(/([0-9,]+(?:\.[0-9]+)?)\s*(韓元|港幣|台幣|日圓|日元|泰銖|美金|美元|元|KRW|HKD|TWD|JPY|THB|USD|HK\$|US\$)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
       );
 
       const formatNote = (note) => {
@@ -658,11 +668,7 @@
         clearTimeout(rateErrorTimer);
         try {
           const nextRates = await refreshRates();
-          exchangeRates.value = {
-            usdToTwd: nextRates.usdToTwd,
-            krwToTwd: nextRates.krwToTwd,
-            hkdToTwd: nextRates.hkdToTwd
-          };
+          exchangeRates.value = nextRates.currencyToTwd;
           rateUpdatedAt.value = nextRates.updatedAt;
           persistRates(exchangeRates.value, rateUpdatedAt.value);
           if (lastRateInput.value === 'twd') {
@@ -890,6 +896,7 @@
         tripSummaries: visibleTripSummaries,
         tripManagerNotice,
         tripNoticeClass,
+        countryOptions,
         formatTripUpdatedAt,
         buildShareUrl,
         copyShareLink,

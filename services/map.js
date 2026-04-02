@@ -282,7 +282,7 @@
 
     const openMap = (query) => {
       const clean = getCleanQuery(query);
-      const url = (getCountryConfig?.().currency || 'KRW') === 'KRW'
+      const url = (getCountryConfig?.().mapProvider || 'google') === 'naver'
         ? `https://map.naver.com/p/search/${encodeURIComponent(clean)}`
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clean)}`;
 

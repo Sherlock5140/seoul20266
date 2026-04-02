@@ -904,8 +904,7 @@
                                 <div v-if="!isShareMode" class="mb-4">
                                     <div class="text-sm font-bold text-m-sub mb-1">地圖區域</div>
                                     <select v-model="countrySetting" class="sync-input">
-                                        <option value="KR">韓國（NAVER Map）</option>
-                                        <option value="GLOBAL">全球（Google Maps）</option>
+                                        <option v-for="option in countryOptions" :key="option.code" :value="option.code">{{ option.label }}</option>
                                     </select>
                                 </div>
                                 <div class="flex items-center justify-between gap-3 pt-1">
@@ -949,8 +948,7 @@
                                     <div>
                                         <div class="text-sm font-bold text-m-sub mb-1">地圖區域</div>
                                         <select v-model="newTripCountry" class="sync-input">
-                                            <option value="KR">韓國（NAVER Map）</option>
-                                            <option value="GLOBAL">全球（Google Maps）</option>
+                                            <option v-for="option in countryOptions" :key="option.code" :value="option.code">{{ option.label }}</option>
                                         </select>
                                     </div>
                                     <div>
@@ -1097,12 +1095,12 @@
         </transition>
     </div>
 
-    <script src="./scripts/config.js?v=20260402c"></script>
-    <script src="./scripts/utils.js?v=20260402c"></script>
-    <script src="./services/storage.js?v=20260402c"></script>
-    <script src="./services/rates.js?v=20260402c"></script>
-    <script src="./services/map.js?v=20260402c"></script>
-    <script src="./data/seoul-2026.js?v=20260402c"></script>
-    <script src="./scripts/app.js?v=20260402c"></script>
+    <script src="./scripts/config.js?v=20260402d"></script>
+    <script src="./scripts/utils.js?v=20260402d"></script>
+    <script src="./services/storage.js?v=20260402d"></script>
+    <script src="./services/rates.js?v=20260402d"></script>
+    <script src="./services/map.js?v=20260402d"></script>
+    <script src="./data/seoul-2026.js?v=20260402d"></script>
+    <script src="./scripts/app.js?v=20260402d"></script>
 </body>
 </html>

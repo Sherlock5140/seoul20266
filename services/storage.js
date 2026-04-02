@@ -1,4 +1,9 @@
 (function attachSeoul2026Storage(global) {
+  const normalizeCountryCode = (countryCode) => {
+    if (countryCode === 'GLOBAL') return 'HK';
+    return countryCode || 'KR';
+  };
+
   const STORAGE_KEYS = {
     activeTripId: 'travelguide_active_trip_id',
     legacyActiveTripId: 'activeTripId',
@@ -20,7 +25,7 @@
 
   const normalizeTripMeta = (tripId, meta = {}) => ({
     title: meta?.title || tripId,
-    country: meta?.country || 'KR',
+    country: normalizeCountryCode(meta?.country),
     schemaVersion: meta?.schemaVersion || 1
   });
 
@@ -36,7 +41,7 @@
       schedule: stored?.schedule,
       meta: {
         title: stored?.meta?.title || '',
-        country: stored?.meta?.country || '',
+        country: normalizeCountryCode(stored?.meta?.country || ''),
         schemaVersion: stored?.meta?.schemaVersion || 1
       }
     };
@@ -55,7 +60,7 @@
     const entry = {
       tripId,
       title: meta?.title || tripId,
-      country: meta?.country || 'KR',
+      country: normalizeCountryCode(meta?.country),
       updatedAt: updatedAt || new Date().toISOString()
     };
 
@@ -68,7 +73,7 @@
     const catalogEntries = Object.entries(catalogTrips).map(([tripId, trip]) => ({
       tripId,
       title: trip?.meta?.title || tripId,
-      country: trip?.meta?.country || 'KR',
+      country: normalizeCountryCode(trip?.meta?.country),
       updatedAt: '',
       source: 'catalog'
     }));
@@ -79,7 +84,7 @@
       const normalizedEntry = {
         tripId: entry.tripId,
         title: entry.title || entry.tripId,
-        country: entry.country || 'KR',
+        country: normalizeCountryCode(entry.country),
         updatedAt: entry.updatedAt || '',
         source: 'local'
       };

@@ -147,7 +147,7 @@
         meta: {
           title: 'Hong Kong Travel Guide',
           displayName: 'HONG KONG',
-          country: 'GLOBAL',
+          country: 'HK',
           region: 'HK',
           dateRange: '【🎉三天兩夜最終版｜2026/07/10–2026/07/12｜住宿：城景國際 The Cityview🏨】',
           hotel: '城景國際 - 香港中華基督教青年會｜The Cityview - Chinese YMCA of Hong Kong',

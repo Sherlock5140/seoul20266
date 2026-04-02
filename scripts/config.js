@@ -8,7 +8,7 @@
 
   global.Seoul2026Config = {
     DEBUG_ENABLED: isLocalPreview || new URLSearchParams(window.location.search).get('debug') === '1',
-    APP_VERSION: '2026-04-02-modular-refactor',
+    APP_VERSION: '2026-04-02-hong-kong-share-fix',
     CATEGORY_CONFIG: {
       transport: { color: '#8FA39D', icon: 'bg-s-green', label: 'Transport', markerColor: '#8FA39D' },
       food: { color: '#D6C0B3', icon: 'bg-s-sand', label: 'Food', markerColor: '#D6C0B3' },

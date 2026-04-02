@@ -23,10 +23,17 @@
       };
     };
 
-    const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
+    const getVisibleMarkers = (markerKeys = null) => Array
+      .from(markersMap.entries())
+      .filter(([markerKey, marker]) => {
+        if (!map || !map.hasLayer(marker)) return false;
+        return !markerKeys || markerKeys.has(markerKey);
+      })
+      .map(([, marker]) => marker);
     const isAirportEvent = (event) => /機場|airport/i.test(`${event?.location || ''} ${event?.note || ''}`);
+    const getMapEvents = () => (getDisplayEvents?.() || []).filter((event) => event.coords);
     const getOverviewEvents = () => {
-      const events = (getDisplayEvents?.() || []).filter((event) => event.coords);
+      const events = getMapEvents();
       const nonAirportEvents = events.filter((event) => !isAirportEvent(event));
       return nonAirportEvents.length >= 2 ? nonAirportEvents : events;
     };
@@ -42,8 +49,8 @@
       };
     };
 
-    const fitBounds = () => {
-      const visibleMarkers = getVisibleMarkers();
+    const fitBounds = (markerKeys = null) => {
+      const visibleMarkers = getVisibleMarkers(markerKeys);
       if (!visibleMarkers.length || !map) return;
 
       if (visibleMarkers.length === 1) {
@@ -119,6 +126,10 @@
 
       ensureMarkers();
       const visibleIds = new Set(
+        getMapEvents()
+          .map((event) => getMarkerKey(event.id))
+      );
+      const overviewIds = new Set(
         getOverviewEvents()
           .map((event) => getMarkerKey(event.id))
       );
@@ -135,7 +146,7 @@
         }
       });
 
-      fitBounds();
+      fitBounds(overviewIds.size ? overviewIds : null);
     };
 
     const clearMarkers = () => {

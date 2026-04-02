@@ -362,8 +362,13 @@
             border: 1px solid rgba(214,216,212,0.92);
         }
         .settings-shell {
-            width: min(92vw, 560px);
+            width: min(94vw, 760px);
             max-height: min(88vh, 820px);
+        }
+        .settings-body {
+            width: 100%;
+            max-width: 47rem;
+            margin: 0 auto;
         }
         .settings-current-card {
             background: rgba(255,255,255,0.92);
@@ -377,7 +382,7 @@
         }
         .settings-current-year {
             align-self: flex-start;
-            min-width: 6rem;
+            min-width: 5.5rem;
         }
         .settings-inline-actions {
             display: flex;
@@ -562,21 +567,31 @@
                 letter-spacing: 0.08em;
             }
             .settings-shell {
-                width: 92%;
+                width: min(82vw, 980px);
+                padding: 1.75rem;
             }
             .settings-current-top {
                 flex-direction: row;
                 align-items: flex-start;
-                justify-content: space-between;
+                justify-content: flex-start;
+                gap: 1.4rem;
             }
             .settings-current-year {
-                align-self: auto;
+                align-self: flex-start;
+                margin-left: auto;
+                min-width: 5.9rem;
             }
             .settings-trips-row {
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
                 gap: 1rem;
+            }
+            .settings-current-card {
+                padding: 1.35rem 1.4rem;
+            }
+            .settings-inline-actions {
+                gap: 0.75rem;
             }
             .share-settings-copy {
                 justify-content: flex-start;
@@ -754,6 +769,38 @@
             .day-meta-shell {
                 padding: 0.96rem 1rem 1rem;
                 border-radius: 1.45rem;
+            }
+            .settings-shell {
+                width: min(96vw, 560px);
+                padding: 1.1rem;
+                border-radius: 1.65rem;
+            }
+            .settings-body {
+                max-width: none;
+            }
+            .settings-current-card {
+                padding: 1rem;
+            }
+            .settings-current-top {
+                gap: 0.8rem;
+            }
+            .settings-current-year {
+                min-width: 4.9rem;
+            }
+            .settings-inline-actions {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.55rem;
+            }
+            .settings-inline-actions .trip-inline-action {
+                min-height: 2.8rem;
+                padding-left: 0.6rem;
+                padding-right: 0.6rem;
+                justify-content: center;
+                text-align: center;
+            }
+            .settings-trips-row {
+                gap: 0.7rem;
             }
             .day-meta-header {
                 flex-direction: column;
@@ -986,7 +1033,7 @@
                         <button aria-label="Close Settings" @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <div class="flex-1 overflow-y-auto hide-scroll space-y-5 md:space-y-6">
+                    <div class="settings-body flex-1 overflow-y-auto hide-scroll space-y-5 md:space-y-6">
                         <div>
                             <div class="trip-panel-shell p-4 md:p-5 rounded-[1.7rem] md:rounded-2xl mb-5 md:mb-6">
                                 <div v-if="isShareMode" class="share-settings-banner rounded-[1.4rem] md:rounded-[1.55rem] px-4 py-3 mb-4">

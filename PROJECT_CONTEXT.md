@@ -204,6 +204,40 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-02
+  Updated at: 2026-04-02 22:04 CST
+  Updated by: Claude Code
+  Type: Optimization, UI, Infra
+  Summary:
+  - `formattedNotes` computed added to `scripts/app.js`: pre-formats all visible event notes once per `displayEvents` change instead of calling `formatNote()` on every Vue render cycle.
+  - `formattedDayNotice` computed added to `scripts/app.js`: same treatment for day-level notice text.
+  - `copyEventLocation(location)` added to `scripts/app.js` with 1800ms visual feedback via `copiedEventId` ref; timeline copy button enlarged to 44px touch target (w-11 h-11) and icon switches to green checkmark on copy.
+  - `shareLoading` ref added to `scripts/app.js`; share buttons now show spinner and disable during async compression + clipboard write.
+  - `closeSettings()` helper added to `scripts/app.js` to centralize Settings modal teardown; backdrop click and close button both call it.
+  - Settings modal: `role="dialog"`, `aria-modal="true"`, `aria-labelledby="settings-dialog-title"` added to `index.html`.
+  - Rates modal: `role="dialog"`, `aria-modal="true"`, `aria-labelledby="rates-dialog-title"` added to `index.html`.
+  - Day tabs: `role="tablist"` on container, `role="tab"` + `:aria-selected` on each button in `index.html`.
+  - Rate inputs: `type="number"` → `type="text"` + `inputmode="decimal"` + `autocomplete="off"` in `index.html` to fix Android scientific notation and Safari scroll jank.
+  - `offline.html` created: branded offline fallback page matching app color scheme (✈️ icon, Chinese copy, reload link).
+  - `sw.js`: `offline.html` added to `APP_SHELL`; navigate handler offline path falls back to cached `offline.html` before generic 503.
+  - Cache version bumped: `travel-guide-v10` → `travel-guide-v11`; asset query version: `20260402e` → `20260402f`.
+  Files:
+  - `scripts/app.js`
+  - `index.html`
+  - `sw.js`
+  - `offline.html` (new)
+
+- 2026-04-02
+  Updated at: 2026-04-02 22:04 CST
+  Updated by: Claude Code
+  Type: Docs
+  Summary:
+  - Audited all Codex changes made after Claude Code's session. Codex's `services/map.js` airport-distance logic (Haversine formula + `shouldKeepAirportInOverview` 12km threshold) verified correct — no bugs found.
+  - Backfilled `Updated at` timestamps on the three earlier Claude Code entries that predated the new format requirement.
+  - Added this follow-up entry to record the Codex audit result and the format-compliance update, per the new follow-up rule.
+  Files:
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-02
   Updated at: 2026-04-02 22:02 CST
   Updated by: Codex
   Type: Bug Fix, Data
@@ -227,8 +261,10 @@ Follow-up rule:
   - `AGENTS.md`
 
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Bug Fix, Optimization
+  Summary:
   Audit-driven robustness fixes:
   - `services/storage.js` now returns write/remove success booleans so UI no longer reports save/create/rename/delete success when storage actually failed.
   - `scripts/app.js` now surfaces storage failure messages for save, create, rename, delete, and share-copy actions.
@@ -241,24 +277,29 @@ Follow-up rule:
   - `services/rates.js`
 
 - 2026-04-02
+  Updated at: 2026-04-02 22:04 CST
   Updated by: Claude Code
   Type: Bug Fix
-  Fixed Codex-introduced bug: `applyTripState` was calling `setTripNotice('error', ...)` internally for storage failure, but all callers (switchTrip, createTrip, deleteTrip) immediately overwrote it with a success notice — error was never visible. Removed the internal notice; storage errors surface via `persistTrip` debounce as intended.
+  Summary:
+  - Fixed Codex-introduced bug: `applyTripState` was calling `setTripNotice('error', ...)` internally for storage failure, but all callers (switchTrip, createTrip, deleteTrip) immediately overwrote it with a success notice — error was never visible. Removed the internal notice; storage errors surface via `persistTrip` debounce as intended.
   Files:
   - `scripts/app.js`
 
 - 2026-04-02
+  Updated at: 2026-04-02 22:04 CST
   Updated by: Claude Code
   Type: Optimization
-  Share URL compression added: `scripts/utils.js` now exports `compressToBase64Url` / `decompressFromBase64Url` using browser-native `CompressionStream` (deflate-raw). New share URLs are prefixed `z.` and are ~60-75% smaller. Old plain-base64 URLs remain readable (backward-compatible). Boot IIFE is now async; `buildShareUrl` and `copyShareLink` are async. Falls back to plain base64 on browsers without `CompressionStream` (Safari < 16.4).
+  Summary:
+  - Share URL compression added: `scripts/utils.js` now exports `compressToBase64Url` / `decompressFromBase64Url` using browser-native `CompressionStream` (deflate-raw). New share URLs are prefixed `z.` and are ~60-75% smaller. Old plain-base64 URLs remain readable (backward-compatible). Boot IIFE is now async; `buildShareUrl` and `copyShareLink` are async. Falls back to plain base64 on browsers without `CompressionStream` (Safari < 16.4).
   Files:
   - `scripts/utils.js`
   - `scripts/app.js`
 
 - 2026-04-02
+  Updated at: 2026-04-02 22:04 CST
   Updated by: Claude Code
   Type: Bug Fix, Infra
-  Code audit and robustness fixes applied:
+  Summary:
   - `services/storage.js`: All `localStorage` calls wrapped in safe wrappers (get/set/remove) to prevent crash from SecurityError in private browsing or storage-blocked environments.
   - `services/rates.js`: Same localStorage SecurityError protection added. Redundant `USD` check in rate payload validation removed (USD is always the base currency from the endpoint).
   - `services/map.js`: Hangul-extraction logic in `getCleanQuery` changed from `currency === 'KRW'` to `mapProvider === 'naver'` for correctness.
@@ -272,38 +313,91 @@ Follow-up rule:
   - `scripts/app.js`
 
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Data, Infra
+  Summary:
   Multi-country foundation added: `KR`, `HK`, `JP`, `TH`, `INTL`, with legacy `GLOBAL -> HK` normalization.
+  Files:
+  - `scripts/config.js`
+  - `services/storage.js`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Optimization
+  Summary:
   Rate handling generalized to support `HKD`, `JPY`, `THB`, and generic currency-to-TWD storage.
+  Files:
+  - `services/rates.js`
+  - `scripts/app.js`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Optimization, Infra
+  Summary:
   PWA relaunch performance improved. Navigation now favors cached shell behavior. Current versions: `travel-guide-v10` and `20260402e`.
+  Files:
+  - `sw.js`
+  - `scripts/app.js`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: UI
+  Summary:
   Settings trip management simplified into direct dropdown switching inside the settings panel.
+  Files:
+  - `index.html`
+  - `scripts/app.js`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: UI
+  Summary:
   Mobile settings and shared settings presentation were polished for clearer spacing and hierarchy.
+  Files:
+  - `index.html`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Bug Fix, Data
+  Summary:
   Airport markers were fixed so airports remain visible on the map while overview fit-bounds can still prefer non-airport points.
+  Files:
+  - `services/map.js`
+  - `data/seoul-2026.js`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: UI
+  Summary:
   Header controls were enlarged and rebalanced for safer desktop/mobile tapping.
+  Files:
+  - `index.html`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: UI
+  Summary:
   Settings modal proportions were adjusted multiple times. Current intent is: larger controls, larger typography, better desktop scale, and a mobile layout that does not feel like a shrunken desktop modal.
+  Files:
+  - `index.html`
 - 2026-04-02
+  Updated at: (timestamp not recorded — predates format requirement)
   Updated by: Codex
   Type: Docs, UI
+  Summary:
   `SEOUL20266_UI_STYLE_GUIDE.md` was expanded into a full UI behavior and bug-fix manual for Claude Code and Codex, not just a visual style memo.
+  Files:
+  - `SEOUL20266_UI_STYLE_GUIDE.md`
+  - `PROJECT_CONTEXT.md`
+  - `AGENTS.md`
+
+- 2026-04-02
+  Updated at: 2026-04-02 22:19 CST
+  Updated by: Codex
+  Type: Docs
+  Summary:
+  - Rechecked the update log and normalized older Codex entries so they now consistently include `Updated at`, `Summary`, and `Files`.
+  - Left other editors' entries intact; this pass only fixed log-format completeness.
+  Files:
+  - `PROJECT_CONTEXT.md`

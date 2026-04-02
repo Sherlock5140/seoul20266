@@ -174,6 +174,7 @@
       const closeNoteBtn = ref(null);
 
       let isHydrating = true;
+      let isApplyingTripState = false;
       let saveStatusTimer = null;
       let rateErrorTimer = null;
       let tripNoticeTimer = null;
@@ -242,7 +243,7 @@
         return preferredOrder
           .map((tripId) => tripCatalog.trips[tripId] ? {
             tripId,
-            label: tripId === 'SEOUL_2026' ? '首爾' : tripId === 'HONGKONG_2026' ? '香港' : tripId.replace(/_(20\d{2})$/, '')
+            label: getCountryMeta(tripCatalog.trips[tripId]?.meta?.country).label
           } : null)
           .filter(Boolean);
       });
@@ -343,6 +344,7 @@
 
       const applyTripState = (tripId) => {
         if (isReadOnlyMode.value) return;
+        isApplyingTripState = true;
         const nextTemplate = getTripTemplate(tripId);
         const nextSaved = loadTripState(tripId);
         activeTripId.value = tripId;
@@ -361,6 +363,7 @@
           mapService.clearMarkers();
           mapService.renderMarkers();
           resetMap();
+          isApplyingTripState = false;
         });
       };
 
@@ -485,9 +488,11 @@
         setTripNotice('success', '已更新行程名稱');
       };
 
+      const isCatalogTrip = (tripId) => Boolean(tripCatalog.trips[tripId]);
+
       const deleteTrip = (trip) => {
         if (isReadOnlyMode.value) return;
-        if (!trip || trip.tripId === tripCatalog.defaultTripId || trip.source === 'catalog') {
+        if (!trip || trip.tripId === tripCatalog.defaultTripId || isCatalogTrip(trip.tripId)) {
           setTripNotice('error', '預設行程不可刪除');
           return;
         }
@@ -506,7 +511,7 @@
 
       const highlightCurrency = (text) => (
         text
-          .replace(/((?:HKD|TWD|KRW)\$?)\s*([0-9,]+(?:\.[0-9]+)?)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
+          .replace(/((?:HKD|HK\$|TWD|KRW)\$?)\s*([0-9,]+(?:\.[0-9]+)?)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
           .replace(/([0-9,]+(?:\.[0-9]+)?)\s*(韓元|港幣|台幣|元|KRW|HKD|TWD|HK\$)/gi, '<span class="font-mono font-bold text-s-green">$1 $2</span>')
       );
 
@@ -770,7 +775,7 @@
       };
 
       watch(countrySetting, () => {
-        if (isHydrating || isReadOnlyMode.value) return;
+        if (isHydrating || isReadOnlyMode.value || isApplyingTripState) return;
         if (!localCurrencyInput.value) {
           localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
         }
@@ -914,6 +919,7 @@
         getDotColor,
         getCategoryBadge,
         getCountryLabel,
+        isCatalogTrip,
         getTagStyle,
         extractCrowdBadge,
         cleanDayTitle,

@@ -1,9 +1,11 @@
 const SHEET_NAME = 'Trips';
 const SPREADSHEET_ID = '1kVooE-_Y4h6IuGdfNI2-265Ii2DLxCtMX_KzHzp9MYc';
+const SCRIPT_TOKEN_KEY = 'TRAVEL_GUIDE_TOKEN';
 
 function doGet(e) {
   try {
     const params = e && e.parameter ? e.parameter : {};
+    assertAuthorized_(params);
     const action = params.action || 'list';
 
     if (action === 'list') {
@@ -42,6 +44,7 @@ function doGet(e) {
 function doPost(e) {
   try {
     const payload = parsePayload_(e);
+    assertAuthorized_(payload);
     const action = String(payload.action || 'save');
     const tripId = String(payload.tripId || '').trim();
 
@@ -162,6 +165,18 @@ function parsePayload_(e) {
     return JSON.parse(e.postData.contents);
   }
   throw new Error('Missing request body');
+}
+
+function assertAuthorized_(params) {
+  const expectedToken = PropertiesService.getScriptProperties().getProperty(SCRIPT_TOKEN_KEY);
+  if (!expectedToken) {
+    throw new Error(`Missing script property: ${SCRIPT_TOKEN_KEY}`);
+  }
+
+  const providedToken = String((params && params.token) || '').trim();
+  if (!providedToken || providedToken !== expectedToken) {
+    throw new Error('Unauthorized');
+  }
 }
 
 function jsonOutput(payload) {

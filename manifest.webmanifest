@@ -1,7 +1,7 @@
 {
-  "name": "Seoul 2026",
-  "short_name": "Seoul 2026",
-  "description": "Seoul 2026 travel itinerary app with maps, notes, rates, and offline support.",
+  "name": "Travel Guide",
+  "short_name": "Travel Guide",
+  "description": "Multi-trip travel itinerary app with maps, notes, exchange rates, and offline support.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

@@ -8,7 +8,7 @@
   };
 
   const getStoredRateState = () => {
-    const storedDirection = localStorage.getItem(RATE_KEYS.direction) || 'twd_to_krw';
+    const storedDirection = localStorage.getItem(RATE_KEYS.direction) || 'twd_to_local';
     const normalizedDirection = storedDirection === 'krw_to_twd'
       ? 'local_to_twd'
       : storedDirection === 'twd_to_krw'

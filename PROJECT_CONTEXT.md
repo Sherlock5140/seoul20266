@@ -183,6 +183,24 @@ If the user mentions exchange rates:
 ## Update Log
 
 - 2026-04-02
+  Audit-driven robustness fixes:
+  - `services/storage.js` now returns write/remove success booleans so UI no longer reports save/create/rename/delete success when storage actually failed.
+  - `scripts/app.js` now surfaces storage failure messages for save, create, rename, delete, and share-copy actions.
+  - `scripts/utils.js` clipboard copy now returns success/failure instead of assuming success, and compression/decompression now await writer promises to avoid ignored promise failures.
+  - `services/rates.js` conversion formatting no longer drops fractional precision for large non-integer values by rounding everything above 1000 to an integer.
+
+- 2026-04-02
+  Share URL compression added: `scripts/utils.js` now exports `compressToBase64Url` / `decompressFromBase64Url` using browser-native `CompressionStream` (deflate-raw). New share URLs are prefixed `z.` and are ~60-75% smaller. Old plain-base64 URLs remain readable (backward-compatible). Boot IIFE is now async; `buildShareUrl` and `copyShareLink` are async. Falls back to plain base64 on browsers without `CompressionStream` (Safari < 16.4).
+
+- 2026-04-02
+  Code audit and robustness fixes applied:
+  - `services/storage.js`: All `localStorage` calls wrapped in safe wrappers (get/set/remove) to prevent crash from SecurityError in private browsing or storage-blocked environments.
+  - `services/rates.js`: Same localStorage SecurityError protection added. Redundant `USD` check in rate payload validation removed (USD is always the base currency from the endpoint).
+  - `services/map.js`: Hangul-extraction logic in `getCleanQuery` changed from `currency === 'KRW'` to `mapProvider === 'naver'` for correctness.
+  - `sw.js`: `skipWaiting()` moved inside `waitUntil` chain to prevent takeover before shell cache completes. Both `cache.put` fire-and-forget calls now have `.catch()` error logging.
+  - `scripts/app.js`: Global `unhandledrejection` handler now active in production (console.warn) not only in debug mode.
+
+- 2026-04-02
   Multi-country foundation added: `KR`, `HK`, `JP`, `TH`, `INTL`, with legacy `GLOBAL -> HK` normalization.
 - 2026-04-02
   Rate handling generalized to support `HKD`, `JPY`, `THB`, and generic currency-to-TWD storage.

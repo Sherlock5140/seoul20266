@@ -20,9 +20,10 @@ const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.locat
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -50,7 +51,9 @@ self.addEventListener('fetch', (event) => {
           .then((response) => {
             if (response && response.ok) {
               const responseClone = response.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', responseClone));
+              caches.open(CACHE_NAME)
+                .then((cache) => cache.put('./index.html', responseClone))
+                .catch((err) => console.warn('[SW] index.html cache write failed', err));
             }
             return response;
           })
@@ -76,7 +79,9 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           if (!response || !response.ok) return cachedResponse || response;
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          caches.open(CACHE_NAME)
+            .then((cache) => cache.put(request, responseClone))
+            .catch((err) => console.warn('[SW] shell asset cache write failed', err));
           return response;
         })
         .catch(() => {

@@ -13,6 +13,35 @@
 
   const getTripStorageKey = (tripId) => `${tripId}_data`;
 
+  const safeLocalStorageGet = (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn('localStorage read failed', key, error);
+      return null;
+    }
+  };
+
+  const safeLocalStorageSet = (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (error) {
+      console.warn('localStorage write failed', key, error);
+      return false;
+    }
+  };
+
+  const safeLocalStorageRemove = (key) => {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      console.warn('localStorage remove failed', key, error);
+      return false;
+    }
+  };
+
   const readJson = (rawValue, fallback = {}) => {
     if (!rawValue) return fallback;
     try {
@@ -30,9 +59,9 @@
   });
 
   const loadTripState = (tripId) => {
-    const storedTrip = localStorage.getItem(getTripStorageKey(tripId));
+    const storedTrip = safeLocalStorageGet(getTripStorageKey(tripId));
     const legacyTrip = !storedTrip && tripId === 'SEOUL_2026'
-      ? localStorage.getItem(STORAGE_KEYS.legacyTripData)
+      ? safeLocalStorageGet(STORAGE_KEYS.legacyTripData)
       : '';
     const stored = readJson(storedTrip || legacyTrip);
 
@@ -48,12 +77,12 @@
   };
 
   const readTripIndex = () => {
-    const index = readJson(localStorage.getItem(STORAGE_KEYS.tripIndex), []);
+    const index = readJson(safeLocalStorageGet(STORAGE_KEYS.tripIndex), []);
     return Array.isArray(index) ? index : [];
   };
 
   const writeTripIndex = (entries) => {
-    localStorage.setItem(STORAGE_KEYS.tripIndex, JSON.stringify(entries));
+    return safeLocalStorageSet(STORAGE_KEYS.tripIndex, JSON.stringify(entries));
   };
 
   const upsertTripIndexEntry = ({ tripId, meta, updatedAt }) => {
@@ -66,7 +95,7 @@
 
     const nextEntries = readTripIndex().filter((item) => item.tripId !== tripId);
     nextEntries.push(entry);
-    writeTripIndex(nextEntries);
+    return writeTripIndex(nextEntries);
   };
 
   const listTrips = (catalogTrips = {}) => {
@@ -106,17 +135,18 @@
   const saveTripState = ({ tripId, notes, schedule, meta }) => {
     const normalizedMeta = normalizeTripMeta(tripId, meta);
     const updatedAt = new Date().toISOString();
-    localStorage.setItem(getTripStorageKey(tripId), JSON.stringify({
+    const wroteTripData = safeLocalStorageSet(getTripStorageKey(tripId), JSON.stringify({
       notes,
       schedule,
       meta: normalizedMeta
     }));
-    localStorage.setItem(STORAGE_KEYS.activeTripId, tripId);
-    upsertTripIndexEntry({ tripId, meta: normalizedMeta, updatedAt });
+    const wroteActiveTrip = safeLocalStorageSet(STORAGE_KEYS.activeTripId, tripId);
+    const wroteTripIndex = upsertTripIndexEntry({ tripId, meta: normalizedMeta, updatedAt });
+    return wroteTripData && wroteActiveTrip && wroteTripIndex;
   };
 
   const createTripState = ({ tripId, notes = '', schedule = [], meta = {} }) => {
-    saveTripState({
+    return saveTripState({
       tripId,
       notes,
       schedule,
@@ -125,21 +155,22 @@
   };
 
   const deleteTripState = (tripId) => {
-    localStorage.removeItem(getTripStorageKey(tripId));
-    writeTripIndex(readTripIndex().filter((entry) => entry.tripId !== tripId));
+    const removedTripData = safeLocalStorageRemove(getTripStorageKey(tripId));
+    const wroteTripIndex = writeTripIndex(readTripIndex().filter((entry) => entry.tripId !== tripId));
+    return removedTripData && wroteTripIndex;
   };
 
   const setActiveTripId = (tripId) => {
-    localStorage.setItem(STORAGE_KEYS.activeTripId, tripId);
+    return safeLocalStorageSet(STORAGE_KEYS.activeTripId, tripId);
   };
 
   const getActiveTripId = (fallbackTripId) => {
-    const scopedValue = localStorage.getItem(STORAGE_KEYS.activeTripId);
+    const scopedValue = safeLocalStorageGet(STORAGE_KEYS.activeTripId);
     if (scopedValue) return scopedValue;
 
-    const legacyValue = localStorage.getItem(STORAGE_KEYS.legacyActiveTripId);
+    const legacyValue = safeLocalStorageGet(STORAGE_KEYS.legacyActiveTripId);
     if (legacyValue) {
-      localStorage.setItem(STORAGE_KEYS.activeTripId, legacyValue);
+      safeLocalStorageSet(STORAGE_KEYS.activeTripId, legacyValue);
       return legacyValue;
     }
 

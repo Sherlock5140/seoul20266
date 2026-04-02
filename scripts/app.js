@@ -1,7 +1,7 @@
-(function bootSeoul2026App(global) {
+(async function bootSeoul2026App(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
   const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, COUNTRY_CODE_ALIASES, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
-  const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml } = global.Seoul2026Utils;
+  const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml, compressToBase64Url, decompressFromBase64Url } = global.Seoul2026Utils;
   const {
     createTripState,
     deleteTripState,
@@ -50,6 +50,10 @@
     window.addEventListener('unhandledrejection', (event) => {
       showDebugOverlay(event.reason || 'Unhandled promise rejection');
     });
+  } else {
+    window.addEventListener('unhandledrejection', (event) => {
+      console.warn(`[${APP_NAME}] unhandled rejection`, event.reason);
+    });
   }
 
   const normalizeCountryCode = (countryCode) => {
@@ -60,12 +64,12 @@
 
   const getTripTemplate = (tripId) => tripCatalog.trips[tripId] || tripCatalog.trips[tripCatalog.defaultTripId];
   const urlParams = new URLSearchParams(window.location.search);
-  const readShareSnapshot = () => {
+  const readShareSnapshot = async () => {
     const match = String(window.location.hash || '').match(/(?:^#|&)share=([^&]+)/);
     if (!match?.[1]) return null;
 
     try {
-      const decoded = decodeBase64Url(match[1]);
+      const decoded = await decompressFromBase64Url(match[1]);
       const parsed = JSON.parse(decoded);
       if (!parsed?.tripId || !Array.isArray(parsed?.schedule)) return null;
       if (!parsed.meta || typeof parsed.meta !== 'object') {
@@ -79,7 +83,7 @@
     }
   };
 
-  const sharedTripSnapshot = readShareSnapshot();
+  const sharedTripSnapshot = await readShareSnapshot();
   const sharedTripId = String(sharedTripSnapshot?.tripId || '').trim().toUpperCase();
   const requestedTripId = String(urlParams.get('trip') || '').trim().toUpperCase();
   const RATE_REFRESH_MAX_AGE_MS = 1000 * 60 * 60 * 6;
@@ -264,7 +268,7 @@
         if (isReadOnlyMode.value) return;
         saveStatus.value = 'Saving...';
         try {
-          saveTripState({
+          const didPersist = saveTripState({
             tripId: activeTripId.value,
             notes: userNotes.value,
             schedule: schedule.value,
@@ -273,6 +277,7 @@
               country: countrySetting.value
             }
           });
+          if (!didPersist) throw new Error('Trip state persistence failed');
           saveStatus.value = 'Saved';
           clearTimeout(saveStatusTimer);
           saveStatusTimer = setTimeout(() => {
@@ -317,7 +322,7 @@
         });
       };
 
-      const buildShareUrl = (tripId) => {
+      const buildShareUrl = async (tripId) => {
         const url = new URL(window.location.href);
         const sourceTemplate = getTripTemplate(tripId);
         const sourceState = tripId === activeTripId.value
@@ -345,13 +350,19 @@
         url.searchParams.set('trip', tripId);
         url.searchParams.set('view', 'share');
         url.searchParams.set('readonly', '1');
-        url.hash = `share=${encodeBase64Url(sharePayload)}`;
+        url.hash = `share=${await compressToBase64Url(sharePayload)}`;
         return url.toString();
       };
 
-      const copyShareLink = (tripId) => {
-        copyText(buildShareUrl(tripId));
-        setTripNotice('success', '已複製分享連結');
+      const copyShareLink = async (tripId) => {
+        try {
+          const copied = await copyText(await buildShareUrl(tripId));
+          if (!copied) throw new Error('Clipboard copy failed');
+          setTripNotice('success', '已複製分享連結');
+        } catch (error) {
+          console.warn('Share link build failed', error);
+          setTripNotice('error', '分享連結產生失敗');
+        }
       };
 
       const applyTripState = (tripId) => {
@@ -360,7 +371,10 @@
         const nextTemplate = getTripTemplate(tripId);
         const nextSaved = loadTripState(tripId);
         activeTripId.value = tripId;
-        setActiveTripId(tripId);
+        const didSetActiveTrip = setActiveTripId(tripId);
+        if (!didSetActiveTrip) {
+          setTripNotice('error', '切換行程失敗，儲存功能可能已受限');
+        }
         currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
         countrySetting.value = nextSaved.meta.country || nextTemplate.meta.country;
         schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
@@ -446,7 +460,7 @@
             ? clone(getTripTemplate(tripCatalog.defaultTripId).schedule || createBlankSchedule())
             : clone(schedule.value);
 
-        createTripState({
+        const created = createTripState({
           tripId,
           notes: '',
           schedule: starterSchedule,
@@ -455,6 +469,10 @@
             country: newTripCountry.value
           }
         });
+        if (!created) {
+          setTripNotice('error', '建立行程失敗，請確認儲存權限');
+          return;
+        }
 
         refreshTripSummaries();
         applyTripState(tripId);
@@ -483,7 +501,7 @@
 
         const existing = loadTripState(tripId);
         const templateTrip = getTripTemplate(tripId);
-        saveTripState({
+        const renamed = saveTripState({
           tripId,
           notes: existing.notes || '',
           schedule: clone(existing.schedule ?? templateTrip.schedule ?? createBlankSchedule()),
@@ -493,6 +511,10 @@
             schemaVersion: existing.meta?.schemaVersion || templateTrip.meta?.schemaVersion || 1
           }
         });
+        if (!renamed) {
+          setTripNotice('error', '更新名稱失敗，請確認儲存權限');
+          return;
+        }
 
         if (tripId === activeTripId.value) {
           currentTripTitle.value = title;
@@ -513,7 +535,11 @@
         if (!window.confirm(`確定要刪除「${trip.title}」嗎？`)) return;
 
         const fallbackTrip = tripSummaries.value.find((item) => item.tripId !== trip.tripId);
-        deleteTripState(trip.tripId);
+        const deleted = deleteTripState(trip.tripId);
+        if (!deleted) {
+          setTripNotice('error', '刪除行程失敗，請確認儲存權限');
+          return;
+        }
         refreshTripSummaries();
 
         if (trip.tripId === activeTripId.value && fallbackTrip) {
@@ -990,4 +1016,6 @@
   }
 
   app.mount('#app');
-})(window);
+})(window).catch((error) => {
+  console.error('[Travel Guide] boot failed', error);
+});

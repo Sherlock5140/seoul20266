@@ -36,20 +36,27 @@
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      document.execCommand('copy');
+      const copied = document.execCommand('copy');
       document.body.removeChild(textArea);
+      return copied;
     } catch (error) {
       console.warn('Copy failed', error);
+      return false;
     }
   };
 
-  const copyText = (text) => {
-    if (!text) return;
+  const copyText = async (text) => {
+    if (!text) return false;
     if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-      return;
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        console.warn('Clipboard API copy failed, falling back', error);
+        return fallbackCopy(text);
+      }
     }
-    fallbackCopy(text);
+    return fallbackCopy(text);
   };
 
   const encodeBase64Url = (value) => {
@@ -77,12 +84,77 @@
     return new TextDecoder().decode(bytes);
   };
 
+  const compressToBase64Url = async (value) => {
+    if (typeof CompressionStream === 'undefined') {
+      return encodeBase64Url(value);
+    }
+    const text = typeof value === 'string' ? value : JSON.stringify(value);
+    const bytes = new TextEncoder().encode(text);
+    const cs = new CompressionStream('deflate-raw');
+    const writer = cs.writable.getWriter();
+    await writer.write(bytes);
+    await writer.close();
+    const chunks = [];
+    const reader = cs.readable.getReader();
+    for (;;) {
+      const { done, value: chunk } = await reader.read();
+      if (done) break;
+      chunks.push(chunk);
+    }
+    const totalLength = chunks.reduce((sum, c) => sum + c.length, 0);
+    const compressed = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const chunk of chunks) {
+      compressed.set(chunk, offset);
+      offset += chunk.length;
+    }
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < compressed.length; i += chunkSize) {
+      binary += String.fromCharCode(...compressed.subarray(i, i + chunkSize));
+    }
+    return `z.${btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}`;
+  };
+
+  const decompressFromBase64Url = async (value) => {
+    const raw = String(value || '');
+    const isCompressed = raw.startsWith('z.');
+    if (!isCompressed || typeof DecompressionStream === 'undefined') {
+      return decodeBase64Url(isCompressed ? raw.slice(2) : raw);
+    }
+    const normalized = raw.slice(2).replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+    const ds = new DecompressionStream('deflate-raw');
+    const writer = ds.writable.getWriter();
+    await writer.write(bytes);
+    await writer.close();
+    const chunks = [];
+    const reader = ds.readable.getReader();
+    for (;;) {
+      const { done, value: chunk } = await reader.read();
+      if (done) break;
+      chunks.push(chunk);
+    }
+    const totalLength = chunks.reduce((sum, c) => sum + c.length, 0);
+    const result = new Uint8Array(totalLength);
+    let pos = 0;
+    for (const chunk of chunks) {
+      result.set(chunk, pos);
+      pos += chunk.length;
+    }
+    return new TextDecoder().decode(result);
+  };
+
   global.Seoul2026Utils = {
     clone,
     escapeHtml,
     debounce,
     copyText,
     encodeBase64Url,
-    decodeBase64Url
+    decodeBase64Url,
+    compressToBase64Url,
+    decompressFromBase64Url
   };
 })(window);

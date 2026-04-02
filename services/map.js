@@ -279,7 +279,7 @@
       let temp = rawLocation;
       if (temp.includes('➔')) temp = temp.split('➔').pop().trim();
 
-      if ((getCountryConfig?.().currency || 'KRW') === 'KRW') {
+      if ((getCountryConfig?.().mapProvider || 'google') === 'naver') {
         const hangulRegex = /[\uAC00-\uD7A3\u3131-\u314E\u314F-\u3163]+/g;
         const hangulMatches = temp.match(hangulRegex);
         if (hangulMatches?.length) return hangulMatches.join(' ');

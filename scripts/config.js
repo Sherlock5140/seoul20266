@@ -7,8 +7,13 @@
     || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
 
   global.Seoul2026Config = {
+    APP_NAME: 'Travel Guide',
     DEBUG_ENABLED: isLocalPreview || new URLSearchParams(window.location.search).get('debug') === '1',
     APP_VERSION: '2026-04-02-hong-kong-share-fix',
+    COUNTRY_CONFIG: {
+      KR: { label: 'Korea', currency: 'KRW', center: [37.5665, 126.9780], zoom: 13 },
+      GLOBAL: { label: 'Hong Kong', currency: 'HKD', center: [22.3193, 114.1694], zoom: 12 }
+    },
     CATEGORY_CONFIG: {
       transport: { color: '#8FA39D', icon: 'bg-s-green', label: 'Transport', markerColor: '#8FA39D' },
       food: { color: '#D6C0B3', icon: 'bg-s-sand', label: 'Food', markerColor: '#D6C0B3' },

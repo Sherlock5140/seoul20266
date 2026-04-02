@@ -15,6 +15,10 @@
         ? 'twd_to_local'
         : storedDirection;
 
+    if (normalizedDirection && normalizedDirection !== storedDirection) {
+      localStorage.setItem(RATE_KEYS.direction, normalizedDirection);
+    }
+
     return {
       rateDirection: normalizedDirection || 'twd_to_local',
       exchangeRates: {

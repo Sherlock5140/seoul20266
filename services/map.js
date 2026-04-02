@@ -1,9 +1,9 @@
 (function attachSeoul2026Map(global) {
   const createMapService = ({
     categoryConfig,
-    countrySettingRef,
     escapeHtml,
     focusEvent,
+    getCountryConfig,
     getActiveTripId,
     getDisplayEvents,
     getSchedule
@@ -15,11 +15,13 @@
     let retryCount = 0;
     let tileErrorTimestamps = [];
     const getMarkerKey = (eventId) => `${String(getActiveTripId?.() || 'TRIP')}::${String(eventId || '')}`;
-    const getDefaultCenter = () => (
-      countrySettingRef.value === 'KR'
-        ? { coords: [37.5665, 126.9780], zoom: 13 }
-        : { coords: [22.3193, 114.1694], zoom: 12 }
-    );
+    const getDefaultCenter = () => {
+      const countryConfig = getCountryConfig?.() || {};
+      return {
+        coords: countryConfig.center || [37.5665, 126.9780],
+        zoom: countryConfig.zoom || 13
+      };
+    };
 
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
 
@@ -235,7 +237,7 @@
       let temp = rawLocation;
       if (temp.includes('➔')) temp = temp.split('➔').pop().trim();
 
-      if (countrySettingRef.value === 'KR') {
+      if ((getCountryConfig?.().currency || 'KRW') === 'KRW') {
         const hangulRegex = /[\uAC00-\uD7A3\u3131-\u314E\u314F-\u3163]+/g;
         const hangulMatches = temp.match(hangulRegex);
         if (hangulMatches?.length) return hangulMatches.join(' ');
@@ -249,7 +251,7 @@
 
     const openMap = (query) => {
       const clean = getCleanQuery(query);
-      const url = countrySettingRef.value === 'KR'
+      const url = (getCountryConfig?.().currency || 'KRW') === 'KRW'
         ? `https://map.naver.com/p/search/${encodeURIComponent(clean)}`
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clean)}`;
 

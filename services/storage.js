@@ -1,6 +1,7 @@
 (function attachSeoul2026Storage(global) {
   const STORAGE_KEYS = {
-    activeTripId: 'activeTripId',
+    activeTripId: 'travelguide_active_trip_id',
+    legacyActiveTripId: 'activeTripId',
     legacyTripData: 'seoul2026_data',
     tripIndex: 'travelguide_trip_index'
   };
@@ -127,9 +128,18 @@
     localStorage.setItem(STORAGE_KEYS.activeTripId, tripId);
   };
 
-  const getActiveTripId = (fallbackTripId) => (
-    localStorage.getItem(STORAGE_KEYS.activeTripId) || fallbackTripId
-  );
+  const getActiveTripId = (fallbackTripId) => {
+    const scopedValue = localStorage.getItem(STORAGE_KEYS.activeTripId);
+    if (scopedValue) return scopedValue;
+
+    const legacyValue = localStorage.getItem(STORAGE_KEYS.legacyActiveTripId);
+    if (legacyValue) {
+      localStorage.setItem(STORAGE_KEYS.activeTripId, legacyValue);
+      return legacyValue;
+    }
+
+    return fallbackTripId;
+  };
 
   global.Seoul2026Storage = {
     createTripState,

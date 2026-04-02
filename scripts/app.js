@@ -1,6 +1,6 @@
 (function bootSeoul2026App(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
-  const { DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
+  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
   const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml } = global.Seoul2026Utils;
   const {
     createTripState,
@@ -43,7 +43,7 @@
   };
 
   if (DEBUG_ENABLED) {
-    console.info(`[Seoul 2026] debug enabled (${APP_VERSION})`);
+    console.info(`[${APP_NAME}] debug enabled (${APP_VERSION})`);
     window.addEventListener('error', (event) => {
       showDebugOverlay(event.error || event.message);
     });
@@ -85,6 +85,8 @@
     dinnerId: null,
     events: []
   }]);
+  const getCountryMeta = (countryCode) => COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.KR;
+  const getLocalCurrencyDefaultAmount = (countryCode) => (getCountryMeta(countryCode).currency === 'HKD' ? '100' : '10000');
   const resolveTripId = (candidateTripId) => {
     const candidate = String(candidateTripId || '').trim().toUpperCase();
     if (!candidate) return tripCatalog.defaultTripId;
@@ -114,9 +116,9 @@
       const rateDirection = ref(initialRateDirection);
       const exchangeRates = ref(initialExchangeRates);
       const rateUpdatedAt = ref(initialRateUpdatedAt);
-      const krwInput = ref('10000');
+      const localCurrencyInput = ref('');
       const twdInput = ref('');
-      const lastRateInput = ref('krw');
+      const lastRateInput = ref('local');
 
       const initialTripId = resolveTripId(sharedTripSnapshot?.tripId || requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
       const activeTripId = ref(initialTripId);
@@ -127,6 +129,7 @@
 
       const currentTripTitle = ref(savedTripData.meta.title || template.meta.title);
       const countrySetting = ref(savedTripData.meta.country || template.meta.country);
+      localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
       const schedule = ref(clone(savedTripData.schedule || template.schedule));
       const userNotes = ref(savedTripData.notes || '');
       const tripSummaries = ref(listTrips(tripCatalog.trips));
@@ -178,7 +181,9 @@
 
       const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
       const displayEvents = computed(() => currentDay.value.events || []);
-      const primaryCurrencyCode = computed(() => (countrySetting.value === 'GLOBAL' ? 'HKD' : 'KRW'));
+      const countryMeta = computed(() => getCountryMeta(countrySetting.value));
+      const primaryCurrencyCode = computed(() => countryMeta.value.currency);
+      const primaryCountryLabel = computed(() => countryMeta.value.label);
       const primaryRate = computed(() => (
         primaryCurrencyCode.value === 'HKD'
           ? (exchangeRates.value.hkdToTwd || 0)
@@ -346,6 +351,7 @@
         countrySetting.value = nextSaved.meta.country || nextTemplate.meta.country;
         schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
         userNotes.value = nextSaved.notes || '';
+        localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
         currentDayIndex.value = 0;
         activeEventId.value = null;
         validateSchedule();
@@ -481,7 +487,7 @@
 
       const deleteTrip = (trip) => {
         if (isReadOnlyMode.value) return;
-        if (!trip || trip.tripId === tripCatalog.defaultTripId) {
+        if (!trip || trip.tripId === tripCatalog.defaultTripId || trip.source === 'catalog') {
           setTripNotice('error', '預設行程不可刪除');
           return;
         }
@@ -572,6 +578,7 @@
 
       const getDotColor = (category) => ({ backgroundColor: (CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default).color });
       const getCategoryBadge = (category) => (CATEGORY_CONFIG[category] || CATEGORY_CONFIG.default).icon;
+      const getCountryLabel = (countryCode) => getCountryMeta(countryCode).label;
       const getTagStyle = (tag) => {
         if (tag === '死線' || tag === '風險') return 'bg-s-alert/20 text-s-alert';
         if (tag === '關鍵') return 'bg-s-warn/20 text-s-warn';
@@ -594,18 +601,18 @@
 
       const mapService = createMapService({
         categoryConfig: CATEGORY_CONFIG,
-        countrySettingRef: countrySetting,
         escapeHtml,
         focusEvent: (eventId) => focusEvent(eventId),
+        getCountryConfig: () => getCountryMeta(countrySetting.value),
         getActiveTripId: () => activeTripId.value,
         getDisplayEvents: () => displayEvents.value,
         getSchedule: () => schedule.value
       });
 
-      const handleKrwInput = () => {
+      const handleLocalCurrencyInput = () => {
         const rate = primaryRate.value || 0;
-        const value = Number(krwInput.value);
-        if (!krwInput.value || !Number.isFinite(value) || !rate) {
+        const value = Number(localCurrencyInput.value);
+        if (!localCurrencyInput.value || !Number.isFinite(value) || !rate) {
           twdInput.value = '';
           return;
         }
@@ -616,10 +623,10 @@
         const rate = primaryRate.value || 0;
         const value = Number(twdInput.value);
         if (!twdInput.value || !Number.isFinite(value) || !rate) {
-          krwInput.value = '';
+          localCurrencyInput.value = '';
           return;
         }
-        krwInput.value = formatConvertedValue(value / rate);
+        localCurrencyInput.value = formatConvertedValue(value / rate);
       };
 
       const toggleRateDirection = () => {
@@ -764,6 +771,9 @@
 
       watch(countrySetting, () => {
         if (isHydrating || isReadOnlyMode.value) return;
+        if (!localCurrencyInput.value) {
+          localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
+        }
         persistTrip();
       });
 
@@ -775,7 +785,7 @@
             persistTrip();
           }
           refreshTripSummaries();
-          handleKrwInput();
+          handleLocalCurrencyInput();
           refreshRateData();
           nextTick(() => {
             if (document.getElementById('map')) {
@@ -883,7 +893,7 @@
         deleteTrip,
         ratesLoading,
         rateError,
-        krwInput,
+        localCurrencyInput,
         twdInput,
         lastRateInput,
         rateDirectionLabel,
@@ -892,6 +902,7 @@
         rateHintText,
         rateUpdatedLabel,
         primaryCurrencyCode,
+        primaryCountryLabel,
         selectDay,
         focusEvent,
         openNotebook,
@@ -902,6 +913,7 @@
         copyText,
         getDotColor,
         getCategoryBadge,
+        getCountryLabel,
         getTagStyle,
         extractCrowdBadge,
         cleanDayTitle,
@@ -909,7 +921,7 @@
         formatDayNotice,
         trapFocus,
         openMealMap,
-        handleKrwInput,
+        handleLocalCurrencyInput,
         handleTwdInput,
         toggleRateDirection,
         refreshRates: refreshRateData

@@ -110,8 +110,9 @@ Recent UI changes:
 6. Do not assume `data/seoul-2026.js` only contains Seoul.
 7. If you change UI proportions, modal layout, header controls, trip management flow, map behavior, share behavior, cache behavior, or trip data, update this file before finishing.
 8. When updating this file, prefer editing the relevant section plus the update log below instead of dumping a long changelog.
-9. Every update-log entry must say who made the change and whether it was a bug fix, optimization, UI change, data change, docs update, or infra change.
-10. Never overwrite or rewrite an older update-log entry from another editor. If a previous update introduced a bug or needs correction, add a new follow-up entry that states what was wrong and what was fixed.
+9. Every update-log entry must include the exact update time in addition to the date.
+10. Every update-log entry must say who made the change and whether it was a bug fix, optimization, UI change, data change, docs update, or infra change.
+11. Never overwrite or rewrite an older update-log entry from another editor. If a previous update introduced a bug or needs correction, add a new follow-up entry that states what was wrong and what was fixed.
 
 ## Known Project Conventions
 
@@ -186,6 +187,7 @@ If the user mentions exchange rates:
 
 Preferred entry format:
 - YYYY-MM-DD
+  Updated at: YYYY-MM-DD HH:MM TZ
   Updated by: Codex | Claude Code | User
   Type: Bug Fix | Optimization | UI | Data | Docs | Infra
   Summary:
@@ -196,16 +198,19 @@ Preferred entry format:
 Follow-up rule:
 - If an earlier entry later turns out to be wrong, incomplete, or buggy, do not replace that old entry.
 - Add a new entry instead, for example:
+  - `Updated at: 2026-04-02 21:47 CST`
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-02
+  Updated at: 2026-04-02 21:47 CST
   Updated by: Codex
   Type: Docs
   Summary:
   - Update-log format now explicitly records who made the change and what kind of change it was, so future handoffs can distinguish bug fixes, optimizations, UI work, docs edits, and user-authored updates.
   - Update-log rules now explicitly forbid overwriting another editor's existing entry; corrections must be recorded as a new follow-up entry instead.
+  - Update-log format now also requires an exact timestamp so multiple same-day edits can be distinguished.
   Files:
   - `PROJECT_CONTEXT.md`
   - `AGENTS.md`

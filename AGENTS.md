@@ -22,6 +22,7 @@ Working rules:
 - If the UI rules or interaction expectations changed, also update `SEOUL20266_UI_STYLE_GUIDE.md`.
 - Keep `PROJECT_CONTEXT.md` concise but current. It is the shared handoff file for future Claude Code and Codex sessions.
 - Every new `PROJECT_CONTEXT.md` update-log entry must include:
+  - `Updated at:` in `YYYY-MM-DD HH:MM TZ` format
   - `Updated by:` `Claude Code`, `Codex`, or `User`
   - `Type:` `Bug Fix`, `Optimization`, `UI`, `Data`, `Docs`, or `Infra`
   - a short summary of what changed

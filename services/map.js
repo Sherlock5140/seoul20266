@@ -24,6 +24,10 @@
     };
 
     const getVisibleMarkers = () => Array.from(markersMap.values()).filter((marker) => map && map.hasLayer(marker));
+    const getHighlightOffset = () => {
+      const isMobile = window.innerWidth < 768;
+      return isMobile ? 120 : 80;
+    };
 
     const fitBounds = () => {
       const visibleMarkers = getVisibleMarkers();
@@ -208,7 +212,10 @@
         }
       });
       if (event?.coords) {
-        map.flyTo(event.coords, 16, { animate: true, duration: 1.2, easeLinearity: 0.25 });
+        const targetZoom = Math.max(map.getZoom() || 0, 16);
+        const targetPoint = map.project(event.coords, targetZoom).subtract([0, getHighlightOffset()]);
+        const targetLatLng = map.unproject(targetPoint, targetZoom);
+        map.flyTo(targetLatLng, targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
       }
     };
 

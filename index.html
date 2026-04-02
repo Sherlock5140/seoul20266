@@ -358,6 +358,35 @@
             background: rgba(244,245,242,0.96);
             border: 1px solid rgba(214,216,212,0.92);
         }
+        .settings-shell {
+            width: min(92vw, 560px);
+            max-height: min(88vh, 820px);
+        }
+        .settings-current-card {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(214,216,212,0.9);
+            box-shadow: 0 16px 30px -24px rgba(47,47,45,0.1);
+        }
+        .settings-current-top {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .settings-current-year {
+            align-self: flex-start;
+            min-width: 6rem;
+        }
+        .settings-inline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+        .settings-trips-row {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.85rem;
+        }
         .share-mode-banner {
             background: linear-gradient(180deg, rgba(142,154,175,0.14) 0%, rgba(255,255,255,0.82) 100%);
             border: 1px solid rgba(142,154,175,0.22);
@@ -517,6 +546,23 @@
                 padding: 0.52rem 0.88rem;
                 font-size: 10px;
                 letter-spacing: 0.08em;
+            }
+            .settings-shell {
+                width: 92%;
+            }
+            .settings-current-top {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+            .settings-current-year {
+                align-self: auto;
+            }
+            .settings-trips-row {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
             }
         }
         .notice-panel {
@@ -916,28 +962,28 @@
         <!-- Settings Modal -->
         <transition name="slide-up">
             <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showSync = false">
-                <div class="bg-white w-[92%] max-w-[560px] rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-white/50 max-h-[88vh] flex flex-col">
-                    <div class="flex justify-between items-center mb-4 flex-none">
-                        <div class="flex items-center gap-2"><i class="fa-solid fa-gear text-typo-title"></i><span class="text-xl font-bold text-typo-title">設定</span></div>
+                <div class="settings-shell bg-white rounded-[1.85rem] md:rounded-[2rem] shadow-2xl px-5 py-5 md:p-6 animate-fade-in border border-white/50 flex flex-col">
+                    <div class="flex justify-between items-center mb-4 md:mb-5 flex-none">
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-gear text-typo-title text-[1.1rem]"></i><span class="text-[1.95rem] md:text-xl font-bold text-typo-title leading-none">設定</span></div>
                         <button aria-label="Close Settings" @click="showSync = false" class="w-8 h-8 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <div class="flex-1 overflow-y-auto hide-scroll space-y-6">
+                    <div class="flex-1 overflow-y-auto hide-scroll space-y-5 md:space-y-6">
                         <div>
-                            <div class="trip-panel-shell p-5 rounded-2xl mb-6">
-                                <div class="bg-white rounded-2xl border border-m-border px-4 py-4 mb-4 shadow-sm">
-                                    <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="trip-panel-shell p-4 md:p-5 rounded-[1.7rem] md:rounded-2xl mb-5 md:mb-6">
+                                <div class="settings-current-card rounded-[1.55rem] md:rounded-2xl px-4 py-4 mb-4">
+                                    <div class="settings-current-top">
                                         <div class="min-w-0">
                                             <div class="text-[10px] font-bold text-typo-label uppercase tracking-widest mb-2">目前行程</div>
-                                            <div class="text-lg font-bold text-typo-title truncate">{{ currentTripTitle }}</div>
-                                            <div class="text-xs font-mono text-m-sub mt-1">{{ activeTripId || '尚未設定' }}</div>
+                                            <div class="text-[1.1rem] md:text-lg font-bold text-typo-title leading-[1.15] break-words">{{ currentTripTitle }}</div>
+                                            <div class="text-[0.82rem] font-mono text-m-sub mt-2">{{ activeTripId || '尚未設定' }}</div>
                                         </div>
-                                        <div class="trip-badge px-3 py-2 rounded-2xl text-right shrink-0">
+                                        <div class="settings-current-year trip-badge px-3.5 py-2.5 rounded-2xl text-center shrink-0">
                                             <div class="text-[10px] font-bold text-typo-label uppercase tracking-[0.16em] mb-1">Year</div>
-                                            <div class="text-sm font-bold text-typo-title">{{ currentTripYear }}</div>
+                                            <div class="text-lg md:text-sm font-bold text-typo-title leading-none">{{ currentTripYear }}</div>
                                         </div>
                                     </div>
-                                    <div class="mt-4 flex flex-wrap gap-2 text-[11px]">
+                                    <div class="mt-4 flex flex-wrap gap-2 text-[11px] md:text-[11px]">
                                         <span v-if="activeTripSummary" class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">Last update · {{ formatTripUpdatedAt(activeTripSummary.updatedAt) }}</span>
                                         <span class="trip-badge px-3 py-1.5 rounded-full font-bold text-m-sub">Country · {{ primaryCountryLabel }}</span>
                                     </div>
@@ -962,7 +1008,7 @@
                                             <button type="button" @click="cancelRenameTrip" class="trip-secondary-button px-3 py-2 rounded-full text-xs font-bold text-m-text">取消</button>
                                         </div>
                                     </div>
-                                    <div v-else class="flex flex-wrap gap-2">
+                                    <div v-else class="settings-inline-actions">
                                         <button type="button" @click="copyShareLink(activeTripId)" class="trip-inline-action px-3.5 py-2 rounded-full text-xs font-bold text-m-text">
                                             分享目前行程
                                         </button>
@@ -974,12 +1020,12 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between gap-3 pt-1">
+                                <div class="settings-trips-row pt-1">
                                     <div>
                                         <div class="text-sm font-bold text-typo-title">Trips</div>
                                         <div class="text-xs text-m-sub mt-1">{{ isShareMode ? '此分享連結已固定在指定 trip' : '切換、建立與整理你的行程資料' }}</div>
                                     </div>
-                                    <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button px-4 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
+                                    <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button w-full md:w-auto px-4 py-3 md:py-2.5 rounded-full text-sm font-bold active:scale-95 transition-transform">
                                         <i class="fa-solid fa-plus mr-2"></i>新增行程
                                     </button>
                                     <button v-else type="button" @click="copyShareLink(activeTripId)" class="trip-action-button px-3.5 py-2 rounded-full text-xs font-bold text-m-text active:scale-95 transition-transform">

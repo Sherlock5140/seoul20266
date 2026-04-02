@@ -70,7 +70,8 @@
   };
 
   const sharedTripSnapshot = readShareSnapshot();
-  const requestedTripId = String(urlParams.get('trip') || sharedTripSnapshot?.tripId || '').trim().toUpperCase();
+  const sharedTripId = String(sharedTripSnapshot?.tripId || '').trim().toUpperCase();
+  const requestedTripId = String(urlParams.get('trip') || '').trim().toUpperCase();
   const SHARE_VIEW_ENABLED = urlParams.get('view') === 'share'
     || urlParams.get('readonly') === '1'
     || urlParams.get('share') === '1';
@@ -120,7 +121,7 @@
       const twdInput = ref('');
       const lastRateInput = ref('local');
 
-      const initialTripId = resolveTripId(sharedTripSnapshot?.tripId || requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
+      const initialTripId = sharedTripId || resolveTripId(requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
       const activeTripId = ref(initialTripId);
       const template = getTripTemplate(activeTripId.value);
       const savedTripData = sharedTripSnapshot || loadTripState(activeTripId.value);
@@ -354,6 +355,8 @@
         schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
         userNotes.value = nextSaved.notes || '';
         localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
+        lastRateInput.value = 'local';
+        handleLocalCurrencyInput();
         currentDayIndex.value = 0;
         activeEventId.value = null;
         validateSchedule();
@@ -652,6 +655,11 @@
           };
           rateUpdatedAt.value = nextRates.updatedAt;
           persistRates(exchangeRates.value, rateUpdatedAt.value);
+          if (lastRateInput.value === 'twd') {
+            handleTwdInput();
+          } else {
+            handleLocalCurrencyInput();
+          }
         } catch (error) {
           console.warn('Rate refresh failed', error);
           rateError.value = true;

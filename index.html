@@ -731,7 +731,6 @@
                                         <div class="header-title-kicker mb-1">
                                             TRAVEL GUIDE
                                         </div>
-                                        <span class="mode-pill px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.16em] text-m-sub uppercase">{{ modeLabel }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -739,7 +738,7 @@
                         <div class="header-toolbar mb-0.5 flex-none self-stretch md:self-auto">
                             <button type="button" aria-label="Reset Map" @click="resetMap" class="header-icon-button"><i class="fa-regular fa-compass header-icon-glyph"></i></button>
                             <button type="button" aria-label="Open Rates" @click="openRatesPanel" class="header-icon-button"><i class="fa-regular fa-credit-card header-icon-glyph"></i></button>
-                            <button type="button" aria-label="Settings" @click="showSync = true" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
+                            <button type="button" aria-label="Settings" @click="openSettingsPanel" class="header-icon-button"><i class="fa-solid fa-sliders header-icon-glyph"></i></button>
                             <button ref="openNoteBtn" type="button" aria-label="Open Notes" @click="openNotebook" class="notes-button flex items-center gap-2 px-4 py-2.5 rounded-full active:scale-95 transition-transform"><i class="fa-regular fa-note-sticky text-typo-title text-xs"></i><span class="header-notes-label text-xs font-bold text-typo-title tracking-wide">Notes</span></button>
                         </div>
                     </div>

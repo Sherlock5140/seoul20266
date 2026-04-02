@@ -643,6 +643,14 @@
         handleLocalCurrencyInput();
       };
 
+      const openSettingsPanel = () => {
+        showSync.value = true;
+        renamingTripId.value = '';
+        renameTitle.value = '';
+        if (isShareMode.value) return;
+        showCreateTripForm.value = false;
+      };
+
       const refreshRateData = async () => {
         ratesLoading.value = true;
         rateError.value = false;
@@ -939,6 +947,7 @@
         handleTwdInput,
         toggleRateDirection,
         openRatesPanel,
+        openSettingsPanel,
         refreshRates: refreshRateData
       };
     }

@@ -111,6 +111,7 @@ Recent UI changes:
 7. If you change UI proportions, modal layout, header controls, trip management flow, map behavior, share behavior, cache behavior, or trip data, update this file before finishing.
 8. When updating this file, prefer editing the relevant section plus the update log below instead of dumping a long changelog.
 9. Every update-log entry must say who made the change and whether it was a bug fix, optimization, UI change, data change, docs update, or infra change.
+10. Never overwrite or rewrite an older update-log entry from another editor. If a previous update introduced a bug or needs correction, add a new follow-up entry that states what was wrong and what was fixed.
 
 ## Known Project Conventions
 
@@ -192,11 +193,19 @@ Preferred entry format:
   Files:
   - `path/to/file`
 
+Follow-up rule:
+- If an earlier entry later turns out to be wrong, incomplete, or buggy, do not replace that old entry.
+- Add a new entry instead, for example:
+  - `Updated by: Claude Code`
+  - `Type: Bug Fix`
+  - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
 - 2026-04-02
   Updated by: Codex
   Type: Docs
   Summary:
   - Update-log format now explicitly records who made the change and what kind of change it was, so future handoffs can distinguish bug fixes, optimizations, UI work, docs edits, and user-authored updates.
+  - Update-log rules now explicitly forbid overwriting another editor's existing entry; corrections must be recorded as a new follow-up entry instead.
   Files:
   - `PROJECT_CONTEXT.md`
   - `AGENTS.md`
@@ -216,7 +225,14 @@ Preferred entry format:
   - `services/rates.js`
 
 - 2026-04-02
-  Updated by: Codex
+  Updated by: Claude Code
+  Type: Bug Fix
+  Fixed Codex-introduced bug: `applyTripState` was calling `setTripNotice('error', ...)` internally for storage failure, but all callers (switchTrip, createTrip, deleteTrip) immediately overwrote it with a success notice — error was never visible. Removed the internal notice; storage errors surface via `persistTrip` debounce as intended.
+  Files:
+  - `scripts/app.js`
+
+- 2026-04-02
+  Updated by: Claude Code
   Type: Optimization
   Share URL compression added: `scripts/utils.js` now exports `compressToBase64Url` / `decompressFromBase64Url` using browser-native `CompressionStream` (deflate-raw). New share URLs are prefixed `z.` and are ~60-75% smaller. Old plain-base64 URLs remain readable (backward-compatible). Boot IIFE is now async; `buildShareUrl` and `copyShareLink` are async. Falls back to plain base64 on browsers without `CompressionStream` (Safari < 16.4).
   Files:
@@ -224,7 +240,7 @@ Preferred entry format:
   - `scripts/app.js`
 
 - 2026-04-02
-  Updated by: Codex
+  Updated by: Claude Code
   Type: Bug Fix, Infra
   Code audit and robustness fixes applied:
   - `services/storage.js`: All `localStorage` calls wrapped in safe wrappers (get/set/remove) to prevent crash from SecurityError in private browsing or storage-blocked environments.

@@ -26,6 +26,8 @@ Working rules:
   - `Type:` `Bug Fix`, `Optimization`, `UI`, `Data`, `Docs`, or `Infra`
   - a short summary of what changed
   - key files touched when relevant
+- Do not overwrite, rewrite, or relabel another editor's existing update-log entry.
+- If you find a problem in a previous change, add a new follow-up entry that references it instead of replacing the old entry.
 
 ## Claude Code / Codex Review Prompt
 

@@ -22,9 +22,9 @@ Working rules:
 - If the UI rules or interaction expectations changed, also update `SEOUL20266_UI_STYLE_GUIDE.md`.
 - Keep `PROJECT_CONTEXT.md` concise but current. It is the shared handoff file for future Claude Code and Codex sessions.
 
-## Claude Code Review Prompt
+## Claude Code / Codex Review Prompt
 
-Use this prompt when asking Claude Code to audit or repair the app:
+Use this prompt when asking Claude Code or Codex to audit or repair the app:
 
 ```text
 這是一套旅遊 APP 使用程式，裡面可以切換不同旅遊地點使用。

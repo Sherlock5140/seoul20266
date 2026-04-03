@@ -6,6 +6,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 ---
 
 - 2026-04-03
+  Updated at: 2026-04-03 13:48 CST
+  Updated by: Claude Code
+  Type: Docs, Optimization
+  Summary: Slimmed PROJECT_CONTEXT.md (537→122 lines) and CLAUDE.md (159→37 lines). Archived 28 log entries to CHANGELOG.md. Rewrote as compact tables.
+  Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`, `CHANGELOG.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 13:43 CST
   Updated by: Claude Code
   Type: Bug Fix

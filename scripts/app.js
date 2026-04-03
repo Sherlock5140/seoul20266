@@ -137,6 +137,7 @@
       const rateError = ref(false);
       const shareLoading = ref(false);
       const shareCopied = ref(false);
+      const shareLinkValue = ref('');
       const copiedEventId = ref(null);
       const { rateDirection: initialRateDirection, exchangeRates: initialExchangeRates, rateUpdatedAt: initialRateUpdatedAt } = getStoredRateState();
       const rateDirection = ref(initialRateDirection);
@@ -341,6 +342,7 @@
           shareLinkCache.clear();
           shareLinkPending.clear();
         }
+        shareLinkValue.value = '';
         resetShareFeedback();
       };
 
@@ -416,8 +418,12 @@
         try {
           await waitForUiPaint();
           const shareUrl = await buildShareUrl(tripId);
+          shareLinkValue.value = shareUrl;
           const copied = await copyText(shareUrl);
-          if (!copied) throw new Error('Clipboard copy failed');
+          if (!copied) {
+            setTripNotice('error', '連結已建立，請手動複製');
+            return;
+          }
           shareCopied.value = true;
           clearTimeout(shareCopiedTimer);
           shareCopiedTimer = setTimeout(() => {
@@ -442,6 +448,21 @@
         copiedEventTimer = setTimeout(() => {
           copiedEventId.value = null;
         }, 1800);
+      };
+
+      const copyGeneratedShareLink = async () => {
+        if (!shareLinkValue.value) return;
+        const copied = await copyText(shareLinkValue.value);
+        if (!copied) {
+          setTripNotice('error', '請長按連結欄位手動複製');
+          return;
+        }
+        shareCopied.value = true;
+        clearTimeout(shareCopiedTimer);
+        shareCopiedTimer = setTimeout(() => {
+          shareCopied.value = false;
+        }, 1800);
+        setTripNotice('success', '已複製分享連結');
       };
 
       const applyTripState = (tripId) => {
@@ -1099,6 +1120,8 @@
         copiedEventId,
         shareLoading,
         shareCopied,
+        shareLinkValue,
+        copyGeneratedShareLink,
         closeSettings,
         getDotColor,
         getCategoryBadge,

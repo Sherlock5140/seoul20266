@@ -98,6 +98,16 @@ Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-03
+  Updated at: 2026-04-03 14:12 CST
+  Updated by: Codex
+  Type: Bug Fix, UI
+  Summary:
+  - Added visible share-link output inside settings so users can manually copy the generated URL even when clipboard access fails on iPhone/PWA.
+  - Added secondary "copy again" action and explicit manual-copy guidance instead of leaving the flow dependent on clipboard success.
+  Cache: v17 → v18; asset: 20260403a → 20260403b.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 14:03 CST
   Updated by: Codex
   Type: Bug Fix, Optimization, UI
@@ -113,10 +123,3 @@ Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
   Type: Docs, Optimization
   Summary: Moved audit prompt to `REVIEW_PROMPT.md`. Added token-saving rules (don't auto-load UI guide or bundle files unless explicitly needed).
   Files: `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `PROJECT_CONTEXT.md`, `REVIEW_PROMPT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 13:48 CST
-  Updated by: Claude Code
-  Type: Docs, Optimization
-  Summary: Slimmed PROJECT_CONTEXT.md (537→122 lines) and CLAUDE.md (159→37 lines). Archived 28 log entries to CHANGELOG.md. Rewrote as compact tables.
-  Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`, `CHANGELOG.md`

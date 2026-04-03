@@ -407,6 +407,20 @@
             justify-content: center;
             min-height: 3rem;
         }
+        .share-link-panel {
+            background: rgba(255,255,255,0.88);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.82);
+        }
+        .share-link-output {
+            background: rgba(244,245,242,0.96);
+            border: 1px solid rgba(214,216,212,0.92);
+            color: #484846;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            word-break: break-all;
+        }
         .share-mode-banner {
             background: linear-gradient(180deg, rgba(142,154,175,0.14) 0%, rgba(255,255,255,0.82) 100%);
             border: 1px solid rgba(142,154,175,0.22);
@@ -1121,6 +1135,17 @@
                                         <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'" class="text-[1rem] md:text-[0.95rem]"></i><span>{{ shareLoading ? '建立連結中...' : shareCopied ? '已複製分享連結' : '複製分享連結' }}</span>
                                     </button>
                                 </div>
+                                <div v-if="shareLinkValue" class="share-link-panel rounded-[1.2rem] px-3.5 py-3 mt-4 space-y-2.5">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div class="text-[12px] font-bold text-m-sub">分享連結</div>
+                                        <button type="button" @click="copyGeneratedShareLink" class="trip-inline-action px-3 py-1.5 rounded-full text-[12px] font-bold text-m-text inline-flex items-center gap-1.5">
+                                            <i :class="shareCopied ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'"></i>
+                                            <span>{{ shareCopied ? '已複製' : '再複製一次' }}</span>
+                                        </button>
+                                    </div>
+                                    <textarea :value="shareLinkValue" readonly class="share-link-output w-full rounded-[1rem] px-3 py-2.5 min-h-[5.6rem]" aria-label="分享連結"></textarea>
+                                    <div class="text-[11px] text-m-sub leading-5">若系統未自動複製，請長按上方連結欄位後手動複製，再分享給對方。</div>
+                                </div>
                                 <transition name="save-indicator">
                                     <div v-if="tripManagerNotice.text" class="mt-4 text-[12px] font-bold px-3 py-2 rounded-2xl" :class="tripNoticeClass">
                                         {{ tripManagerNotice.text }}
@@ -1258,6 +1283,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260403a"></script>
+    <script src="./scripts/app.js?v=20260403b"></script>
 </body>
 </html>

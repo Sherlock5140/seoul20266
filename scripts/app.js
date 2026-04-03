@@ -136,6 +136,7 @@
       const ratesLoading = ref(false);
       const rateError = ref(false);
       const shareLoading = ref(false);
+      const shareCopied = ref(false);
       const copiedEventId = ref(null);
       const { rateDirection: initialRateDirection, exchangeRates: initialExchangeRates, rateUpdatedAt: initialRateUpdatedAt } = getStoredRateState();
       const rateDirection = ref(initialRateDirection);
@@ -203,7 +204,10 @@
       let saveStatusTimer = null;
       let rateErrorTimer = null;
       let tripNoticeTimer = null;
+      let shareCopiedTimer = null;
       let lastItineraryTapAt = 0;
+      const shareLinkCache = new Map();
+      const shareLinkPending = new Map();
 
       const currentDay = computed(() => schedule.value[currentDayIndex.value] || { date: '', title: '', events: [] });
       const displayEvents = computed(() => currentDay.value.events || []);
@@ -324,43 +328,101 @@
         });
       };
 
-      const buildShareUrl = async (tripId) => {
-        const url = new URL(window.location.origin + window.location.pathname);
-        const sourceTemplate = getTripTemplate(tripId);
-        const sourceState = tripId === activeTripId.value
-          ? {
-              tripId,
-              schedule: schedule.value,
-              meta: {
-                title: currentTripTitle.value,
-                country: countrySetting.value
-              }
-            }
-          : loadTripState(tripId);
-        const sharePayload = {
-          tripId,
-          schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
-          meta: {
-            title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
-            country: sourceState.meta?.country || sourceTemplate.meta?.country || 'KR',
-            schemaVersion: sourceState.meta?.schemaVersion || 1
-          }
-        };
+      const resetShareFeedback = () => {
+        shareCopied.value = false;
+        clearTimeout(shareCopiedTimer);
+      };
 
-        url.searchParams.set('trip', tripId);
-        url.searchParams.set('view', 'share');
-        url.searchParams.set('readonly', '1');
-        url.hash = `share=${await compressToBase64Url(sharePayload)}`;
-        return url.toString();
+      const invalidateShareLink = (tripId = activeTripId.value) => {
+        if (tripId) {
+          shareLinkCache.delete(tripId);
+          shareLinkPending.delete(tripId);
+        } else {
+          shareLinkCache.clear();
+          shareLinkPending.clear();
+        }
+        resetShareFeedback();
+      };
+
+      const waitForUiPaint = async () => {
+        await nextTick();
+        await new Promise((resolve) => {
+          if (typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(() => resolve());
+            return;
+          }
+          window.setTimeout(resolve, 0);
+        });
+      };
+
+      const buildShareUrl = async (tripId, { useCache = true } = {}) => {
+        if (useCache && shareLinkCache.has(tripId)) {
+          return shareLinkCache.get(tripId);
+        }
+        if (shareLinkPending.has(tripId)) {
+          return shareLinkPending.get(tripId);
+        }
+        const pending = (async () => {
+          const url = new URL(window.location.origin + window.location.pathname);
+          const sourceTemplate = getTripTemplate(tripId);
+          const sourceState = tripId === activeTripId.value
+            ? {
+                tripId,
+                schedule: schedule.value,
+                meta: {
+                  title: currentTripTitle.value,
+                  country: countrySetting.value
+                }
+              }
+            : loadTripState(tripId);
+          const sharePayload = {
+            tripId,
+            schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
+            meta: {
+              title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
+              country: sourceState.meta?.country || sourceTemplate.meta?.country || 'KR',
+              schemaVersion: sourceState.meta?.schemaVersion || 1
+            }
+          };
+
+          url.searchParams.set('trip', tripId);
+          url.searchParams.set('view', 'share');
+          url.searchParams.set('readonly', '1');
+          url.hash = `share=${await compressToBase64Url(sharePayload)}`;
+          const nextUrl = url.toString();
+          shareLinkCache.set(tripId, nextUrl);
+          return nextUrl;
+        })();
+        shareLinkPending.set(tripId, pending);
+        return pending.finally(() => {
+          shareLinkPending.delete(tripId);
+        });
+      };
+
+      const warmShareLink = (tripId = activeTripId.value) => {
+        if (!tripId || shareLinkCache.has(tripId)) return;
+        scheduleBackgroundTask(() => {
+          buildShareUrl(tripId, { useCache: false }).catch((error) => {
+            console.warn('Share link warmup failed', error);
+          });
+        }, 800);
       };
 
       const copyShareLink = async (tripId) => {
         if (shareLoading.value) return;
         shareLoading.value = true;
+        resetShareFeedback();
         const timeout = setTimeout(() => { shareLoading.value = false; }, 8000);
         try {
-          const copied = await copyText(await buildShareUrl(tripId));
+          await waitForUiPaint();
+          const shareUrl = await buildShareUrl(tripId);
+          const copied = await copyText(shareUrl);
           if (!copied) throw new Error('Clipboard copy failed');
+          shareCopied.value = true;
+          clearTimeout(shareCopiedTimer);
+          shareCopiedTimer = setTimeout(() => {
+            shareCopied.value = false;
+          }, 1800);
           setTripNotice('success', '已複製分享連結');
         } catch (error) {
           console.warn('Share link build failed', error);
@@ -385,6 +447,7 @@
       const applyTripState = (tripId) => {
         if (isReadOnlyMode.value) return;
         isApplyingTripState = true;
+        invalidateShareLink(tripId);
         const nextTemplate = getTripTemplate(tripId);
         const nextSaved = loadTripState(tripId);
         activeTripId.value = tripId;
@@ -406,6 +469,7 @@
           mapService.renderMarkers();
           resetMap();
           isApplyingTripState = false;
+          warmShareLink(tripId);
         });
       };
 
@@ -554,6 +618,7 @@
           setTripNotice('error', '刪除行程失敗，請確認儲存權限');
           return;
         }
+        invalidateShareLink(trip.tripId);
         refreshTripSummaries();
 
         if (trip.tripId === activeTripId.value && fallbackTrip) {
@@ -706,6 +771,7 @@
         showSync.value = true;
         renamingTripId.value = '';
         renameTitle.value = '';
+        warmShareLink(activeTripId.value);
         if (isShareMode.value) return;
         showCreateTripForm.value = false;
       };
@@ -863,11 +929,25 @@
 
       watch(countrySetting, () => {
         if (isHydrating || isReadOnlyMode.value || isApplyingTripState) return;
+        invalidateShareLink(activeTripId.value);
         if (!localCurrencyInput.value) {
           localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
         }
         persistTrip();
+        warmShareLink(activeTripId.value);
       });
+
+      watch(currentTripTitle, () => {
+        if (isHydrating || isReadOnlyMode.value || isApplyingTripState) return;
+        invalidateShareLink(activeTripId.value);
+        warmShareLink(activeTripId.value);
+      });
+
+      watch(schedule, () => {
+        if (isHydrating || isReadOnlyMode.value || isApplyingTripState) return;
+        invalidateShareLink(activeTripId.value);
+        warmShareLink(activeTripId.value);
+      }, { deep: true });
 
       onMounted(() => {
         try {
@@ -878,6 +958,7 @@
           }
           refreshTripSummaries();
           handleLocalCurrencyInput();
+          warmShareLink(activeTripId.value);
           if (shouldRefreshRatesOnLaunch()) {
             scheduleBackgroundTask(() => {
               refreshRateData();
@@ -934,6 +1015,7 @@
         clearTimeout(saveStatusTimer);
         clearTimeout(rateErrorTimer);
         clearTimeout(tripNoticeTimer);
+        clearTimeout(shareCopiedTimer);
         clearTimeout(copiedEventTimer);
         mapService.destroy();
         window.removeEventListener('keydown', handleGlobalKeydown);
@@ -1016,6 +1098,7 @@
         copyEventLocation,
         copiedEventId,
         shareLoading,
+        shareCopied,
         closeSettings,
         getDotColor,
         getCategoryBadge,

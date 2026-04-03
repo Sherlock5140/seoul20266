@@ -98,6 +98,16 @@ Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-03
+  Updated at: 2026-04-03 14:03 CST
+  Updated by: Codex
+  Type: Bug Fix, Optimization, UI
+  Summary:
+  - Optimized settings share-trip flow so the loading state renders before heavy share URL compression starts, which removes the "處理中..." no-response feeling on mobile.
+  - Added share-link warmup and cache invalidation for active-trip changes, plus short-lived `已複製` button feedback after success.
+  Cache: v16 → v17; asset: 20260402k → 20260403a.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 13:53 CST
   Updated by: Codex
   Type: Docs, Optimization
@@ -110,11 +120,3 @@ Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
   Type: Docs, Optimization
   Summary: Slimmed PROJECT_CONTEXT.md (537→122 lines) and CLAUDE.md (159→37 lines). Archived 28 log entries to CHANGELOG.md. Rewrote as compact tables.
   Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`, `CHANGELOG.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 13:43 CST
-  Updated by: Claude Code
-  Type: Bug Fix
-  Summary: Fixed share link "處理中..." stuck bug. Removed notes from payload; clean base URL; 8s timeout safety.
-  Cache: v15 → v16; asset: 20260402j → 20260402k.
-  Files: `scripts/app.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`

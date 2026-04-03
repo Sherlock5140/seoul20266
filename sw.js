@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v16';
+const CACHE_NAME = 'travel-guide-v17';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,13 +8,13 @@ const APP_SHELL = [
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
-  './scripts/config.js?v=20260402f',
-  './scripts/utils.js?v=20260402f',
-  './scripts/app.js?v=20260402f',
-  './services/storage.js?v=20260402f',
-  './services/rates.js?v=20260402f',
+  './scripts/config.js?v=20260402k',
+  './scripts/utils.js?v=20260402k',
+  './scripts/app.js?v=20260403a',
+  './services/storage.js?v=20260402k',
+  './services/rates.js?v=20260402k',
   './services/map.js?v=20260402k',
-  './data/seoul-2026.js?v=20260402f'
+  './data/seoul-2026.js?v=20260402k'
 ];
 
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));

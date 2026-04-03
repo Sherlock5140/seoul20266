@@ -1097,8 +1097,9 @@
                                         </div>
                                     </div>
                                     <div v-else class="settings-inline-actions">
-                                        <button type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text disabled:opacity-50">
-                                            <i v-if="shareLoading" class="fa-solid fa-circle-notch animate-spin mr-1"></i>{{ shareLoading ? '處理中...' : '分享目前行程' }}
+                                        <button type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text disabled:opacity-50 inline-flex items-center justify-center gap-1.5 min-w-[8.5rem]">
+                                            <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'"></i>
+                                            <span>{{ shareLoading ? '建立連結中...' : shareCopied ? '已複製' : '分享目前行程' }}</span>
                                         </button>
                                         <button type="button" @click="startRenameTrip(activeTripSummary || { tripId: activeTripId, title: currentTripTitle })" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text">
                                             改名
@@ -1116,8 +1117,8 @@
                                     <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold active:scale-95 transition-transform">
                                         <i class="fa-solid fa-plus mr-2"></i>新增行程
                                     </button>
-                                    <button v-else type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-action-button share-settings-copy w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold text-m-text active:scale-95 transition-transform inline-flex items-center gap-2 disabled:opacity-50">
-                                        <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : 'fa-regular fa-copy'" class="text-[1rem] md:text-[0.95rem]"></i><span>{{ shareLoading ? '處理中...' : '複製分享連結' }}</span>
+                                    <button v-else type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-action-button share-settings-copy w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold text-m-text active:scale-95 transition-transform inline-flex items-center justify-center gap-2 disabled:opacity-50 min-w-[10.5rem]">
+                                        <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'" class="text-[1rem] md:text-[0.95rem]"></i><span>{{ shareLoading ? '建立連結中...' : shareCopied ? '已複製分享連結' : '複製分享連結' }}</span>
                                     </button>
                                 </div>
                                 <transition name="save-indicator">
@@ -1257,6 +1258,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260402k"></script>
+    <script src="./scripts/app.js?v=20260403a"></script>
 </body>
 </html>

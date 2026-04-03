@@ -6,6 +6,14 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 ---
 
 - 2026-04-03
+  Updated at: 2026-04-03 13:43 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary: Fixed share link "處理中..." stuck bug. Removed notes from payload; clean base URL; 8s timeout safety.
+  Cache: v15 → v16; asset: 20260402j → 20260402k.
+  Files: `scripts/app.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 13:47 CST
   Updated by: Codex
   Type: Docs

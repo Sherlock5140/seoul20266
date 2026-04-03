@@ -255,7 +255,13 @@
       });
       if (event?.coords) {
         const targetZoom = Math.max(map.getZoom() || 0, 16);
-        map.flyTo(event.coords, targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
+        // Push pin tip to ~65% from top so the popup (opens ~80px above) fits within the map.
+        // subtract([0, D]) shifts center north → pin tip lands D px south of center.
+        const mapEl = document.getElementById('map');
+        const mapH = mapEl ? mapEl.getBoundingClientRect().height : (window.innerWidth < 768 ? 280 : 500);
+        const offsetPx = Math.round(0.15 * mapH);
+        const targetPoint = map.project(event.coords, targetZoom).subtract([0, offsetPx]);
+        map.flyTo(map.unproject(targetPoint, targetZoom), targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
       }
     };
 

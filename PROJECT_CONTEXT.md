@@ -91,7 +91,7 @@ UI logic:
 - Country dropdowns are now generated from config instead of hardcoded options.
 
 Cache:
-- Service worker cache version is currently `travel-guide-v14`.
+- Service worker cache version is currently `travel-guide-v15`.
 - Frontend asset query version is currently `20260402g`.
 
 Recent UI changes:
@@ -206,6 +206,19 @@ Follow-up rule:
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
+- 2026-04-03
+  Updated at: 2026-04-03 11:15 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary:
+  - Refined map marker centering: direct flyTo(event.coords) placed the popup too close to the top edge (pin tip at 50%, popup extends ~80px above). Added controlled offset: subtract([0, 0.15 * mapH]) shifts the center north so the pin tip lands at ~65% from top — popup has ~30% of map height as clearance above it. Offset uses live getBoundingClientRect().height with mobile fallback.
+  - Cache version: `travel-guide-v14` → `travel-guide-v15`; asset version: `20260402i` → `20260402j`.
+  Files:
+  - `services/map.js`
+  - `sw.js`
+  - `index.html`
+  - `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 11:11 CST

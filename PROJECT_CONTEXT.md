@@ -110,9 +110,10 @@ Recent UI changes:
 6. Do not assume `data/seoul-2026.js` only contains Seoul.
 7. If you change UI proportions, modal layout, header controls, trip management flow, map behavior, share behavior, cache behavior, or trip data, update this file before finishing.
 8. When updating this file, prefer editing the relevant section plus the update log below instead of dumping a long changelog.
-9. Every update-log entry must include the exact update time in addition to the date.
+9. Every update-log entry must include the exact update time in addition to the date. The timestamp must be obtained by running `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M'` immediately before writing the entry — never estimate, guess, or use a placeholder time.
 10. Every update-log entry must say who made the change and whether it was a bug fix, optimization, UI change, data change, docs update, or infra change.
 11. Never overwrite or rewrite an older update-log entry from another editor. If a previous update introduced a bug or needs correction, add a new follow-up entry that states what was wrong and what was fixed.
+12. Each update-log entry must list every file that was actually changed. Do not batch multiple separate change rounds into one entry — write one entry per work session/commit.
 
 ## Known Project Conventions
 
@@ -204,7 +205,18 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-03
-  Updated at: 2026-04-03 00:00 CST
+  Updated at: 2026-04-03 10:21 CST
+  Updated by: Claude Code
+  Type: Docs
+  Summary:
+  - Corrected placeholder timestamp `00:00` in the 2026-04-03 map fix entry to the actual commit time `10:20 CST` (verified via `git log`).
+  - Added Rule 12: each entry must cover one work session/commit and list all changed files.
+  - Strengthened Rule 9: timestamp must be obtained by running `TZ='Asia/Taipei' date` immediately before writing — never estimate or use a placeholder.
+  Files:
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 10:20 CST
   Updated by: Claude Code
   Type: Bug Fix
   Summary:

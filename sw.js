@@ -1,16 +1,16 @@
-const CACHE_NAME = 'travel-guide-v29';
+const CACHE_NAME = 'travel-guide-v30';
 const APP_SHELL = [
   './',
   './index.html',
   './offline.html',
-  './manifest.webmanifest',
+  './manifest.webmanifest?v=20260403l',
   './icon.svg',
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
   './scripts/config.js?v=20260402k',
   './scripts/utils.js?v=20260402k',
-  './scripts/app.js?v=20260403i',
+  './scripts/app.js?v=20260403l',
   './services/storage.js?v=20260402k',
   './services/rates.js?v=20260402k',
   './services/map.js?v=20260402k',
@@ -47,21 +47,21 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match('./index.html').then((cachedIndex) => {
-        const networkFetch = fetch(request)
-          .then((response) => {
-            if (response && response.ok) {
-              const responseClone = response.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => cache.put('./index.html', responseClone))
-                .catch((err) => console.warn('[SW] index.html cache write failed', err));
-            }
-            return response;
-          })
-          .catch(() => cachedIndex || caches.match('./offline.html').then((r) => r || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' })));
-
-        return cachedIndex || networkFetch;
-      })
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => cache.put('./index.html', responseClone))
+              .catch((err) => console.warn('[SW] index.html cache write failed', err));
+          }
+          return response;
+        })
+        .catch(() => (
+          caches.match('./index.html')
+            .then((cachedIndex) => cachedIndex || caches.match('./offline.html'))
+            .then((fallbackResponse) => fallbackResponse || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' }))
+        ))
     );
     return;
   }

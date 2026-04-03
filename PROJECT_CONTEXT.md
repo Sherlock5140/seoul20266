@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v29`
-- Asset query version: `20260403k`
+- SW cache: `travel-guide-v30`
+- Asset query version: `20260403l`
 
 ## Data Shapes
 
@@ -95,8 +95,10 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Gemini | Maintenance | Inserted new entry in PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
+
 - 2026-04-03 | Claude Code | Maintenance | Updated PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
 
 - 2026-04-03 | Codex | UI/UX | Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation. Cache v24→v25; asset 20260403f→g. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
 
-- 2026-04-03 20:09 CST | Codex | Data | Rebuilt the built-in Seoul 8D7N itinerary from the newly supplied final schedule, adding trip-level hotel/pass/strategy metadata, correcting Day 1 flight and boarding timing, restoring the full Day 4 / Day 6 teammate notes, and splitting Day 5 Seongsu post-dinner browsing into its own event while keeping built-in linked-share behavior tied to the catalog trip data. Also corrected summary durations where the pasted heading conflicted with the actual schedule window, so Day 6 remains `5h` and Day 8 remains `5.5h`. Cache v28→v29; data asset 20260403j→20260403k. Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
+- 2026-04-03 | Codex | PWA/Infra | Installed Home Screen launches now prefer the latest network `index.html`, perform explicit service-worker update checks on launch/return, and use a versioned manifest `start_url` for future installs. This reduces cases where the iPhone PWA stayed on stale itinerary data until the user removed and re-added it. Cache v29→v30; asset/manifest 20260403l. Files: `sw.js`, `manifest.webmanifest`, `index.html`, `scripts/app.js`, `PROJECT_CONTEXT.md`

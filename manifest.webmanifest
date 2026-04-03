@@ -2,7 +2,7 @@
   "name": "Travel Guide",
   "short_name": "Travel Guide",
   "description": "Multi-trip travel itinerary app with maps, notes, exchange rates, and offline support.",
-  "start_url": "./index.html",
+  "start_url": "./index.html?entry=pwa&v=20260403l",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ECEDEA",

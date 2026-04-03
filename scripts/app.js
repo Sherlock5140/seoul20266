@@ -1237,9 +1237,30 @@
                   console.warn('Local service worker cleanup failed', error);
                 });
             } else {
-              navigator.serviceWorker.register('./sw.js').catch((error) => {
-                console.warn('Service worker registration failed', error);
-              });
+              navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+                .then((registration) => {
+                  const requestUpdate = () => {
+                    registration.update().catch((error) => {
+                      console.warn('Service worker update check failed', error);
+                    });
+                  };
+
+                  requestUpdate();
+                  window.setTimeout(requestUpdate, 1500);
+
+                  document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') requestUpdate();
+                  });
+
+                  if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                      window.location.reload();
+                    }, { once: true });
+                  }
+                })
+                .catch((error) => {
+                  console.warn('Service worker registration failed', error);
+                });
             }
           }
         } catch (error) {

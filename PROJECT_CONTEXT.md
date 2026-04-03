@@ -95,6 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Claude Code | Docs/Opt | CLAUDE.md: session-start read (not per-edit); Gemini Flash auto-writes log; PROJECT_CONTEXT.md removed from Gemini exclusion list. Files: `CLAUDE.md`, `PROJECT_CONTEXT.md`
+
 - 2026-04-03 | Claude Code | Docs/Opt | Added Code Navigation table (app.js/index.html line refs); 1-line log format; token-saving workflow rules in CLAUDE.md. Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`
 
 - 2026-04-03 | Codex | Feature/UI | Selected-day share URLs (`?days=1,3,5`); day-picker in settings; share preserves original day numbers. Cache v20→v21; asset 20260403c→d. Files: `app.js`, `index.html`, `sw.js`, `UI_GUIDE`, `PROJECT_CONTEXT`

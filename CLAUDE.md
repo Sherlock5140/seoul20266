@@ -73,16 +73,31 @@ Binary: `~/.npm-global/bin/gemini` (full path — Claude Code Bash 不繼承 PAT
 export PATH="$HOME/.npm-global/bin:$PATH" && ~/.npm-global/bin/gemini -p "{{任務}}" -m {{模型}}
 ```
 
-**先問自己，再叫 Gemini：**
-1. 已知答案 / 本專案邏輯 → 直接讀程式碼執行
-2. 查外部文件/版本/API → `gemini-2.5-flash`
-3. 複雜分析/第二意見/跨檔追蹤 → `gemini-2.5-pro`
+**加入 opusplan 後的新分工：**
 
-| 模型 | 適用 |
-|------|------|
-| `gemini-2.5-flash` | API 文件、版本號、語法相容性、快速比較、寫 log |
-| `gemini-2.5-pro` | 跨檔 bug 根因、架構比較、Code Review |
+| 誰 | 職責 |
+|----|------|
+| Opus 4.6（Plan Mode） | 複雜推理、跨檔架構、bug 根因分析 |
+| Sonnet 4.6（執行） | 寫程式碼、修改檔案 |
+| Gemini Flash | 查外部文件/版本/API、自動寫 log |
+| Gemini Pro | 審查**其他 AI（Codex）寫的程式碼**、需要完全獨立第二意見時 |
 
-**不用 Gemini：** 本專案邏輯判斷、修改功能程式碼、commit/push、更新 `SEOUL20266_UI_STYLE_GUIDE.md`
+**呼叫判斷：**
+1. 本專案邏輯 / 複雜分析 → Opus Plan Mode（不叫 Gemini）
+2. 查外部資料 → Gemini Flash
+3. 審查 Codex 修改 / 真正獨立視角 → Gemini Pro
+
+**Gemini Flash — 固定觸發（commit 後自動執行）：**
+```bash
+export PATH="$HOME/.npm-global/bin:$PATH" && \
+git diff HEAD --stat | \
+~/.npm-global/bin/gemini --approval-mode=auto_edit \
+  -p "在 PROJECT_CONTEXT.md 的 Update Log 最上方插入一筆，格式：
+- YYYY-MM-DD | Editor | Type | 摘要。Cache vX→vY; asset old→new. Files: list
+執行 TZ='Asia/Taipei' date '+%Y-%m-%d' 取得日期。Editor=Claude Code。超過 3 筆刪最舊。只改 PROJECT_CONTEXT.md。" \
+  -m gemini-2.5-flash
+```
+
+**不用 Gemini：** 本專案邏輯、修改程式碼、commit/push、更新 `SEOUL20266_UI_STYLE_GUIDE.md`
 
 **透明度：** 呼叫前說明「呼叫 Flash/Pro — 原因」；呼叫後說明結果與是否採用。

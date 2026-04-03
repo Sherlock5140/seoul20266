@@ -3,12 +3,15 @@
 This repository is primarily maintained with:
 - Claude Code
 - Codex
+- Gemini
 
-If you are Claude Code or Codex, read `PROJECT_CONTEXT.md` before doing anything else.
+If you are Claude Code, Codex, or Gemini, read `PROJECT_CONTEXT.md` before doing anything else.
 
 Priority order:
 - `PROJECT_CONTEXT.md` for current rules, recent changes, and update log requirements
 - `SEOUL20266_UI_STYLE_GUIDE.md` for UI behavior, layout rules, responsive logic, and bug-fix expectations
+- `CLAUDE.md` for Claude Code-specific entry instructions
+- `GEMINI.md` for Gemini-specific entry instructions
 - `scripts/config.js` for country and map behavior
 - `scripts/app.js` for app flow
 - `services/map.js` for marker and map behavior
@@ -23,7 +26,7 @@ Working rules:
 - Keep `PROJECT_CONTEXT.md` concise but current. It is the shared handoff file for future Claude Code and Codex sessions.
 - Every new `PROJECT_CONTEXT.md` update-log entry must include:
   - `Updated at:` in `YYYY-MM-DD HH:MM TZ` format
-  - `Updated by:` `Claude Code`, `Codex`, or `User`
+  - `Updated by:` `Claude Code`, `Codex`, `Gemini`, or `User`
   - `Type:` `Bug Fix`, `Optimization`, `UI`, `Data`, `Docs`, or `Infra`
   - a short summary of what changed
   - key files touched when relevant

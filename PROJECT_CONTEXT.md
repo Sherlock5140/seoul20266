@@ -13,8 +13,9 @@ If you are continuing work in this repo, use this file as the first source of tr
 Primary AI editors for this repo:
 - Claude Code
 - Codex
+- Gemini
 
-This file is the shared handoff log between Claude Code and Codex.
+This file is the shared handoff log between Claude Code, Codex, and Gemini.
 
 UI-specific source of truth:
 - `SEOUL20266_UI_STYLE_GUIDE.md`
@@ -160,6 +161,8 @@ Useful next improvements:
 ## If Another AI Is Continuing Work
 
 Before editing:
+- Read `CLAUDE.md` if you are Claude Code
+- Read `GEMINI.md` if you are Gemini
 - Read `scripts/config.js`
 - Read `scripts/app.js`
 - Read `services/rates.js`
@@ -189,7 +192,7 @@ If the user mentions exchange rates:
 Preferred entry format:
 - YYYY-MM-DD
   Updated at: YYYY-MM-DD HH:MM TZ
-  Updated by: Codex | Claude Code | User
+  Updated by: Codex | Claude Code | Gemini | User
   Type: Bug Fix | Optimization | UI | Data | Docs | Infra
   Summary:
   - Short description of what changed
@@ -203,6 +206,19 @@ Follow-up rule:
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
+- 2026-04-03
+  Updated at: 2026-04-03 10:42 CST
+  Updated by: Codex
+  Type: Docs
+  Summary:
+  - Added `CLAUDE.md` and `GEMINI.md` as AI-specific entry files while keeping `PROJECT_CONTEXT.md` as the single shared source of truth.
+  - Updated shared rules so Claude Code, Codex, and Gemini all follow the same handoff and update-log conventions.
+  Files:
+  - `CLAUDE.md`
+  - `GEMINI.md`
+  - `AGENTS.md`
+  - `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 10:21 CST

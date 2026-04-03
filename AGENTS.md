@@ -11,6 +11,7 @@ Priority order:
 - `PROJECT_CONTEXT.md` for current rules, recent changes, and update log requirements
 - `SEOUL20266_UI_STYLE_GUIDE.md` for UI behavior, layout rules, responsive logic, and bug-fix expectations
 - `CLAUDE.md` for Claude Code-specific entry instructions
+- `CODEX.md` for Codex-specific entry instructions
 - `GEMINI.md` for Gemini-specific entry instructions
 - `scripts/config.js` for country and map behavior
 - `scripts/app.js` for app flow

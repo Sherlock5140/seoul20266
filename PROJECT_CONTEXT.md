@@ -85,11 +85,27 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 - Map/country issues → `meta.country` in trip data, `COUNTRY_CONFIG` in `scripts/config.js`, `services/map.js`
 - Rate issues → `services/rates.js`, confirm country maps to expected currency
 
+## AI Entry Files
+
+- `CLAUDE.md` → Claude Code-specific entry instructions
+- `CODEX.md` → Codex-specific entry instructions
+- `GEMINI.md` → Gemini-specific entry instructions
+- All three still share the same source of truth in `PROJECT_CONTEXT.md`
+
 ## Update Log
 
 Format: date · Updated at · Updated by · Type · Summary · Files
 Older entries archived in `CHANGELOG.md`.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
+
+- 2026-04-03
+  Updated at: 2026-04-03 13:47 CST
+  Updated by: Codex
+  Type: Docs
+  Summary:
+  - Added `CODEX.md` so Claude Code, Codex, and Gemini now each have a dedicated project entry file.
+  - Updated shared documentation to point Codex to `CODEX.md` while keeping `PROJECT_CONTEXT.md` as the common source of truth.
+  Files: `CODEX.md`, `AGENTS.md`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 13:48 CST

@@ -208,6 +208,20 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-03
+  Updated at: 2026-04-03 10:50 CST
+  Updated by: Claude Code
+  Type: Docs, Infra
+  Summary:
+  - Rewrote Gemini CLI collaboration rules in `CLAUDE.md` with precise model-selection logic.
+  - Added Claude judgment priority order (4-step self-check before calling Gemini).
+  - Defined explicit trigger conditions for Flash (lookup/docs/version) vs Pro (complex bug, cross-file analysis, second-opinion review).
+  - Added Gemini result handling principles: verify before adopting, project rules override Gemini output.
+  - Removed vague "needs stronger reasoning" wording; replaced with concrete task examples for each model.
+  Files:
+  - `CLAUDE.md`
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 10:45 CST
   Updated by: Claude Code
   Type: Infra, Docs

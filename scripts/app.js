@@ -151,7 +151,7 @@
     const titleMatchesTemplate = !normalizedSavedTitle || normalizedSavedTitle === normalizedTemplateTitle;
     const notesEmpty = !String(state?.notes || '').trim();
     const scheduleMatchesTemplate = !Array.isArray(state?.schedule)
-      || schedulesMatch(state.schedule, templateTrip?.schedule || []);
+      || schedulesMatch(stripScheduleShareMeta(state.schedule), templateTrip?.schedule || []);
     return titleMatchesTemplate && notesEmpty && scheduleMatchesTemplate;
   };
   const normalizeCatalogTripState = (tripId, state = {}) => {
@@ -171,20 +171,12 @@
     const tripId = String(summary?.tripId || '').trim().toUpperCase();
     const templateTrip = tripCatalog.trips[tripId];
     if (!templateTrip) return summary;
-    const normalizedSummaryCountry = normalizeCountryCode(summary?.country || '');
-    const normalizedTemplateCountry = normalizeCountryCode(templateTrip?.meta?.country || 'KR');
-    const normalizedSummaryTitle = String(summary?.title || '').trim();
-    const normalizedTemplateTitle = String(templateTrip?.meta?.title || tripId).trim();
-    const titleMatchesTemplate = !normalizedSummaryTitle || normalizedSummaryTitle === normalizedTemplateTitle;
-    const updatedAtEmpty = !String(summary?.updatedAt || '').trim();
-    if (normalizedSummaryCountry === normalizedTemplateCountry || !titleMatchesTemplate || !updatedAtEmpty) {
-      return summary;
-    }
+    const fullState = loadTripState(tripId);
+    if (!shouldRestoreTemplateMeta(tripId, fullState, templateTrip)) return summary;
     return {
       ...summary,
-      title: normalizedTemplateTitle,
-      country: normalizedTemplateCountry,
-      source: 'catalog'
+      title: String(templateTrip?.meta?.title || tripId).trim(),
+      country: normalizeCountryCode(templateTrip?.meta?.country || 'KR')
     };
   };
   const cloneScheduleForView = (sourceSchedule = [], dayIndexes = []) => {

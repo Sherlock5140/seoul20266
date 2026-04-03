@@ -208,6 +208,17 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-03
+  Updated at: 2026-04-03 10:45 CST
+  Updated by: Claude Code
+  Type: Infra, Docs
+  Summary:
+  - Gemini CLI (v0.36.0) installed at `~/.npm-global/bin/gemini`; verified callable from Claude Code Bash environment.
+  - `CLAUDE.md` updated with Gemini collaboration rules: when to use Gemini, model selection table (Flash for lookup/summarize, Pro for heavier reasoning), call template with full binary path, and cases where Gemini should not be used.
+  Files:
+  - `CLAUDE.md`
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 10:42 CST
   Updated by: Codex
   Type: Docs

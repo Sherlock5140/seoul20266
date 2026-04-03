@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v32';
+const CACHE_NAME = 'travel-guide-v33';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,9 +10,9 @@ const APP_SHELL = [
   './icon-512.png',
   './scripts/config.js?v=20260402k',
   './scripts/utils.js?v=20260402k',
-  './scripts/app.js?v=20260404a',
+  './scripts/app.js?v=20260404b',
   './services/storage.js?v=20260402k',
-  './services/rates.js?v=20260404a',
+  './services/rates.js?v=20260404b',
   './services/map.js?v=20260402k',
   './data/seoul-2026.js?v=20260403k'
 ];

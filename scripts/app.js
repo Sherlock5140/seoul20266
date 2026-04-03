@@ -360,7 +360,6 @@
           return {
             badge: 'Cash Rate',
             title: '韓國當地現鈔匯率',
-            description: '查看 Creatrip 的韓國現鈔匯率與線上換算頁。App 內維持即時換算，這張卡則提供你比對當地實體換匯價格。',
             sourceLabel: 'Creatrip',
             url: 'https://creatrip.com/exchange'
           };

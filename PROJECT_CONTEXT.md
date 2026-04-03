@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v32`
-- Asset query version: `20260404a`
+- SW cache: `travel-guide-v33`
+- Asset query version: `20260404b`
 
 ## Data Shapes
 
@@ -96,6 +96,8 @@ Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-04 | Codex | UI/UX, Rates | Added a Korea-only cash-rate source card inside the exchange modal that links to Creatrip's local cash-rate page, while keeping the app's own calculator for internal conversions. The rate modal layout was also tightened so the new source block reads as part of the same flow. Cache v31→v32; asset 20260404a. Files: `index.html`, `scripts/app.js`, `services/rates.js`, `sw.js`, `PROJECT_CONTEXT.md`
+
+- 2026-04-04 01:04 CST | Codex | UI/UX, Rates | Follow-up: moved the Korea cash-rate card to the bottom of the exchange modal and removed the extra descriptive note so the layout stays cleaner and more minimal. Cache v32→v33; asset 20260404b. Files: `index.html`, `scripts/app.js`, `sw.js`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03 | Claude Code | Update | Added new log entry as requested. Files: PROJECT_CONTEXT.md
 

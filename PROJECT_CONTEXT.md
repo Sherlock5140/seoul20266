@@ -94,66 +94,27 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 ## Update Log
 
-Format: date · Updated at · Updated by · Type · Summary · Files
-Older entries archived in `CHANGELOG.md`.
+Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-03
   Updated at: 2026-04-03 13:53 CST
   Updated by: Codex
   Type: Docs, Optimization
-  Summary:
-  - Moved the long audit prompt out of `AGENTS.md` into `REVIEW_PROMPT.md` so startup context stays smaller.
-  - Added explicit token-saving rules: do not auto-load UI guide for non-UI tasks, and do not auto-load large bundled review files unless a full bundled review is explicitly needed.
+  Summary: Moved audit prompt to `REVIEW_PROMPT.md`. Added token-saving rules (don't auto-load UI guide or bundle files unless explicitly needed).
   Files: `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `PROJECT_CONTEXT.md`, `REVIEW_PROMPT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 13:47 CST
-  Updated by: Codex
-  Type: Docs
-  Summary:
-  - Added `CODEX.md` so Claude Code, Codex, and Gemini now each have a dedicated project entry file.
-  - Updated shared documentation to point Codex to `CODEX.md` while keeping `PROJECT_CONTEXT.md` as the common source of truth.
-  Files: `CODEX.md`, `AGENTS.md`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 13:48 CST
   Updated by: Claude Code
   Type: Docs, Optimization
-  Summary:
-  - Reduced token consumption: PROJECT_CONTEXT.md 537 → 122 lines (−77%), CLAUDE.md 159 → 37 lines (−77%).
-  - Archived 28 older update-log entries to `CHANGELOG.md` (not auto-loaded).
-  - Rewrote PROJECT_CONTEXT.md as a compact reference (table format for architecture, country model, data shapes).
-  - Rewrote CLAUDE.md Gemini rules into a concise table + 4-step checklist.
-  - Combined context file savings: ~29KB → ~7KB per session start.
-  Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`, `CHANGELOG.md` (new)
+  Summary: Slimmed PROJECT_CONTEXT.md (537→122 lines) and CLAUDE.md (159→37 lines). Archived 28 log entries to CHANGELOG.md. Rewrote as compact tables.
+  Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`, `CHANGELOG.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 13:43 CST
   Updated by: Claude Code
   Type: Bug Fix
-  Summary:
-  - Fixed share link stuck at "處理中..." and failing on recipient's end.
-  - Removed `notes` from share payload (schedule + meta only) — notes caused oversized URLs.
-  - Built share URL from clean `origin+pathname` instead of `window.location.href` (prevented stale hash/params leaking in).
-  - Added 8-second safety timeout in `copyShareLink` so `shareLoading` always resets.
-  - Cache: v15 → v16; asset: 20260402j → 20260402k.
+  Summary: Fixed share link "處理中..." stuck bug. Removed notes from payload; clean base URL; 8s timeout safety.
+  Cache: v15 → v16; asset: 20260402j → 20260402k.
   Files: `scripts/app.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 11:15 CST
-  Updated by: Claude Code
-  Type: Bug Fix
-  Summary:
-  - Refined map marker centering: add 15% mapHeight offset via project/subtract/unproject so pin lands at ~65% from top, giving popup clearance above it.
-  - Cache: v14 → v15; asset: 20260402i → 20260402j.
-  Files: `services/map.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 11:11 CST
-  Updated by: Claude Code
-  Type: Bug Fix
-  Summary:
-  - Removed `getHighlightOffset()` and projection offset entirely; replaced with `map.flyTo(event.coords)` for exact centering. `autoPan: false` retained.
-  - Cache: v13 → v14; asset: 20260402h → 20260402i.
-  Files: `services/map.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`

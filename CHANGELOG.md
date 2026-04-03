@@ -6,6 +6,29 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 ---
 
 - 2026-04-03
+  Updated at: 2026-04-03 13:47 CST
+  Updated by: Codex
+  Type: Docs
+  Summary: Added CODEX.md; all three AIs now have dedicated entry files.
+  Files: `CODEX.md`, `AGENTS.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 11:15 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary: Map marker: 15% offset via project/subtract/unproject, pin at ~65% from top.
+  Cache: v14 → v15; asset: 20260402i → 20260402j.
+  Files: `services/map.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 11:11 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary: Removed getHighlightOffset(); replaced with direct flyTo(event.coords). autoPan: false retained.
+  Cache: v13 → v14; asset: 20260402h → 20260402i.
+  Files: `services/map.js`, `sw.js`, `index.html`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 10:58 CST
   Updated by: Claude Code
   Type: Bug Fix

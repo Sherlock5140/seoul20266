@@ -545,7 +545,13 @@
         }
       };
 
-      const copyShareLink = async (tripId, { dayIndexes = [] } = {}) => {
+      const copyShareLink = async (tripId, {
+        dayIndexes = [],
+        preferNativeShare = true,
+        successLabel = '已複製',
+        successNotice = '已複製分享連結',
+        manualCopyNotice = '連結已建立，請手動複製'
+      } = {}) => {
         if (shareLoading.value) return;
         shareLoading.value = true;
         resetShareFeedback();
@@ -554,22 +560,26 @@
           await waitForUiPaint();
           const shareUrl = await buildShareUrl(tripId, { dayIndexes });
           shareLinkValue.value = shareUrl;
-          const shared = await tryNativeShare(shareUrl);
-          if (shared) return;
           const copied = await copyText(shareUrl);
+          if (copied) {
+            shareCopied.value = true;
+            shareStatusLabel.value = successLabel;
+            clearTimeout(shareCopiedTimer);
+            shareCopiedTimer = setTimeout(() => {
+              shareCopied.value = false;
+              shareStatusLabel.value = '';
+            }, 1800);
+            setTripNotice('success', successNotice);
+          }
+          if (preferNativeShare) {
+            const shared = await tryNativeShare(shareUrl);
+            if (shared) return;
+          }
           if (!copied) {
             shareStatusLabel.value = '可手動複製';
-            setTripNotice('error', '連結已建立，請手動複製');
+            setTripNotice('error', manualCopyNotice);
             return;
           }
-          shareCopied.value = true;
-          shareStatusLabel.value = '已複製';
-          clearTimeout(shareCopiedTimer);
-          shareCopiedTimer = setTimeout(() => {
-            shareCopied.value = false;
-            shareStatusLabel.value = '';
-          }, 1800);
-          setTripNotice('success', '已複製分享連結');
         } catch (error) {
           console.warn('Share link build failed', error);
           setTripNotice('error', '分享連結產生失敗');
@@ -592,7 +602,13 @@
           setTripNotice('error', '請先選擇要分享的日期');
           return;
         }
-        await copyShareLink(activeTripId.value, { dayIndexes: normalizedSelectedShareDays.value });
+        await copyShareLink(activeTripId.value, {
+          dayIndexes: normalizedSelectedShareDays.value,
+          preferNativeShare: false,
+          successLabel: '已複製日期連結',
+          successNotice: '已複製所選日期連結',
+          manualCopyNotice: '日期連結已建立，請手動複製'
+        });
       };
 
       let copiedEventTimer = null;

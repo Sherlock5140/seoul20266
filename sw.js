@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v22';
+const CACHE_NAME = 'travel-guide-v23';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,7 +10,7 @@ const APP_SHELL = [
   './icon-512.png',
   './scripts/config.js?v=20260402k',
   './scripts/utils.js?v=20260402k',
-  './scripts/app.js?v=20260403d',
+  './scripts/app.js?v=20260403e',
   './services/storage.js?v=20260402k',
   './services/rates.js?v=20260402k',
   './services/map.js?v=20260402k',

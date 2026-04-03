@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v22`
-- Asset query version: `20260403d`
+- SW cache: `travel-guide-v23`
+- Asset query version: `20260403e`
 
 ## Data Shapes
 
@@ -95,8 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Codex | Bug Fix/UX | `分享所選日期` now copies the generated link first instead of preferring native share, so one tap leaves a usable URL in the clipboard immediately. Cache v22→v23; asset 20260403d→e. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
 - 2026-04-03 | Codex | UI/Opt | Premium settings polish: stronger modal/card hierarchy, clearer field labels, improved share-day panel, better mobile chip grid and CTA emphasis. Cache v21→v22. Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03 | Claude Code | Docs/Opt | CLAUDE.md: session-start read (not per-edit); Gemini Flash auto-writes log; PROJECT_CONTEXT.md removed from Gemini exclusion list. Files: `CLAUDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Claude Code | Docs/Opt | Added Code Navigation table (app.js/index.html line refs); 1-line log format; token-saving workflow rules in CLAUDE.md. Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`

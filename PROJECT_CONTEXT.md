@@ -4,34 +4,51 @@
 
 Read this file before editing code, trip data, SW cache versions, or country/map/currency behavior.
 Primary AI editors: Claude Code, Codex, Gemini. This is the shared handoff log.
-UI source of truth: `SEOUL20266_UI_STYLE_GUIDE.md` (layout, modals, responsive, share mode, visual bugs).
+UI source of truth: `SEOUL20266_UI_STYLE_GUIDE.md` — **only read for UI/layout/modal/share-mode tasks**.
 
-Last updated: 2026-04-03
-Project: Travel Guide — Static PWA (HTML + Vue 3 CDN + Tailwind CDN + Leaflet + Service Worker). No build step.
+Last updated: 2026-04-03 | Stack: HTML + Vue 3 CDN + Tailwind CDN + Leaflet + SW. No build step.
 
-## What This App Is
+## App Summary
 
-Local-first multi-trip travel itinerary web app.
-- Day-by-day itinerary timeline with map markers
-- Trip switching and localStorage persistence
-- Share-link mode supporting full-trip direct share, selected-day direct share, and snapshot fallback (schedule + meta only, no notes)
-- Exchange-rate calculator
-- PWA install/offline shell
-
+Local-first multi-trip travel itinerary PWA.
+Features: day timeline + map markers, trip switching, localStorage persistence, share-link (full/day-filtered/snapshot), exchange-rate calculator, offline shell.
 Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 
 ## Architecture
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Single-page UI, all layout and component templates |
-| `scripts/config.js` | Global app config, country config, labels, map provider, currency |
-| `scripts/app.js` | Main Vue app logic |
-| `services/storage.js` | LocalStorage read/write, trip index, active trip state |
-| `services/map.js` | Leaflet map service and external map opening logic |
+| `index.html` | Single-page UI (1262 lines) |
+| `scripts/config.js` | Country config, labels, map provider, currency (83 lines) |
+| `scripts/app.js` | Vue app logic (1056 lines) — see Code Nav below |
+| `services/storage.js` | localStorage read/write, trip index (189 lines) |
+| `services/map.js` | Leaflet map + external map links |
 | `services/rates.js` | Exchange-rate storage and refresh |
-| `data/seoul-2026.js` | Built-in trip catalog (contains both Seoul and HK trips) |
+| `data/seoul-2026.js` | Built-in trips catalog (Seoul + HK) |
 | `sw.js` | Service worker cache shell |
+
+## Code Navigation (app.js key locations)
+
+| Area | Line | What's there |
+|------|------|--------------|
+| Share URL build | ~451 | `buildShareUrl(tripId, {useCache, dayIndexes})` |
+| Share copy | ~548 | `copyShareLink(tripId, {dayIndexes})` |
+| Trip apply | ~627 | `applyTripState(tripId)` |
+| Trip switch | ~683 | `switchTrip(tripId)` |
+| Trip create | ~691 | `createTrip()` |
+| Trip delete | ~788 | `deleteTrip(trip)` |
+| Event copy | ~599 | `copyEventLocation(location)` |
+| Close settings | ~960 | `closeSettings()` |
+| Focus event | ~1009 | `focusEvent(id)` |
+
+## index.html key sections
+
+| Section | Line |
+|---------|------|
+| Map div | ~1056 |
+| Settings modal | ~1086 |
+| Share link panel | ~1197 |
+| Create trip form | ~1215 |
 
 ## Country Model
 
@@ -43,7 +60,7 @@ Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 | `TH` | Thailand | Google Maps | THB |
 | `INTL` | Generic | Google Maps | — |
 
-Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in new data.
+Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
@@ -53,75 +70,35 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 ## Data Shapes
 
 **Trip:** `tripId`, `meta.title`, `meta.country`, `schedule[]`
-
 **Day:** `date`, `title`, `lunch/lunchId`, `tea/teaId`, `dinner/dinnerId`, `notice?`, `events[]`
-
 **Event:** `id`, `time`, `location`, `map_term?`, `category`, `note`, `tags?`, `coords?`
 
 ## Rules
 
-1. Do not reintroduce `GLOBAL` as a real country code.
-2. New country → update `scripts/config.js` first.
-3. New currency → ensure `services/rates.js` supports it.
-4. Changed frontend JS/CSS → update both `index.html` asset query version AND `sw.js` cache version + shell list.
-5. Keep backward compatibility for existing localStorage data unless user explicitly asks to break it.
-6. Do not assume `data/seoul-2026.js` only contains Seoul.
-7. If you change UI, modal, map, share, cache, or trip data behavior → update this file.
-8. Edit only the relevant section + add a new update-log entry. Do not dump long changelogs.
-9. **Before writing `Updated at`:** run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'` — never guess.
-10. Each entry must say who changed it and what type (Bug Fix / Optimization / UI / Data / Docs / Infra).
-11. Never overwrite another editor's entry. Add a follow-up entry for corrections.
-12. One entry per work session/commit. List every file actually changed.
-
-## Known Limitations
-
-- JP/TH built-in trip templates not yet created.
-- `data/seoul-2026.js` filename is misleading (contains both Seoul and HK).
-- No formal build step or test runner. Manual browser testing required after UI changes.
+1. No `GLOBAL` country code. New country → update `scripts/config.js` first.
+2. Changed frontend JS/CSS → update `index.html` asset version AND `sw.js` cache version + shell list.
+3. Keep localStorage backward compatibility unless user explicitly asks to break it.
+4. Don't assume `data/seoul-2026.js` only contains Seoul.
+5. UI/modal/map/share/cache/data change → update this file.
+6. One log entry per session/commit. Max 3 entries here; older → `CHANGELOG.md`.
+7. **Timestamp:** run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'` before writing — never guess.
+8. Never overwrite another editor's entry; add a follow-up entry for corrections.
 
 ## Debugging Shortcuts
 
-- Share/sync issues → `scripts/app.js` (snapshot), `services/storage.js` (normalization), `sw.js` (cache)
-- Map/country issues → `meta.country` in trip data, `COUNTRY_CONFIG` in `scripts/config.js`, `services/map.js`
-- Rate issues → `services/rates.js`, confirm country maps to expected currency
-
-## AI Entry Files
-
-- `CLAUDE.md` → Claude Code-specific entry instructions
-- `CODEX.md` → Codex-specific entry instructions
-- `GEMINI.md` → Gemini-specific entry instructions
-- All three still share the same source of truth in `PROJECT_CONTEXT.md`
+- Share/sync → `app.js` line ~451 (build), `storage.js` (normalization), `sw.js` (cache)
+- Map/country → `meta.country`, `COUNTRY_CONFIG` in `config.js`, `services/map.js`
+- Rates → `services/rates.js`; confirm country maps to expected currency
 
 ## Update Log
 
-Older entries → `CHANGELOG.md`. Keep max 3 entries here.
-Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
+Older entries → `CHANGELOG.md`. Max 3 here.
+Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-04-03
-  Updated at: 2026-04-03 14:48 CST
-  Updated by: Codex
-  Type: Feature, UI, Optimization
-  Summary:
-  - Added selected-day sharing for current and future trips using direct URLs like `?trip=...&days=1,3,5&view=share&readonly=1`, so shared links can stay linked to the main trip while only showing chosen days.
-  - Share mode now preserves original Day numbering when filtered, and settings now include a day-picker UI for building linked partial-trip shares.
-  Cache: v20 → v21; asset: 20260403c → 20260403d.
-  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+- 2026-04-03 | Claude Code | Docs/Opt | Added Code Navigation table (app.js/index.html line refs); 1-line log format; token-saving workflow rules in CLAUDE.md. Files: `PROJECT_CONTEXT.md`, `CLAUDE.md`
 
-- 2026-04-03
-  Updated at: 2026-04-03 14:26 CST
-  Updated by: Codex
-  Type: UI
-  Summary:
-  - Fixed mobile settings action-row layout: share button now spans the full first row, with rename/delete on the second row, so the longer label no longer overlaps or compresses adjacent controls.
-  Cache: v19 → v20; asset: unchanged `20260403c`.
-  Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+- 2026-04-03 | Codex | Feature/UI | Selected-day share URLs (`?days=1,3,5`); day-picker in settings; share preserves original day numbers. Cache v20→v21; asset 20260403c→d. Files: `app.js`, `index.html`, `sw.js`, `UI_GUIDE`, `PROJECT_CONTEXT`
 
-- 2026-04-03
-  Updated at: 2026-04-03 14:20 CST
-  Updated by: Codex
-  Type: Bug Fix, Optimization, UI
-  Summary:
-  - Built-in trips now share via direct short URLs (`?trip=...&view=share&readonly=1`) instead of always generating a large compressed snapshot, which removes the long iPhone/PWA stall for Seoul and Hong Kong.
-  - Added native Web Share support on supported devices, with visible manual-copy fallback kept on screen if sharing or clipboard access is unavailable.
-  Cache: v18 → v19; asset: 20260403b → 20260403c.
-  Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
+- 2026-04-03 | Codex | UI | Fixed mobile settings action-row: share button full-width first row, rename/delete second row. Cache v19→v20. Files: `index.html`, `sw.js`, `UI_GUIDE`, `PROJECT_CONTEXT`
+
+- 2026-04-03 | Codex | Bug Fix/Opt | Built-in trips use direct short URLs (no snapshot compression); native Web Share + manual-copy fallback. Cache v18→v19; asset 20260403b→c. Files: `app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT`

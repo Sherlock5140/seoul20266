@@ -6,6 +6,35 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 ---
 
 - 2026-04-03
+  Updated at: 2026-04-03 14:48 CST
+  Updated by: Codex
+  Type: Feature, UI, Optimization
+  Summary:
+  - Added selected-day sharing for current and future trips using direct URLs like `?trip=...&days=1,3,5&view=share&readonly=1`, so shared links stay linked to the main trip while showing only chosen days.
+  - Share mode preserves original Day numbering when filtered, and settings now include a day-picker UI for building linked partial-trip shares.
+  Cache: v20 → v21; asset: 20260403c → 20260403d.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 14:26 CST
+  Updated by: Codex
+  Type: UI
+  Summary:
+  - Fixed mobile settings action-row layout so the long share button uses a full first row and rename/delete stay on a balanced second row.
+  Cache: v19 → v20.
+  Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 14:20 CST
+  Updated by: Codex
+  Type: Bug Fix, Feature, Optimization
+  Summary:
+  - Built-in trips now share through direct short URLs instead of compressed snapshots, which removes iPhone/PWA stalls and keeps shared links synced to the main trip.
+  - Added native Web Share support on supported devices, with visible manual-copy fallback if system share or clipboard access is unavailable.
+  Cache: v18 → v19; asset: 20260403b → 20260403c.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 14:12 CST
   Updated by: Codex
   Type: Bug Fix, UI

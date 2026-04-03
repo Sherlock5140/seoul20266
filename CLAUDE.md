@@ -1,5 +1,15 @@
 # Claude Code Project Entry
 
+## 推薦模型設定
+
+在 Claude Code `settings.json` 加入：
+```json
+{ "model": "opusplan" }
+```
+- **Plan Mode**（Shift+Tab）→ 自動使用 Opus 4.6（架構推理、複雜 bug 分析）
+- **執行模式** → 自動切換 Sonnet 4.6（寫程式碼）
+- 複雜任務開始前按 Shift+Tab 進 Plan Mode，確認計劃後再執行
+
 ## Session Start (讀一次，同 session 內不重複讀)
 
 1. Read `PROJECT_CONTEXT.md`

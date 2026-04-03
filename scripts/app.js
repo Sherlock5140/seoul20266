@@ -86,6 +86,7 @@
   const sharedTripSnapshot = await readShareSnapshot();
   const sharedTripId = String(sharedTripSnapshot?.tripId || '').trim().toUpperCase();
   const requestedTripId = String(urlParams.get('trip') || '').trim().toUpperCase();
+  const requestedShareDaysRaw = String(urlParams.get('days') || '').trim();
   const RATE_REFRESH_MAX_AGE_MS = 1000 * 60 * 60 * 6;
   const SHARE_VIEW_ENABLED = urlParams.get('view') === 'share'
     || urlParams.get('readonly') === '1'
@@ -123,6 +124,42 @@
     );
     return hasSavedState ? candidate : tripCatalog.defaultTripId;
   };
+  const parseDayIndexesParam = (rawValue) => {
+    if (!rawValue) return [];
+    return Array.from(new Set(
+      String(rawValue)
+        .split(',')
+        .map((value) => Number.parseInt(value.trim(), 10))
+        .filter((value) => Number.isInteger(value) && value > 0)
+        .map((value) => value - 1)
+    )).sort((a, b) => a - b);
+  };
+  const normalizeDayIndexes = (dayIndexes, totalDays) => (
+    Array.from(new Set(
+      (Array.isArray(dayIndexes) ? dayIndexes : [])
+        .filter((value) => Number.isInteger(value) && value >= 0 && value < totalDays)
+    )).sort((a, b) => a - b)
+  );
+  const cloneScheduleForView = (sourceSchedule = [], dayIndexes = []) => {
+    const safeSchedule = Array.isArray(sourceSchedule) ? sourceSchedule : [];
+    const normalizedIndexes = normalizeDayIndexes(dayIndexes, safeSchedule.length);
+    const targetIndexes = normalizedIndexes.length ? normalizedIndexes : safeSchedule.map((_, index) => index);
+    return targetIndexes.map((index) => ({
+      ...clone(safeSchedule[index]),
+      shareDayNumber: index + 1
+    }));
+  };
+  const stripScheduleShareMeta = (sourceSchedule = []) => (
+    clone(sourceSchedule).map((day) => {
+      if (!day || typeof day !== 'object') return day;
+      const { shareDayNumber, ...rest } = day;
+      return rest;
+    })
+  );
+  const formatDaySelectionParam = (dayIndexes = []) => (
+    dayIndexes.map((index) => index + 1).join(',')
+  );
+  const requestedShareDayIndexes = parseDayIndexesParam(requestedShareDaysRaw);
 
   const app = createApp({
     setup() {
@@ -139,6 +176,7 @@
       const shareCopied = ref(false);
       const shareLinkValue = ref('');
       const shareStatusLabel = ref('');
+      const shareSelectedDays = ref([]);
       const copiedEventId = ref(null);
       const { rateDirection: initialRateDirection, exchangeRates: initialExchangeRates, rateUpdatedAt: initialRateUpdatedAt } = getStoredRateState();
       const rateDirection = ref(initialRateDirection);
@@ -158,7 +196,7 @@
       const currentTripTitle = ref(savedTripData.meta.title || template.meta.title);
       const countrySetting = ref(savedTripData.meta.country || template.meta.country);
       localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
-      const schedule = ref(clone(savedTripData.schedule || template.schedule));
+      const schedule = ref(cloneScheduleForView(savedTripData.schedule || template.schedule, isShareMode.value ? requestedShareDayIndexes : []));
       const userNotes = ref(savedTripData.notes || '');
       const tripSummaries = ref(listTrips(tripCatalog.trips));
       const tripManagerNotice = ref({ tone: '', text: '' });
@@ -189,6 +227,34 @@
           source: 'share'
         } : null)
       ));
+      const shareDayOptions = computed(() => (
+        schedule.value.map((day, index) => ({
+          index,
+          label: `Day ${day.shareDayNumber || index + 1}`,
+          date: String(day.date || '').trim()
+        }))
+      ));
+      const normalizedSelectedShareDays = computed(() => normalizeDayIndexes(shareSelectedDays.value, schedule.value.length));
+      const hasShareDaySelection = computed(() => normalizedSelectedShareDays.value.length > 0);
+      const hasPartialShareSelection = computed(() => (
+        hasShareDaySelection.value
+        && normalizedSelectedShareDays.value.length < schedule.value.length
+      ));
+      const shareSelectionSummary = computed(() => {
+        if (!hasShareDaySelection.value) return '尚未選擇日期';
+        return normalizedSelectedShareDays.value
+          .map((index) => shareDayOptions.value[index]?.label)
+          .filter(Boolean)
+          .join('、');
+      });
+      const shareModeDaySummary = computed(() => {
+        if (!isShareMode.value) return '';
+        const fullLength = (getTripTemplate(activeTripId.value)?.schedule || []).length;
+        if (!schedule.value.length || schedule.value.length === fullLength) return '';
+        return schedule.value
+          .map((day, index) => `Day ${day.shareDayNumber || index + 1}`)
+          .join('、');
+      });
       const visibleTripSummaries = computed(() => (
         isShareMode.value
           ? (activeTripSummary.value ? [activeTripSummary.value] : [])
@@ -279,7 +345,7 @@
           const didPersist = saveTripState({
             tripId: activeTripId.value,
             notes: userNotes.value,
-            schedule: schedule.value,
+            schedule: stripScheduleShareMeta(schedule.value),
             meta: {
               title: currentTripTitle.value,
               country: countrySetting.value
@@ -335,11 +401,19 @@
         shareStatusLabel.value = '';
         clearTimeout(shareCopiedTimer);
       };
+      const resetShareDaySelection = () => {
+        shareSelectedDays.value = schedule.value.map((_, index) => index);
+      };
 
       const invalidateShareLink = (tripId = activeTripId.value) => {
+        const prefix = `${tripId}::`;
         if (tripId) {
-          shareLinkCache.delete(tripId);
-          shareLinkPending.delete(tripId);
+          Array.from(shareLinkCache.keys()).forEach((key) => {
+            if (key.startsWith(prefix)) shareLinkCache.delete(key);
+          });
+          Array.from(shareLinkPending.keys()).forEach((key) => {
+            if (key.startsWith(prefix)) shareLinkPending.delete(key);
+          });
         } else {
           shareLinkCache.clear();
           shareLinkPending.clear();
@@ -360,6 +434,7 @@
       };
 
       const schedulesMatch = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || []);
+      const getShareCacheKey = (tripId, dayIndexes = []) => `${tripId}::${formatDaySelectionParam(dayIndexes) || 'all'}`;
 
       const canUseDirectTripShare = (tripId, state, templateTrip) => {
         if (!tripCatalog.trips[tripId]) return false;
@@ -369,16 +444,17 @@
         const templateCountry = normalizeCountryCode(templateTrip?.meta?.country || 'KR');
         const titleMatches = !normalizedTitle || normalizedTitle === templateTitle;
         const countryMatches = !normalizedCountry || normalizedCountry === templateCountry;
-        const scheduleMatches = !state?.schedule || schedulesMatch(state.schedule, templateTrip?.schedule || []);
+        const scheduleMatches = !state?.schedule || schedulesMatch(stripScheduleShareMeta(state.schedule), templateTrip?.schedule || []);
         return titleMatches && countryMatches && scheduleMatches;
       };
 
-      const buildShareUrl = async (tripId, { useCache = true } = {}) => {
-        if (useCache && shareLinkCache.has(tripId)) {
-          return shareLinkCache.get(tripId);
+      const buildShareUrl = async (tripId, { useCache = true, dayIndexes = [] } = {}) => {
+        const shareKey = getShareCacheKey(tripId, dayIndexes);
+        if (useCache && shareLinkCache.has(shareKey)) {
+          return shareLinkCache.get(shareKey);
         }
-        if (shareLinkPending.has(tripId)) {
-          return shareLinkPending.get(tripId);
+        if (shareLinkPending.has(shareKey)) {
+          return shareLinkPending.get(shareKey);
         }
         const pending = (async () => {
           const url = new URL(window.location.origin + window.location.pathname);
@@ -386,25 +462,32 @@
           const sourceState = tripId === activeTripId.value
             ? {
                 tripId,
-                schedule: schedule.value,
+                schedule: stripScheduleShareMeta(schedule.value),
                 meta: {
                   title: currentTripTitle.value,
                   country: countrySetting.value
                 }
               }
             : loadTripState(tripId);
+          const sourceSchedule = sourceState.schedule || sourceTemplate.schedule || createBlankSchedule();
+          const filteredDayIndexes = normalizeDayIndexes(dayIndexes, sourceSchedule.length);
           if (canUseDirectTripShare(tripId, sourceState, sourceTemplate)) {
             url.searchParams.set('trip', tripId);
             url.searchParams.set('view', 'share');
             url.searchParams.set('readonly', '1');
+            if (filteredDayIndexes.length && filteredDayIndexes.length < sourceSchedule.length) {
+              url.searchParams.set('days', formatDaySelectionParam(filteredDayIndexes));
+            } else {
+              url.searchParams.delete('days');
+            }
             url.hash = '';
             const directUrl = url.toString();
-            shareLinkCache.set(tripId, directUrl);
+            shareLinkCache.set(shareKey, directUrl);
             return directUrl;
           }
           const sharePayload = {
             tripId,
-            schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
+            schedule: cloneScheduleForView(sourceSchedule, filteredDayIndexes),
             meta: {
               title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
               country: sourceState.meta?.country || sourceTemplate.meta?.country || 'KR',
@@ -415,21 +498,27 @@
           url.searchParams.set('trip', tripId);
           url.searchParams.set('view', 'share');
           url.searchParams.set('readonly', '1');
+          if (filteredDayIndexes.length && filteredDayIndexes.length < sourceSchedule.length) {
+            url.searchParams.set('days', formatDaySelectionParam(filteredDayIndexes));
+          } else {
+            url.searchParams.delete('days');
+          }
           url.hash = `share=${await compressToBase64Url(sharePayload)}`;
           const nextUrl = url.toString();
-          shareLinkCache.set(tripId, nextUrl);
+          shareLinkCache.set(shareKey, nextUrl);
           return nextUrl;
         })();
-        shareLinkPending.set(tripId, pending);
+        shareLinkPending.set(shareKey, pending);
         return pending.finally(() => {
-          shareLinkPending.delete(tripId);
+          shareLinkPending.delete(shareKey);
         });
       };
 
-      const warmShareLink = (tripId = activeTripId.value) => {
-        if (!tripId || shareLinkCache.has(tripId)) return;
+      const warmShareLink = (tripId = activeTripId.value, dayIndexes = []) => {
+        const shareKey = getShareCacheKey(tripId, dayIndexes);
+        if (!tripId || shareLinkCache.has(shareKey)) return;
         scheduleBackgroundTask(() => {
-          buildShareUrl(tripId, { useCache: false }).catch((error) => {
+          buildShareUrl(tripId, { useCache: false, dayIndexes }).catch((error) => {
             console.warn('Share link warmup failed', error);
           });
         }, 800);
@@ -456,14 +545,14 @@
         }
       };
 
-      const copyShareLink = async (tripId) => {
+      const copyShareLink = async (tripId, { dayIndexes = [] } = {}) => {
         if (shareLoading.value) return;
         shareLoading.value = true;
         resetShareFeedback();
         const timeout = setTimeout(() => { shareLoading.value = false; }, 8000);
         try {
           await waitForUiPaint();
-          const shareUrl = await buildShareUrl(tripId);
+          const shareUrl = await buildShareUrl(tripId, { dayIndexes });
           shareLinkValue.value = shareUrl;
           const shared = await tryNativeShare(shareUrl);
           if (shared) return;
@@ -488,6 +577,22 @@
           clearTimeout(timeout);
           shareLoading.value = false;
         }
+      };
+      const toggleShareDay = (index) => {
+        const selected = new Set(normalizedSelectedShareDays.value);
+        if (selected.has(index)) selected.delete(index);
+        else selected.add(index);
+        shareSelectedDays.value = Array.from(selected).sort((a, b) => a - b);
+      };
+      const selectAllShareDays = () => {
+        resetShareDaySelection();
+      };
+      const shareSelectedDayRange = async () => {
+        if (!hasShareDaySelection.value) {
+          setTripNotice('error', '請先選擇要分享的日期');
+          return;
+        }
+        await copyShareLink(activeTripId.value, { dayIndexes: normalizedSelectedShareDays.value });
       };
 
       let copiedEventTimer = null;
@@ -529,13 +634,14 @@
         setActiveTripId(tripId);
         currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
         countrySetting.value = nextSaved.meta.country || nextTemplate.meta.country;
-        schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
+        schedule.value = cloneScheduleForView(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
         userNotes.value = nextSaved.notes || '';
         localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
         lastRateInput.value = 'local';
         handleLocalCurrencyInput();
         currentDayIndex.value = 0;
         activeEventId.value = null;
+        resetShareDaySelection();
         validateSchedule();
         refreshTripSummaries();
         nextTick(() => {
@@ -611,7 +717,7 @@
           ? createBlankSchedule()
           : newTripStarter.value === 'seoul_template'
             ? clone(getTripTemplate(tripCatalog.defaultTripId).schedule || createBlankSchedule())
-            : clone(schedule.value);
+            : stripScheduleShareMeta(schedule.value);
 
         const created = createTripState({
           tripId,
@@ -1021,6 +1127,7 @@
       watch(schedule, () => {
         if (isHydrating || isReadOnlyMode.value || isApplyingTripState) return;
         invalidateShareLink(activeTripId.value);
+        resetShareDaySelection();
         warmShareLink(activeTripId.value);
       }, { deep: true });
 
@@ -1033,6 +1140,7 @@
           }
           refreshTripSummaries();
           handleLocalCurrencyInput();
+          resetShareDaySelection();
           warmShareLink(activeTripId.value);
           if (shouldRefreshRatesOnLaunch()) {
             scheduleBackgroundTask(() => {
@@ -1176,6 +1284,15 @@
         shareCopied,
         shareLinkValue,
         shareStatusLabel,
+        shareDayOptions,
+        shareSelectedDays,
+        shareSelectionSummary,
+        shareModeDaySummary,
+        hasShareDaySelection,
+        hasPartialShareSelection,
+        toggleShareDay,
+        selectAllShareDays,
+        shareSelectedDayRange,
         copyGeneratedShareLink,
         closeSettings,
         getDotColor,

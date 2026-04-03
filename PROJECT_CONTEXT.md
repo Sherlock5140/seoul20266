@@ -14,7 +14,7 @@ Project: Travel Guide — Static PWA (HTML + Vue 3 CDN + Tailwind CDN + Leaflet 
 Local-first multi-trip travel itinerary web app.
 - Day-by-day itinerary timeline with map markers
 - Trip switching and localStorage persistence
-- Share-link snapshot mode (schedule + meta only, no notes)
+- Share-link mode supporting full-trip direct share, selected-day direct share, and snapshot fallback (schedule + meta only, no notes)
 - Exchange-rate calculator
 - PWA install/offline shell
 
@@ -47,8 +47,8 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 ## Current Versions
 
-- SW cache: `travel-guide-v20`
-- Asset query version: `20260403c`
+- SW cache: `travel-guide-v21`
+- Asset query version: `20260403d`
 
 ## Data Shapes
 
@@ -98,6 +98,16 @@ Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-03
+  Updated at: 2026-04-03 14:48 CST
+  Updated by: Codex
+  Type: Feature, UI, Optimization
+  Summary:
+  - Added selected-day sharing for current and future trips using direct URLs like `?trip=...&days=1,3,5&view=share&readonly=1`, so shared links can stay linked to the main trip while only showing chosen days.
+  - Share mode now preserves original Day numbering when filtered, and settings now include a day-picker UI for building linked partial-trip shares.
+  Cache: v20 → v21; asset: 20260403c → 20260403d.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 14:26 CST
   Updated by: Codex
   Type: UI
@@ -115,30 +125,3 @@ Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
   - Added native Web Share support on supported devices, with visible manual-copy fallback kept on screen if sharing or clipboard access is unavailable.
   Cache: v18 → v19; asset: 20260403b → 20260403c.
   Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 14:12 CST
-  Updated by: Codex
-  Type: Bug Fix, UI
-  Summary:
-  - Added visible share-link output inside settings so users can manually copy the generated URL even when clipboard access fails on iPhone/PWA.
-  - Added secondary "copy again" action and explicit manual-copy guidance instead of leaving the flow dependent on clipboard success.
-  Cache: v17 → v18; asset: 20260403a → 20260403b.
-  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 14:03 CST
-  Updated by: Codex
-  Type: Bug Fix, Optimization, UI
-  Summary:
-  - Optimized settings share-trip flow so the loading state renders before heavy share URL compression starts, which removes the "處理中..." no-response feeling on mobile.
-  - Added share-link warmup and cache invalidation for active-trip changes, plus short-lived `已複製` button feedback after success.
-  Cache: v16 → v17; asset: 20260402k → 20260403a.
-  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
-  Updated at: 2026-04-03 13:53 CST
-  Updated by: Codex
-  Type: Docs, Optimization
-  Summary: Moved audit prompt to `REVIEW_PROMPT.md`. Added token-saving rules (don't auto-load UI guide or bundle files unless explicitly needed).
-  Files: `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `PROJECT_CONTEXT.md`, `REVIEW_PROMPT.md`

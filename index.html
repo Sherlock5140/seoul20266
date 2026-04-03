@@ -424,6 +424,22 @@
             line-height: 1.45;
             word-break: break-all;
         }
+        .share-day-select-shell {
+            background: rgba(255,255,255,0.76);
+            border: 1px solid rgba(214,216,212,0.88);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+        }
+        .share-day-chip {
+            background: rgba(244,245,242,0.94);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+        }
+        .share-day-chip.is-active {
+            background: rgba(47,47,45,0.92);
+            border-color: rgba(47,47,45,0.92);
+            color: #F4F5F2;
+            box-shadow: 0 12px 22px -18px rgba(47,47,45,0.3);
+        }
         .share-mode-banner {
             background: linear-gradient(180deg, rgba(142,154,175,0.14) 0%, rgba(255,255,255,0.82) 100%);
             border: 1px solid rgba(142,154,175,0.22);
@@ -949,7 +965,7 @@
                     </div>
                 </div>
                 <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center" role="tablist" :aria-label="currentTripDisplayName + ' 日程'">
-                    <button type="button" role="tab" :aria-selected="currentDayIndex === index" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="day-tab snap-start flex-shrink-0 transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.01]' : 'segment-pill-inactive'">Day {{ index + 1 }}</button>
+                    <button type="button" role="tab" :aria-selected="currentDayIndex === index" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="day-tab snap-start flex-shrink-0 transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.01]' : 'segment-pill-inactive'">Day {{ day.shareDayNumber || index + 1 }}</button>
                 </div>
             </div>
 
@@ -1083,6 +1099,7 @@
                                             <div class="mode-pill inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold text-m-sub uppercase tracking-[0.18em] mb-2">Share View</div>
                                             <div class="text-sm font-bold text-typo-title">此連結目前鎖定在單一行程</div>
                                             <div class="text-xs text-m-sub mt-1 leading-5">你可以瀏覽內容與再次複製分享連結，但不會修改原始行程資料。</div>
+                                            <div v-if="shareModeDaySummary" class="text-[11px] text-m-sub mt-2 leading-5">目前僅顯示：{{ shareModeDaySummary }}</div>
                                         </div>
                                         <div class="trip-badge px-3 py-1.5 rounded-full text-[10px] font-bold text-m-sub shrink-0">唯讀</div>
                                     </div>
@@ -1134,6 +1151,34 @@
                                         </button>
                                         <button type="button" @click="deleteTrip(activeTripSummary)" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-s-alert disabled:opacity-40" :disabled="!activeTripSummary || isCatalogTrip(activeTripId)">
                                             刪除
+                                        </button>
+                                    </div>
+                                    <div class="share-day-select-shell rounded-[1.2rem] px-3.5 py-3 mt-3 space-y-3">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <div>
+                                                <div class="text-[12px] font-bold text-m-sub">分享指定日期</div>
+                                                <div class="text-[11px] text-m-sub mt-1 leading-5">可自行勾選某幾天，之後主行程更新時，這條連結也會一起同步。</div>
+                                            </div>
+                                            <button type="button" @click="selectAllShareDays" class="trip-inline-action px-3 py-1.5 rounded-full text-[12px] font-bold text-m-text inline-flex items-center gap-1.5">
+                                                全選
+                                            </button>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button
+                                                v-for="day in shareDayOptions"
+                                                :key="day.index"
+                                                type="button"
+                                                @click="toggleShareDay(day.index)"
+                                                class="share-day-chip rounded-full px-3 py-2 text-[12px] font-bold text-m-text transition-all"
+                                                :class="{ 'is-active': shareSelectedDays.includes(day.index) }"
+                                            >
+                                                {{ day.label }}
+                                            </button>
+                                        </div>
+                                        <div class="text-[11px] text-m-sub leading-5">{{ hasPartialShareSelection ? `目前選擇：${shareSelectionSummary}` : '目前會分享整個行程' }}</div>
+                                        <button type="button" @click="shareSelectedDayRange" :disabled="shareLoading || !hasShareDaySelection" class="trip-action-button w-full px-4 py-3 rounded-full text-sm font-bold text-m-text inline-flex items-center justify-center gap-2 disabled:opacity-50">
+                                            <i class="fa-regular fa-calendar-days"></i>
+                                            <span>{{ hasPartialShareSelection ? '分享所選日期' : '分享全部日期' }}</span>
                                         </button>
                                     </div>
                                 </div>
@@ -1297,6 +1342,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260403c"></script>
+    <script src="./scripts/app.js?v=20260403d"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v28';
+const CACHE_NAME = 'travel-guide-v29';
 const APP_SHELL = [
   './',
   './index.html',
@@ -14,7 +14,7 @@ const APP_SHELL = [
   './services/storage.js?v=20260402k',
   './services/rates.js?v=20260402k',
   './services/map.js?v=20260402k',
-  './data/seoul-2026.js?v=20260403j'
+  './data/seoul-2026.js?v=20260403k'
 ];
 
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));

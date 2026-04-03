@@ -47,8 +47,8 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 ## Current Versions
 
-- SW cache: `travel-guide-v16`
-- Asset query version: `20260402k`
+- SW cache: `travel-guide-v19`
+- Asset query version: `20260403c`
 
 ## Data Shapes
 
@@ -96,6 +96,16 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
+
+- 2026-04-03
+  Updated at: 2026-04-03 14:20 CST
+  Updated by: Codex
+  Type: Bug Fix, Optimization, UI
+  Summary:
+  - Built-in trips now share via direct short URLs (`?trip=...&view=share&readonly=1`) instead of always generating a large compressed snapshot, which removes the long iPhone/PWA stall for Seoul and Hong Kong.
+  - Added native Web Share support on supported devices, with visible manual-copy fallback kept on screen if sharing or clipboard access is unavailable.
+  Cache: v18 → v19; asset: 20260403b → 20260403c.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 14:12 CST

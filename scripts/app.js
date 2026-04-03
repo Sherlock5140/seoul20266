@@ -138,6 +138,7 @@
       const shareLoading = ref(false);
       const shareCopied = ref(false);
       const shareLinkValue = ref('');
+      const shareStatusLabel = ref('');
       const copiedEventId = ref(null);
       const { rateDirection: initialRateDirection, exchangeRates: initialExchangeRates, rateUpdatedAt: initialRateUpdatedAt } = getStoredRateState();
       const rateDirection = ref(initialRateDirection);
@@ -331,6 +332,7 @@
 
       const resetShareFeedback = () => {
         shareCopied.value = false;
+        shareStatusLabel.value = '';
         clearTimeout(shareCopiedTimer);
       };
 
@@ -357,6 +359,20 @@
         });
       };
 
+      const schedulesMatch = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || []);
+
+      const canUseDirectTripShare = (tripId, state, templateTrip) => {
+        if (!tripCatalog.trips[tripId]) return false;
+        const normalizedTitle = String(state?.meta?.title || '').trim();
+        const normalizedCountry = normalizeCountryCode(state?.meta?.country || '');
+        const templateTitle = String(templateTrip?.meta?.title || tripId).trim();
+        const templateCountry = normalizeCountryCode(templateTrip?.meta?.country || 'KR');
+        const titleMatches = !normalizedTitle || normalizedTitle === templateTitle;
+        const countryMatches = !normalizedCountry || normalizedCountry === templateCountry;
+        const scheduleMatches = !state?.schedule || schedulesMatch(state.schedule, templateTrip?.schedule || []);
+        return titleMatches && countryMatches && scheduleMatches;
+      };
+
       const buildShareUrl = async (tripId, { useCache = true } = {}) => {
         if (useCache && shareLinkCache.has(tripId)) {
           return shareLinkCache.get(tripId);
@@ -377,6 +393,15 @@
                 }
               }
             : loadTripState(tripId);
+          if (canUseDirectTripShare(tripId, sourceState, sourceTemplate)) {
+            url.searchParams.set('trip', tripId);
+            url.searchParams.set('view', 'share');
+            url.searchParams.set('readonly', '1');
+            url.hash = '';
+            const directUrl = url.toString();
+            shareLinkCache.set(tripId, directUrl);
+            return directUrl;
+          }
           const sharePayload = {
             tripId,
             schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
@@ -410,6 +435,27 @@
         }, 800);
       };
 
+      const tryNativeShare = async (shareUrl) => {
+        if (typeof navigator.share !== 'function') return false;
+        try {
+          await navigator.share({
+            title: currentTripTitle.value || activeTripId.value,
+            text: 'Travel Guide 行程分享',
+            url: shareUrl
+          });
+          shareStatusLabel.value = '已開啟分享';
+          setTripNotice('success', '已開啟分享選單');
+          return true;
+        } catch (error) {
+          if (error?.name === 'AbortError') {
+            setTripNotice('error', '已取消分享，可改用複製連結');
+            return false;
+          }
+          console.warn('Native share failed', error);
+          return false;
+        }
+      };
+
       const copyShareLink = async (tripId) => {
         if (shareLoading.value) return;
         shareLoading.value = true;
@@ -419,15 +465,20 @@
           await waitForUiPaint();
           const shareUrl = await buildShareUrl(tripId);
           shareLinkValue.value = shareUrl;
+          const shared = await tryNativeShare(shareUrl);
+          if (shared) return;
           const copied = await copyText(shareUrl);
           if (!copied) {
+            shareStatusLabel.value = '可手動複製';
             setTripNotice('error', '連結已建立，請手動複製');
             return;
           }
           shareCopied.value = true;
+          shareStatusLabel.value = '已複製';
           clearTimeout(shareCopiedTimer);
           shareCopiedTimer = setTimeout(() => {
             shareCopied.value = false;
+            shareStatusLabel.value = '';
           }, 1800);
           setTripNotice('success', '已複製分享連結');
         } catch (error) {
@@ -454,13 +505,16 @@
         if (!shareLinkValue.value) return;
         const copied = await copyText(shareLinkValue.value);
         if (!copied) {
+          shareStatusLabel.value = '可手動複製';
           setTripNotice('error', '請長按連結欄位手動複製');
           return;
         }
         shareCopied.value = true;
+        shareStatusLabel.value = '已複製';
         clearTimeout(shareCopiedTimer);
         shareCopiedTimer = setTimeout(() => {
           shareCopied.value = false;
+          shareStatusLabel.value = '';
         }, 1800);
         setTripNotice('success', '已複製分享連結');
       };
@@ -1121,6 +1175,7 @@
         shareLoading,
         shareCopied,
         shareLinkValue,
+        shareStatusLabel,
         copyGeneratedShareLink,
         closeSettings,
         getDotColor,

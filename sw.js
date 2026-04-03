@@ -1,19 +1,20 @@
-const CACHE_NAME = 'travel-guide-v10';
+const CACHE_NAME = 'travel-guide-v12';
 const APP_SHELL = [
   './',
   './index.html',
+  './offline.html',
   './manifest.webmanifest',
   './icon.svg',
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
-  './scripts/config.js?v=20260402e',
-  './scripts/utils.js?v=20260402e',
-  './scripts/app.js?v=20260402e',
-  './services/storage.js?v=20260402e',
-  './services/rates.js?v=20260402e',
-  './services/map.js?v=20260402e',
-  './data/seoul-2026.js?v=20260402e'
+  './scripts/config.js?v=20260402f',
+  './scripts/utils.js?v=20260402f',
+  './scripts/app.js?v=20260402f',
+  './services/storage.js?v=20260402f',
+  './services/rates.js?v=20260402f',
+  './services/map.js?v=20260402g',
+  './data/seoul-2026.js?v=20260402f'
 ];
 
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));
@@ -57,7 +58,7 @@ self.addEventListener('fetch', (event) => {
             }
             return response;
           })
-          .catch(() => cachedIndex || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' }));
+          .catch(() => cachedIndex || caches.match('./offline.html').then((r) => r || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' })));
 
         return cachedIndex || networkFetch;
       })

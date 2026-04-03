@@ -920,8 +920,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center">
-                    <button type="button" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="day-tab snap-start flex-shrink-0 transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.01]' : 'segment-pill-inactive'">Day {{ index + 1 }}</button>
+                <div class="day-tab-row flex overflow-x-auto hide-scroll snap-x -mx-6 px-6 items-center" role="tablist" :aria-label="currentTripDisplayName + ' 日程'">
+                    <button type="button" role="tab" :aria-selected="currentDayIndex === index" v-for="(day, index) in schedule" :key="index" @click="selectDay(index)" :ref="(el) => { if(el) dayRefs[index] = el }" class="day-tab snap-start flex-shrink-0 transition-all duration-300" :class="currentDayIndex === index ? 'segment-pill-active scale-[1.01]' : 'segment-pill-inactive'">Day {{ index + 1 }}</button>
                 </div>
             </div>
 
@@ -976,15 +976,15 @@
                             <div class="text-[11px] font-bold tracking-[0.18em] uppercase text-s-alert">Day Notice</div>
                         </div>
                         <div class="notice-body rounded-[1.45rem] p-4">
-                            <div class="notice-stack select-text" v-html="formatDayNotice(currentDay.notice)"></div>
+                            <div class="notice-stack select-text" v-html="formattedDayNotice"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Timeline -->
-                <div v-if="displayEvents.length" class="relative pl-2 space-y-10">
+                <div v-if="displayEvents.length" class="relative pl-2 space-y-10" role="list">
                     <div class="absolute left-[19px] top-4 bottom-4 w-[2px] timeline-line rounded-full opacity-50"></div>
-                    <div v-for="event in displayEvents" :key="event.id" :id="'event-' + event.id" @click="focusEvent(event.id)" @keydown.enter.prevent="focusEvent(event.id)" @keydown.space.prevent="focusEvent(event.id)" tabindex="0" role="button" :aria-label="`${event.time} ${event.location}`" class="relative pl-10 group cursor-pointer active:scale-[0.99] transition-transform duration-300 rounded-[1.8rem] outline-none focus-visible:outline-none">
+                    <div v-for="event in displayEvents" :key="event.id" :id="'event-' + event.id" @click="focusEvent(event.id)" @keydown.enter.prevent="focusEvent(event.id)" @keydown.space.prevent="focusEvent(event.id)" tabindex="0" role="listitem button" :aria-label="`${event.time} ${event.location}`" class="relative pl-10 group cursor-pointer active:scale-[0.99] transition-transform duration-300 rounded-[1.8rem] outline-none focus-visible:outline-none">
                         <div class="absolute left-0 top-7 w-[12px] h-[12px] rounded-full border-[2px] border-m-card shadow-sm z-10 transition-all duration-300 ring-4 ring-m-card" :style="activeEventId === event.id ? null : getDotColor(event.category)" :class="[activeEventId === event.id ? 'scale-125 bg-typo-title border-typo-title shadow-lg' : '']"></div>
                         <div class="timeline-card p-6 rounded-[1.8rem] relative overflow-hidden transition-all duration-400 group-focus-visible:ring-2 group-focus-visible:ring-typo-title/20 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-m-card" :class="activeEventId === event.id ? 'ring-1 ring-typo-title/10 bg-white' : ''">
                             <div class="flex justify-between items-center mb-3 no-select">
@@ -994,10 +994,12 @@
                             <div class="flex justify-between items-start gap-3 mb-4">
                                 <h3 class="timeline-location text-[17px] font-medium text-typo-title leading-[1.55] tracking-calm select-text">{{ event.location }}</h3>
                                 <div class="flex gap-2">
-                                    <button type="button" @click.stop="copyText(event.location)" class="copy-button-soft flex-none w-7 h-7 rounded-full text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20"><i class="fa-regular fa-copy text-xs"></i></button>
+                                    <button type="button" :aria-label="copiedEventId === event.location ? '已複製' : '複製地點'" @click.stop="copyEventLocation(event.location)" class="copy-button-soft flex-none w-11 h-11 rounded-full text-m-sub hover:text-typo-title flex items-center justify-center transition-colors active:bg-m-border focus:outline-none focus:ring-2 focus:ring-typo-title/20">
+                                        <i :class="copiedEventId === event.location ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'" class="text-xs transition-all duration-200"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div v-if="event.note" class="timeline-note-box text-[13.5px] text-m-text leading-[1.85] p-4 rounded-xl select-text" v-html="formatNote(event.note)"></div>
+                            <div v-if="formattedNotes[event.id]" class="timeline-note-box text-[13.5px] text-m-text leading-[1.85] p-4 rounded-xl select-text" v-html="formattedNotes[event.id]"></div>
                             <div v-if="event.tags" class="mt-4 flex flex-wrap gap-2 no-select"><span v-for="tag in event.tags" :key="tag" class="text-[10px] px-2.5 py-1 rounded-md font-bold tracking-wide" :class="getTagStyle(tag)">#{{ tag }}</span></div>
                         </div>
                     </div>
@@ -1037,11 +1039,11 @@
 
         <!-- Settings Modal -->
         <transition name="slide-up">
-            <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showSync = false">
+            <div v-if="showSync" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="closeSettings" role="dialog" aria-modal="true" aria-labelledby="settings-dialog-title">
                 <div class="settings-shell bg-white rounded-[1.85rem] md:rounded-[2rem] shadow-2xl px-5 py-5 md:p-6 animate-fade-in border border-white/50 flex flex-col">
                     <div class="flex justify-between items-center mb-4 md:mb-5 flex-none">
-                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-gear text-typo-title text-[1.1rem] md:text-[1.2rem]"></i><span class="text-[1.95rem] md:text-[1.75rem] font-bold text-typo-title leading-none">設定</span></div>
-                        <button aria-label="Close Settings" @click="showSync = false" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark"></i></button>
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-gear text-typo-title text-[1.1rem] md:text-[1.2rem]" aria-hidden="true"></i><span id="settings-dialog-title" class="text-[1.95rem] md:text-[1.75rem] font-bold text-typo-title leading-none">設定</span></div>
+                        <button aria-label="關閉設定" @click="closeSettings" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-m-bg flex items-center justify-center text-m-sub hover:text-typo-title"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
                     </div>
 
                     <div class="settings-body flex-1 overflow-y-auto hide-scroll space-y-5 md:space-y-6">
@@ -1095,8 +1097,8 @@
                                         </div>
                                     </div>
                                     <div v-else class="settings-inline-actions">
-                                        <button type="button" @click="copyShareLink(activeTripId)" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text">
-                                            分享目前行程
+                                        <button type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text disabled:opacity-50">
+                                            <i v-if="shareLoading" class="fa-solid fa-circle-notch animate-spin mr-1"></i>{{ shareLoading ? '處理中...' : '分享目前行程' }}
                                         </button>
                                         <button type="button" @click="startRenameTrip(activeTripSummary || { tripId: activeTripId, title: currentTripTitle })" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text">
                                             改名
@@ -1114,8 +1116,8 @@
                                     <button v-if="!isShareMode" type="button" @click="openCreateTripForm" class="trip-primary-button w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold active:scale-95 transition-transform">
                                         <i class="fa-solid fa-plus mr-2"></i>新增行程
                                     </button>
-                                    <button v-else type="button" @click="copyShareLink(activeTripId)" class="trip-action-button share-settings-copy w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold text-m-text active:scale-95 transition-transform inline-flex items-center gap-2">
-                                        <i class="fa-regular fa-copy text-[1rem] md:text-[0.95rem]"></i><span>複製分享連結</span>
+                                    <button v-else type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-action-button share-settings-copy w-full md:w-auto px-4 py-3.5 md:px-5 md:py-3 rounded-full text-sm md:text-[15px] font-bold text-m-text active:scale-95 transition-transform inline-flex items-center gap-2 disabled:opacity-50">
+                                        <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : 'fa-regular fa-copy'" class="text-[1rem] md:text-[0.95rem]"></i><span>{{ shareLoading ? '處理中...' : '複製分享連結' }}</span>
                                     </button>
                                 </div>
                                 <transition name="save-indicator">
@@ -1173,15 +1175,15 @@
 
         <!-- Rates Modal -->
         <transition name="slide-up">
-            <div v-if="showRates" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showRates = false">
+            <div v-if="showRates" class="fixed inset-0 z-[2000] flex items-center justify-center bg-typo-title/20 backdrop-blur-sm" @click.self="showRates = false" role="dialog" aria-modal="true" aria-labelledby="rates-dialog-title">
                 <div class="bg-white w-[92%] max-w-[430px] rounded-[2.15rem] shadow-2xl px-5 pt-5 pb-4 animate-fade-in border border-white/50">
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-coins text-typo-title"></i>
-                            <span class="text-xl font-bold text-typo-title">匯率資訊</span>
+                            <i class="fa-solid fa-coins text-typo-title" aria-hidden="true"></i>
+                            <span id="rates-dialog-title" class="text-xl font-bold text-typo-title">匯率資訊</span>
                         </div>
-                        <button aria-label="Close Rates" @click="showRates = false" class="w-8 h-8 rounded-full flex items-center justify-center text-m-sub hover:text-typo-title">
-                            <i class="fa-solid fa-xmark"></i>
+                        <button aria-label="關閉匯率" @click="showRates = false" class="w-8 h-8 rounded-full flex items-center justify-center text-m-sub hover:text-typo-title">
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                         </button>
                     </div>
 
@@ -1218,7 +1220,8 @@
                                 @input="handleLocalCurrencyInput"
                                 @focus="lastRateInput = 'local'"
                                 inputmode="decimal"
-                                type="number"
+                                type="text"
+                                autocomplete="off"
                                 class="w-full bg-transparent text-[28px] leading-none font-semibold text-typo-title font-mono outline-none tracking-tight"
                                 placeholder="0"
                             >
@@ -1230,7 +1233,8 @@
                                 @input="handleTwdInput"
                                 @focus="lastRateInput = 'twd'"
                                 inputmode="decimal"
-                                type="number"
+                                type="text"
+                                autocomplete="off"
                                 class="w-full bg-transparent text-[28px] leading-none font-semibold text-typo-title font-mono outline-none tracking-tight"
                                 placeholder="0"
                             >
@@ -1247,12 +1251,12 @@
         </transition>
     </div>
 
-    <script src="./scripts/config.js?v=20260402e"></script>
-    <script src="./scripts/utils.js?v=20260402e"></script>
-    <script src="./services/storage.js?v=20260402e"></script>
-    <script src="./services/rates.js?v=20260402e"></script>
-    <script src="./services/map.js?v=20260402e"></script>
-    <script src="./data/seoul-2026.js?v=20260402e"></script>
-    <script src="./scripts/app.js?v=20260402e"></script>
+    <script src="./scripts/config.js?v=20260402g"></script>
+    <script src="./scripts/utils.js?v=20260402g"></script>
+    <script src="./services/storage.js?v=20260402g"></script>
+    <script src="./services/rates.js?v=20260402g"></script>
+    <script src="./services/map.js?v=20260402g"></script>
+    <script src="./data/seoul-2026.js?v=20260402g"></script>
+    <script src="./scripts/app.js?v=20260402g"></script>
 </body>
 </html>

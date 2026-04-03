@@ -135,6 +135,8 @@
       const mapError = ref(false);
       const ratesLoading = ref(false);
       const rateError = ref(false);
+      const shareLoading = ref(false);
+      const copiedEventId = ref(null);
       const { rateDirection: initialRateDirection, exchangeRates: initialExchangeRates, rateUpdatedAt: initialRateUpdatedAt } = getStoredRateState();
       const rateDirection = ref(initialRateDirection);
       const exchangeRates = ref(initialExchangeRates);
@@ -355,6 +357,8 @@
       };
 
       const copyShareLink = async (tripId) => {
+        if (shareLoading.value) return;
+        shareLoading.value = true;
         try {
           const copied = await copyText(await buildShareUrl(tripId));
           if (!copied) throw new Error('Clipboard copy failed');
@@ -362,7 +366,20 @@
         } catch (error) {
           console.warn('Share link build failed', error);
           setTripNotice('error', '分享連結產生失敗');
+        } finally {
+          shareLoading.value = false;
         }
+      };
+
+      let copiedEventTimer = null;
+      const copyEventLocation = async (location) => {
+        const copied = await copyText(location);
+        if (!copied) return;
+        copiedEventId.value = location;
+        clearTimeout(copiedEventTimer);
+        copiedEventTimer = setTimeout(() => {
+          copiedEventId.value = null;
+        }, 1800);
       };
 
       const applyTripState = (tripId) => {
@@ -371,10 +388,7 @@
         const nextTemplate = getTripTemplate(tripId);
         const nextSaved = loadTripState(tripId);
         activeTripId.value = tripId;
-        const didSetActiveTrip = setActiveTripId(tripId);
-        if (!didSetActiveTrip) {
-          setTripNotice('error', '切換行程失敗，儲存功能可能已受限');
-        }
+        setActiveTripId(tripId);
         currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
         countrySetting.value = nextSaved.meta.country || nextTemplate.meta.country;
         schedule.value = clone(nextSaved.schedule || nextTemplate.schedule || createBlankSchedule());
@@ -696,6 +710,12 @@
         showCreateTripForm.value = false;
       };
 
+      const closeSettings = () => {
+        showSync.value = false;
+        renamingTripId.value = '';
+        renameTitle.value = '';
+      };
+
       const refreshRateData = async () => {
         ratesLoading.value = true;
         rateError.value = false;
@@ -899,11 +919,22 @@
         }
       });
 
+      const formattedNotes = computed(() => {
+        const result = {};
+        displayEvents.value.forEach((e) => {
+          if (e.note) result[e.id] = formatNote(e.note);
+        });
+        return result;
+      });
+
+      const formattedDayNotice = computed(() => formatDayNotice(currentDay.value.notice || ''));
+
       onUnmounted(() => {
         persistTrip.flush?.();
         clearTimeout(saveStatusTimer);
         clearTimeout(rateErrorTimer);
         clearTimeout(tripNoticeTimer);
+        clearTimeout(copiedEventTimer);
         mapService.destroy();
         window.removeEventListener('keydown', handleGlobalKeydown);
         const itineraryPanel = document.getElementById('itinerary-panel');
@@ -982,6 +1013,10 @@
         resetMap,
         retryMap,
         copyText,
+        copyEventLocation,
+        copiedEventId,
+        shareLoading,
+        closeSettings,
         getDotColor,
         getCategoryBadge,
         getCountryLabel,
@@ -989,8 +1024,8 @@
         getTagStyle,
         extractCrowdBadge,
         cleanDayTitle,
-        formatNote,
-        formatDayNotice,
+        formattedNotes,
+        formattedDayNotice,
         trapFocus,
         openMealMap,
         handleLocalCurrencyInput,

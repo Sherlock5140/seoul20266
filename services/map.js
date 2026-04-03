@@ -59,8 +59,14 @@
       return nonAirportEvents.length >= 2 ? nonAirportEvents : events;
     };
     const getHighlightOffset = () => {
-      const isMobile = window.innerWidth < 768;
-      return isMobile ? 220 : 130;
+      const mapDiv = document.getElementById('map');
+      const mapHeight = mapDiv
+        ? mapDiv.getBoundingClientRect().height
+        : (window.innerWidth < 768 ? 280 : 500);
+      // Place the marker at ~38% from the top of the visible map area.
+      // offset = target_screen_y - center_screen_y = (0.38 - 0.5) * mapHeight
+      // Negative value means marker appears above center (toward top of map).
+      return Math.round((0.38 - 0.5) * mapHeight);
     };
     const getPopupPadding = () => {
       const isMobile = window.innerWidth < 768;

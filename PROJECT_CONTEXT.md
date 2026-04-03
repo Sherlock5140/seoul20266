@@ -90,8 +90,8 @@ UI logic:
 - Country dropdowns are now generated from config instead of hardcoded options.
 
 Cache:
-- Service worker cache version is currently `travel-guide-v10`.
-- Frontend asset query version is currently `20260402e`.
+- Service worker cache version is currently `travel-guide-v12`.
+- Frontend asset query version is currently `20260402g`.
 
 Recent UI changes:
 - Header toolbar buttons and `Notes` control were enlarged for safer tapping.
@@ -202,6 +202,19 @@ Follow-up rule:
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
+- 2026-04-03
+  Updated at: 2026-04-03 00:00 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary:
+  - Fixed map marker centering offset on mobile: `getHighlightOffset()` in `services/map.js` was returning a fixed +220px (mobile) / +130px (desktop) pixel offset. On mobile the map container is only ~280px tall, so the offset exceeded the container height and pushed the highlighted marker completely out of view — Leaflet's autoPan then snapped it to the top edge, causing the visible position shift.
+  - New logic reads the actual map container height via `getBoundingClientRect()` and places the marker at 38% from the top of the map (offset = (0.38 − 0.5) × mapHeight), giving a correct upward nudge that works at any screen size.
+  - Cache version bumped: `travel-guide-v11` → `travel-guide-v12`; asset version: `20260402f` → `20260402g`.
+  Files:
+  - `services/map.js`
+  - `sw.js`
+  - `index.html`
 
 - 2026-04-02
   Updated at: 2026-04-02 22:04 CST

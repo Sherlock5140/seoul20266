@@ -506,6 +506,7 @@
             background: rgba(255,255,255,0.8);
             border: 1px solid rgba(214,216,212,0.82);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.88);
+            border-radius: 0.85rem;
         }
         .share-day-primary {
             background: linear-gradient(180deg, rgba(47,47,45,0.96) 0%, rgba(39,39,37,0.92) 100%);
@@ -948,6 +949,10 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+            .share-day-panel-top > .trip-inline-action {
+                justify-content: center;
+                align-self: flex-start;
+            }
             .share-day-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -1271,7 +1276,7 @@
                                                 全選
                                             </button>
                                         </div>
-                                        <div class="share-day-grid">
+                                        <div class="share-day-grid" :style="shareDayGridStyle">
                                             <button
                                                 v-for="day in shareDayOptions"
                                                 :key="day.index"
@@ -1283,7 +1288,7 @@
                                                 {{ day.label }}
                                             </button>
                                         </div>
-                                        <div class="share-day-summary px-3.5 py-3 text-[11px] text-m-sub leading-5">{{ hasPartialShareSelection ? `目前選擇：${shareSelectionSummary}` : '目前會分享整個行程' }}</div>
+                                        <div class="share-day-summary px-3.5 py-3 text-[11px] text-m-sub leading-5">{{ shareSelectionStateLabel }}</div>
                                         <button type="button" @click="shareSelectedDayRange" :disabled="shareLoading || !hasShareDaySelection" class="trip-action-button share-day-primary w-full px-4 py-3 rounded-full text-sm font-bold inline-flex items-center justify-center gap-2 disabled:opacity-50">
                                             <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
                                             <span>
@@ -1456,6 +1461,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260403f"></script>
+    <script src="./scripts/app.js?v=20260403g"></script>
 </body>
 </html>

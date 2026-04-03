@@ -247,6 +247,20 @@
           .filter(Boolean)
           .join('、');
       });
+      const shareSelectionStateLabel = computed(() => {
+        if (!hasShareDaySelection.value) return '尚未選擇日期';
+        if (!hasPartialShareSelection.value) {
+          return `目前已選全部 ${schedule.value.length} 天，等同分享整個行程`;
+        }
+        return `目前選擇：${shareSelectionSummary.value}`;
+      });
+      const shareDayGridStyle = computed(() => {
+        const totalDays = shareDayOptions.value.length;
+        if (totalDays > 0 && totalDays <= 3) {
+          return { gridTemplateColumns: `repeat(${totalDays}, minmax(0, 1fr))` };
+        }
+        return null;
+      });
       const shareModeDaySummary = computed(() => {
         if (!isShareMode.value) return '';
         const fullLength = (getTripTemplate(activeTripId.value)?.schedule || []).length;
@@ -1301,8 +1315,10 @@
         shareLinkValue,
         shareStatusLabel,
         shareDayOptions,
+        shareDayGridStyle,
         shareSelectedDays,
         shareSelectionSummary,
+        shareSelectionStateLabel,
         shareModeDaySummary,
         hasShareDaySelection,
         hasPartialShareSelection,

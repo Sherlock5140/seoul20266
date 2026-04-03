@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v24`
-- Asset query version: `20260403f`
+- SW cache: `travel-guide-v25`
+- Asset query version: `20260403g`
 
 ## Data Shapes
 
@@ -95,8 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Codex | UI/UX | Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation. Cache v24→v25; asset 20260403f→g. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03 | Claude Code | [Type: PENDING_USER_INPUT] | [Summary: PENDING_USER_INPUT]. Cache [PENDING_USER_INPUT]; asset [PENDING_USER_INPUT]. Files: [PENDING_USER_INPUT]
+
 - 2026-04-03 | Codex | UX | Selected-day share CTA now clearly behaves as copy-first: button text emphasizes copying/pasting, success state shows `已複製可貼上`, and no longer feels like a native share action. Cache v23→v24; asset 20260403e→f. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Gemini | Maintenance | Added a new entry to the update log in PROJECT_CONTEXT.md. Files: PROJECT_CONTEXT.md
-
-- 2026-04-03 | Codex | Bug Fix/UX | `分享所選日期` now copies the generated link first instead of preferring native share, so one tap leaves a usable URL in the clipboard immediately. Cache v22→v23; asset 20260403d→e. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`

@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v23`
-- Asset query version: `20260403e`
+- SW cache: `travel-guide-v24`
+- Asset query version: `20260403f`
 
 ## Data Shapes
 
@@ -95,8 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Codex | UX | Selected-day share CTA now clearly behaves as copy-first: button text emphasizes copying/pasting, success state shows `已複製可貼上`, and no longer feels like a native share action. Cache v23→v24; asset 20260403e→f. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03 | Gemini | Maintenance | Added a new entry to the update log in PROJECT_CONTEXT.md. Files: PROJECT_CONTEXT.md
+
 - 2026-04-03 | Codex | Bug Fix/UX | `分享所選日期` now copies the generated link first instead of preferring native share, so one tap leaves a usable URL in the clipboard immediately. Cache v22→v23; asset 20260403d→e. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Codex | UI/Opt | Premium settings polish: stronger modal/card hierarchy, clearer field labels, improved share-day panel, better mobile chip grid and CTA emphasis. Cache v21→v22. Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Claude Code | Docs/Opt | CLAUDE.md: session-start read (not per-edit); Gemini Flash auto-writes log; PROJECT_CONTEXT.md removed from Gemini exclusion list. Files: `CLAUDE.md`, `PROJECT_CONTEXT.md`

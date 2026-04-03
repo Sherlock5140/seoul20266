@@ -196,7 +196,7 @@
       const currentTripTitle = ref(savedTripData.meta.title || template.meta.title);
       const countrySetting = ref(savedTripData.meta.country || template.meta.country);
       localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
-      const schedule = ref(cloneScheduleForView(savedTripData.schedule || template.schedule, isShareMode.value ? requestedShareDayIndexes : []));
+      const schedule = ref(cloneScheduleForView(savedTripData.schedule || template.schedule, (isShareMode.value && !sharedTripSnapshot) ? requestedShareDayIndexes : []));
       const userNotes = ref(savedTripData.notes || '');
       const tripSummaries = ref(listTrips(tripCatalog.trips));
       const tripManagerNotice = ref({ tone: '', text: '' });
@@ -605,8 +605,8 @@
         await copyShareLink(activeTripId.value, {
           dayIndexes: normalizedSelectedShareDays.value,
           preferNativeShare: false,
-          successLabel: '已複製日期連結',
-          successNotice: '已複製所選日期連結',
+          successLabel: '已複製可貼上',
+          successNotice: '已複製所選日期連結，可直接貼上分享',
           manualCopyNotice: '日期連結已建立，請手動複製'
         });
       };

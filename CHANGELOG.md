@@ -6,16 +6,6 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 ---
 
 - 2026-04-03
-  Updated at: 2026-04-03 17:16 CST
-  Updated by: Codex
-  Type: Bug Fix, UX
-  Summary:
-  - Changed `分享所選日期` so it copies the generated selected-day link to the clipboard first, instead of preferring native share and leaving paste targets empty.
-  - Kept the visible share-link panel as fallback, but removed the extra "copy again" dependency for the primary selected-day action.
-  Cache: v22 → v23; asset: 20260403d → 20260403e.
-  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03
   Updated at: 2026-04-03 16:48 CST
   Updated by: Codex
   Type: UI, Optimization
@@ -24,6 +14,16 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   - Upgraded the selected-day share section with a clearer linked-share header, balanced chip grid, highlighted summary state, and stronger primary action styling.
   Cache: v21 → v22.
   Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03
+  Updated at: 2026-04-03 17:16 CST
+  Updated by: Codex
+  Type: Bug Fix, UX
+  Summary:
+  - Changed `分享所選日期` so it copies the generated selected-day link to the clipboard first, instead of preferring native share and leaving paste targets empty.
+  - Kept the visible share-link panel as fallback, but removed the extra "copy again" dependency for the primary selected-day action.
+  Cache: v22 → v23; asset: 20260403d → 20260403e.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 13:49 CST

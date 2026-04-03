@@ -1285,8 +1285,14 @@
                                         </div>
                                         <div class="share-day-summary px-3.5 py-3 text-[11px] text-m-sub leading-5">{{ hasPartialShareSelection ? `目前選擇：${shareSelectionSummary}` : '目前會分享整個行程' }}</div>
                                         <button type="button" @click="shareSelectedDayRange" :disabled="shareLoading || !hasShareDaySelection" class="trip-action-button share-day-primary w-full px-4 py-3 rounded-full text-sm font-bold inline-flex items-center justify-center gap-2 disabled:opacity-50">
-                                            <i class="fa-regular fa-calendar-days"></i>
-                                            <span>{{ hasPartialShareSelection ? '分享所選日期' : '分享全部日期' }}</span>
+                                            <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
+                                            <span>
+                                                {{ shareLoading
+                                                  ? '建立並複製中...'
+                                                  : shareCopied
+                                                    ? '已複製可貼上'
+                                                    : (hasPartialShareSelection ? '複製所選日期連結' : '複製全部日期連結') }}
+                                            </span>
                                         </button>
                                     </div>
                                 </div>
@@ -1450,6 +1456,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260403e"></script>
+    <script src="./scripts/app.js?v=20260403f"></script>
 </body>
 </html>

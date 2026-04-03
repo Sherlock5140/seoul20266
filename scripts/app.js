@@ -1246,7 +1246,6 @@
                   };
 
                   requestUpdate();
-                  window.setTimeout(requestUpdate, 1500);
 
                   document.addEventListener('visibilitychange', () => {
                     if (document.visibilityState === 'visible') requestUpdate();

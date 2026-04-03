@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v30';
+const CACHE_NAME = 'travel-guide-v31';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,7 +10,7 @@ const APP_SHELL = [
   './icon-512.png',
   './scripts/config.js?v=20260402k',
   './scripts/utils.js?v=20260402k',
-  './scripts/app.js?v=20260403l',
+  './scripts/app.js?v=20260403m',
   './services/storage.js?v=20260402k',
   './services/rates.js?v=20260402k',
   './services/map.js?v=20260402k',
@@ -47,7 +47,10 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
+      Promise.race([
+        fetch(request),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4000))
+      ])
         .then((response) => {
           if (response && response.ok) {
             const responseClone = response.clone();

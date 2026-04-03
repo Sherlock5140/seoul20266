@@ -91,7 +91,7 @@ UI logic:
 - Country dropdowns are now generated from config instead of hardcoded options.
 
 Cache:
-- Service worker cache version is currently `travel-guide-v15`.
+- Service worker cache version is currently `travel-guide-v16`.
 - Frontend asset query version is currently `20260402g`.
 
 Recent UI changes:
@@ -206,6 +206,22 @@ Follow-up rule:
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
+- 2026-04-03
+  Updated at: 2026-04-03 13:43 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary:
+  - Fixed share link stuck at "處理中..." and failing to load on recipient's end.
+  - Root cause 1: `notes` (personal trip notes) was included in the share payload. Combined with the full schedule, the compressed URL was too large, causing `compressToBase64Url` to potentially hang → `shareLoading` never reset.
+  - Root cause 2: `buildShareUrl` used `window.location.href` as base, carrying over any existing hash/query params from the current page into the share URL.
+  - Fix: (1) Removed `notes` from `sharePayload` — share contains only `schedule` and `meta`. (2) Build share URL from clean `origin + pathname` with no existing params. (3) Added 8-second safety timeout in `copyShareLink` so `shareLoading` always resets even if async compression hangs.
+  - Cache version: `travel-guide-v15` → `travel-guide-v16`; asset version: `20260402j` → `20260402k`.
+  Files:
+  - `scripts/app.js`
+  - `sw.js`
+  - `index.html`
+  - `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 11:15 CST

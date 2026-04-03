@@ -325,12 +325,11 @@
       };
 
       const buildShareUrl = async (tripId) => {
-        const url = new URL(window.location.href);
+        const url = new URL(window.location.origin + window.location.pathname);
         const sourceTemplate = getTripTemplate(tripId);
         const sourceState = tripId === activeTripId.value
           ? {
               tripId,
-              notes: userNotes.value,
               schedule: schedule.value,
               meta: {
                 title: currentTripTitle.value,
@@ -340,7 +339,6 @@
           : loadTripState(tripId);
         const sharePayload = {
           tripId,
-          notes: sourceState.notes || '',
           schedule: clone(sourceState.schedule || sourceTemplate.schedule || createBlankSchedule()),
           meta: {
             title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
@@ -359,6 +357,7 @@
       const copyShareLink = async (tripId) => {
         if (shareLoading.value) return;
         shareLoading.value = true;
+        const timeout = setTimeout(() => { shareLoading.value = false; }, 8000);
         try {
           const copied = await copyText(await buildShareUrl(tripId));
           if (!copied) throw new Error('Clipboard copy failed');
@@ -367,6 +366,7 @@
           console.warn('Share link build failed', error);
           setTripNotice('error', '分享連結產生失敗');
         } finally {
+          clearTimeout(timeout);
           shareLoading.value = false;
         }
       };

@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v26`
-- Asset query version: `20260403h`
+- SW cache: `travel-guide-v28`
+- Asset query version: `20260403j`
 
 ## Data Shapes
 
@@ -95,8 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-04-03 | Codex | Bug Fix/Logic | Built-in trip state now auto-normalizes template-equivalent local metadata before UI/share logic runs, so stale country values no longer break Hong Kong sharing or display while keeping the same shared-template logic for future trips. Cache v25→v26; asset 20260403g→h. Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
-
 - 2026-04-03 | Claude Code | Maintenance | Updated PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
 
 - 2026-04-03 | Codex | UI/UX | Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation. Cache v24→v25; asset 20260403f→g. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03 | Codex | Data | Recalculated day-header summary durations in the built-in Seoul trip so the title block matches the actual schedule windows, including fixing the Seongsu segment and extending Day 6 / Day 8 summary windows. Hong Kong schedule data was re-audited with no source-data corrections needed. Cache v27→v28; data asset 20260402k→20260403j. Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`

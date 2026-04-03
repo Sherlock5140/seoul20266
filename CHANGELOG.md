@@ -333,3 +333,9 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Type: Docs, UI
   Summary: SEOUL20266_UI_STYLE_GUIDE.md expanded into full UI behavior and bug-fix manual.
   Files: `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`, `AGENTS.md`
+- 2026-04-03
+  Updated at: 2026-04-03 17:33 CST
+  Updated by: Codex
+  Type: UI/UX
+  Summary: Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation.
+  Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`

@@ -91,7 +91,7 @@ UI logic:
 - Country dropdowns are now generated from config instead of hardcoded options.
 
 Cache:
-- Service worker cache version is currently `travel-guide-v12`.
+- Service worker cache version is currently `travel-guide-v14`.
 - Frontend asset query version is currently `20260402g`.
 
 Recent UI changes:
@@ -206,6 +206,19 @@ Follow-up rule:
   - `Updated by: Claude Code`
   - `Type: Bug Fix`
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
+
+- 2026-04-03
+  Updated at: 2026-04-03 11:11 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary:
+  - Follow-up fix for map marker centering. The previous 55%-from-top offset via pixel projection was still placing the marker near the top of the map instead of centered. Root cause was unclear (likely interaction between projection offset and autoPan: false). Fix: removed `getHighlightOffset()` entirely and replaced the project/subtract/unproject pattern with a direct `map.flyTo(event.coords, targetZoom)`. Marker now appears at exact center of map. `autoPan: false` retained on all popups.
+  - Cache version: `travel-guide-v13` → `travel-guide-v14`; asset version: `20260402h` → `20260402i`.
+  Files:
+  - `services/map.js`
+  - `sw.js`
+  - `index.html`
+  - `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 10:58 CST

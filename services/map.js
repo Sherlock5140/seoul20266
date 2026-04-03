@@ -58,16 +58,6 @@
       const nonAirportEvents = events.filter((event) => !isAirportEvent(event));
       return nonAirportEvents.length >= 2 ? nonAirportEvents : events;
     };
-    const getHighlightOffset = () => {
-      const mapDiv = document.getElementById('map');
-      const mapHeight = mapDiv
-        ? mapDiv.getBoundingClientRect().height
-        : (window.innerWidth < 768 ? 280 : 500);
-      // Place marker at ~55% from top so the popup (which opens ~70px above the
-      // marker) has enough room at the top of the map without clipping.
-      // offset > 0 → center moves north → marker appears below center.
-      return Math.round((0.55 - 0.5) * mapHeight);
-    };
 
     const fitBounds = (markerKeys = null) => {
       const visibleMarkers = getVisibleMarkers(markerKeys);
@@ -265,9 +255,7 @@
       });
       if (event?.coords) {
         const targetZoom = Math.max(map.getZoom() || 0, 16);
-        const targetPoint = map.project(event.coords, targetZoom).subtract([0, getHighlightOffset()]);
-        const targetLatLng = map.unproject(targetPoint, targetZoom);
-        map.flyTo(targetLatLng, targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
+        map.flyTo(event.coords, targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
       }
     };
 

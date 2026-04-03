@@ -63,17 +63,10 @@
       const mapHeight = mapDiv
         ? mapDiv.getBoundingClientRect().height
         : (window.innerWidth < 768 ? 280 : 500);
-      // Place the marker at ~38% from the top of the visible map area.
-      // offset = target_screen_y - center_screen_y = (0.38 - 0.5) * mapHeight
-      // Negative value means marker appears above center (toward top of map).
-      return Math.round((0.38 - 0.5) * mapHeight);
-    };
-    const getPopupPadding = () => {
-      const isMobile = window.innerWidth < 768;
-      return {
-        topLeft: isMobile ? [20, 180] : [24, 112],
-        bottomRight: isMobile ? [20, 24] : [24, 32]
-      };
+      // Place marker at ~55% from top so the popup (which opens ~70px above the
+      // marker) has enough room at the top of the map without clipping.
+      // offset > 0 → center moves north → marker appears below center.
+      return Math.round((0.55 - 0.5) * mapHeight);
     };
 
     const fitBounds = (markerKeys = null) => {
@@ -119,7 +112,6 @@
           const marker = L.marker(event.coords, { icon });
           marker.eventId = event.id;
           marker.tripScopedId = markerKey;
-          const popupPadding = getPopupPadding();
           marker.bindPopup(`
             <div class="font-sans p-1 min-w-[120px]">
               <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${escapeHtml(event.category)}</div>
@@ -129,9 +121,7 @@
             closeButton: false,
             className: 'rounded-xl shadow-lg border-none',
             offset: [0, -5],
-            autoPan: true,
-            autoPanPaddingTopLeft: popupPadding.topLeft,
-            autoPanPaddingBottomRight: popupPadding.bottomRight
+            autoPan: false
           });
           marker.on('click', () => focusEvent(event.id));
           markersMap.set(markerKey, marker);

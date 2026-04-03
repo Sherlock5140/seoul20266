@@ -208,6 +208,22 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-03
+  Updated at: 2026-04-03 10:58 CST
+  Updated by: Claude Code
+  Type: Bug Fix
+  Summary:
+  - Fixed map marker centering issue affecting all itinerary events on mobile: previous fix placed marker at 38% from top, putting popup (~70px above marker) within 36px of map top edge. Leaflet autoPan with topLeft padding [20, 180] then overrode flyTo by forcing popup 180px from top, pushing marker to map bottom and covering the itinerary panel.
+  - `getHighlightOffset()`: changed target position from 38% to 55% from top — marker sits slightly below center, popup opens above with sufficient clearance.
+  - `autoPan: false` set on all marker popups: flyTo already handles positioning; autoPan was fighting flyTo and always winning, causing the double-movement symptom.
+  - Removed `getPopupPadding()` helper (no longer needed).
+  - Cache version: `travel-guide-v12` → `travel-guide-v13`; asset version: `20260402g` → `20260402h`.
+  Files:
+  - `services/map.js`
+  - `sw.js`
+  - `index.html`
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 10:51 CST
   Updated by: Claude Code
   Type: Docs

@@ -6,9 +6,19 @@
 ```json
 { "model": "opusplan" }
 ```
-- **Plan Mode**（Shift+Tab）→ 自動使用 Opus 4.6（架構推理、複雜 bug 分析）
-- **執行模式** → 自動切換 Sonnet 4.6（寫程式碼）
-- 複雜任務開始前按 Shift+Tab 進 Plan Mode，確認計劃後再執行
+- Plan Mode → 自動使用 Opus 4.6（架構推理）
+- 執行模式 → 自動切換 Sonnet 4.6（寫程式碼）
+
+## 自動 Plan Mode（全自動，不需手動 Shift+Tab）
+
+以下情況 Claude 必須主動呼叫 `EnterPlanMode` 工具，不等使用者觸發：
+- 任務涉及 **2 個以上檔案**同時修改
+- 任務描述含「重構」、「架構」、「全面」、「優化」、「新增功能」
+- bug 根因不明，需要跨檔追蹤
+- 上一個修法失敗，需要重新設計方案
+
+Plan Mode 內：列出計劃步驟、確認影響範圍、再呼叫 `ExitPlanMode` 開始執行。
+單純的一行修正、版本 bump、log 更新 → 不進 Plan Mode，直接執行。
 
 ## Session Start (讀一次，同 session 內不重複讀)
 

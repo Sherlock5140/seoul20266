@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v30`
-- Asset query version: `20260403l`
+- SW cache: `travel-guide-v32`
+- Asset query version: `20260404a`
 
 ## Data Shapes
 
@@ -95,10 +95,10 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-04 | Codex | UI/UX, Rates | Added a Korea-only cash-rate source card inside the exchange modal that links to Creatrip's local cash-rate page, while keeping the app's own calculator for internal conversions. The rate modal layout was also tightened so the new source block reads as part of the same flow. Cache v31→v32; asset 20260404a. Files: `index.html`, `scripts/app.js`, `services/rates.js`, `sw.js`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03 | Claude Code | Update | Added new log entry as requested. Files: PROJECT_CONTEXT.md
+
+- 2026-04-03 | Claude Code | Refactor | Inserted new record as per user request.
+
 - 2026-04-03 | Gemini | Maintenance | Inserted new entry in PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Claude Code | Maintenance | Updated PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Codex | UI/UX | Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation. Cache v24→v25; asset 20260403f→g. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Codex | PWA/Infra | Installed Home Screen launches now prefer the latest network `index.html`, perform explicit service-worker update checks on launch/return, and use a versioned manifest `start_url` for future installs. This reduces cases where the iPhone PWA stayed on stale itinerary data until the user removed and re-added it. Cache v29→v30; asset/manifest 20260403l. Files: `sw.js`, `manifest.webmanifest`, `index.html`, `scripts/app.js`, `PROJECT_CONTEXT.md`

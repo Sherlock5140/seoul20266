@@ -577,6 +577,25 @@
             border: 1px solid rgba(214, 216, 212, 0.9);
             box-shadow: 0 12px 24px -18px rgba(47, 47, 45, 0.18);
         }
+        .rate-source-card {
+            background:
+                radial-gradient(circle at top right, rgba(201,166,161,0.16), transparent 34%),
+                linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246,247,243,0.94) 100%);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 18px 28px -24px rgba(47,47,45,0.14);
+        }
+        .rate-source-badge {
+            background: rgba(255,255,255,0.86);
+            border: 1px solid rgba(214,216,212,0.92);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92);
+        }
+        .rate-source-button {
+            background: linear-gradient(180deg, rgba(47,47,45,0.94) 0%, rgba(47,47,45,0.88) 100%);
+            border: 1px solid rgba(47,47,45,0.92);
+            color: #F4F5F2;
+            box-shadow: 0 16px 28px -22px rgba(47,47,45,0.26);
+            min-height: 3rem;
+        }
         .rate-big-number {
             font-size: clamp(2rem, 8vw, 2.5rem);
             line-height: 1;
@@ -1420,6 +1439,24 @@
                         </div>
                     </div>
 
+                    <div v-if="cashRateSource" class="rate-source-card rounded-[1.75rem] p-4 mb-5">
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div class="min-w-0">
+                                <div class="inline-flex items-center gap-2 rate-source-badge rounded-full px-3 py-1 text-[11px] font-bold tracking-[0.18em] uppercase text-m-sub mb-2">
+                                    <i class="fa-solid fa-won-sign text-[10px]" aria-hidden="true"></i>
+                                    <span>{{ cashRateSource.badge }}</span>
+                                </div>
+                                <div class="text-[1.02rem] font-bold text-typo-title leading-tight">{{ cashRateSource.title }}</div>
+                                <p class="mt-1 text-[12px] leading-6 text-m-sub">{{ cashRateSource.description }}</p>
+                            </div>
+                            <div class="text-right text-[11px] font-mono text-m-sub whitespace-nowrap">{{ cashRateSource.sourceLabel }}</div>
+                        </div>
+                        <button type="button" @click="openCashRateSource" class="rate-source-button w-full rounded-2xl px-4 py-3 text-sm font-bold active:scale-[0.98] transition-transform inline-flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            <span>查看韓國現鈔匯率</span>
+                        </button>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-3.5 mb-5">
                         <div class="rate-calc-input rounded-[1.45rem] px-4 pt-4 pb-3.5" :class="{ 'is-active': lastRateInput === 'local' }">
                             <div class="text-[11px] font-bold text-m-sub tracking-[0.18em] uppercase mb-3">{{ primaryCurrencyCode }}</div>
@@ -1462,9 +1499,9 @@
     <script src="./scripts/config.js?v=20260402k"></script>
     <script src="./scripts/utils.js?v=20260402k"></script>
     <script src="./services/storage.js?v=20260402k"></script>
-    <script src="./services/rates.js?v=20260402k"></script>
+    <script src="./services/rates.js?v=20260404a"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260403k"></script>
-    <script src="./scripts/app.js?v=20260403m"></script>
+    <script src="./scripts/app.js?v=20260404a"></script>
 </body>
 </html>

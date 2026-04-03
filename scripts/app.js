@@ -355,6 +355,18 @@
           ? `1 ${primaryCurrencyCode.value} ≈ ${rate.toFixed(primaryRatePrecision.value)} TWD`
           : `1 TWD ≈ ${(1 / rate).toFixed(2)} ${primaryCurrencyCode.value}`;
       });
+      const cashRateSource = computed(() => {
+        if (primaryCurrencyCode.value === 'KRW') {
+          return {
+            badge: 'Cash Rate',
+            title: '韓國當地現鈔匯率',
+            description: '查看 Creatrip 的韓國現鈔匯率與線上換算頁。App 內維持即時換算，這張卡則提供你比對當地實體換匯價格。',
+            sourceLabel: 'Creatrip',
+            url: 'https://creatrip.com/exchange'
+          };
+        }
+        return null;
+      });
       const rateUpdatedLabel = computed(() => {
         if (!rateUpdatedAt.value) return '尚未更新';
         const parsedDate = new Date(rateUpdatedAt.value);
@@ -1105,6 +1117,12 @@
         });
       };
 
+      const openCashRateSource = () => {
+        const url = cashRateSource.value?.url;
+        if (!url) return;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      };
+
       const closeNotebook = () => {
         showNotebook.value = false;
         nextTick(() => {
@@ -1352,6 +1370,7 @@
         displayPrimaryRate,
         displayUsdRate,
         rateHintText,
+        cashRateSource,
         rateUpdatedLabel,
         primaryCurrencyCode,
         primaryCountryLabel,
@@ -1396,6 +1415,7 @@
         handleLocalCurrencyInput,
         handleTwdInput,
         toggleRateDirection,
+        openCashRateSource,
         openRatesPanel,
         openSettingsPanel,
         refreshRates: refreshRateData

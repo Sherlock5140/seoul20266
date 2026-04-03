@@ -7,6 +7,7 @@ Project: Static PWA (HTML + Vue 3 CDN + Tailwind + Leaflet + SW). No build step.
 **After changes:** update `PROJECT_CONTEXT.md` (and `SEOUL20266_UI_STYLE_GUIDE.md` if UI changed).
 **Before writing timestamp:** run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'` — never guess.
 **One log entry per session/commit. List all changed files.**
+**Token saving:** do not read `SEOUL20266_UI_STYLE_GUIDE.md` unless the task is UI-related, and do not auto-load any `*_REVIEW_BUNDLE.md` file unless a full bundled review is explicitly needed.
 
 ---
 

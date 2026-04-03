@@ -22,3 +22,7 @@ Update-log rules:
 - Never guess the time.
 - Write one update-log entry per work session or commit.
 - List the files that actually changed.
+
+Token saving:
+- Do not read `SEOUL20266_UI_STYLE_GUIDE.md` unless the task is UI-related.
+- Do not auto-load `FULL_APP_REVIEW_BUNDLE.md`, `COMPLETE_APP_REVIEW_BUNDLE.md`, or `MULTI_TRIP_REVIEW_BUNDLE.md` unless a full bundled review is explicitly needed.

@@ -28,10 +28,13 @@ Update-log rules:
 - Write one update-log entry per work session or commit.
 - List the files that actually changed.
 
+Token saving:
+- Do not read `SEOUL20266_UI_STYLE_GUIDE.md` unless the task is UI-related.
+- Do not auto-load `FULL_APP_REVIEW_BUNDLE.md`, `COMPLETE_APP_REVIEW_BUNDLE.md`, or `MULTI_TRIP_REVIEW_BUNDLE.md` unless a full bundled review is explicitly needed.
+
 Suggested task order:
 1. Read entry docs
 2. Inspect the relevant code
 3. Make changes
 4. Update `PROJECT_CONTEXT.md`
 5. Update `SEOUL20266_UI_STYLE_GUIDE.md` if needed
-

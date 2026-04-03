@@ -99,6 +99,15 @@ Older entries archived in `CHANGELOG.md`.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-04-03
+  Updated at: 2026-04-03 13:53 CST
+  Updated by: Codex
+  Type: Docs, Optimization
+  Summary:
+  - Moved the long audit prompt out of `AGENTS.md` into `REVIEW_PROMPT.md` so startup context stays smaller.
+  - Added explicit token-saving rules: do not auto-load UI guide for non-UI tasks, and do not auto-load large bundled review files unless a full bundled review is explicitly needed.
+  Files: `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `PROJECT_CONTEXT.md`, `REVIEW_PROMPT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 13:47 CST
   Updated by: Codex
   Type: Docs

@@ -392,6 +392,9 @@
             flex-wrap: wrap;
             gap: 0.65rem;
         }
+        .settings-share-action {
+            flex: 1 1 12rem;
+        }
         .settings-trips-row {
             display: flex;
             flex-direction: column;
@@ -810,7 +813,7 @@
             }
             .settings-inline-actions {
                 display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 0.6rem;
             }
             .settings-inline-actions .trip-inline-action {
@@ -819,6 +822,17 @@
                 padding-right: 0.6rem;
                 justify-content: center;
                 text-align: center;
+                min-width: 0;
+            }
+            .settings-inline-actions .settings-share-action {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            .settings-inline-actions .trip-inline-action span {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .settings-trips-row {
                 gap: 0.8rem;
@@ -1111,7 +1125,7 @@
                                         </div>
                                     </div>
                                     <div v-else class="settings-inline-actions">
-                                        <button type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-inline-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text disabled:opacity-50 inline-flex items-center justify-center gap-1.5 min-w-[8.5rem]">
+                                        <button type="button" @click="copyShareLink(activeTripId)" :disabled="shareLoading" class="trip-inline-action settings-share-action px-3.5 py-2 rounded-full text-[13px] md:text-sm font-bold text-m-text disabled:opacity-50 inline-flex items-center justify-center gap-1.5 min-w-[8.5rem]">
                                             <i :class="shareLoading ? 'fa-solid fa-circle-notch animate-spin' : shareCopied ? 'fa-solid fa-check text-s-green' : 'fa-regular fa-copy'"></i>
                                             <span>{{ shareLoading ? '建立連結中...' : shareStatusLabel || '分享目前行程' }}</span>
                                         </button>

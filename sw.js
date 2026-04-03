@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v19';
+const CACHE_NAME = 'travel-guide-v20';
 const APP_SHELL = [
   './',
   './index.html',

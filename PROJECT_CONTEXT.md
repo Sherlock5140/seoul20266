@@ -47,7 +47,7 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 ## Current Versions
 
-- SW cache: `travel-guide-v19`
+- SW cache: `travel-guide-v20`
 - Asset query version: `20260403c`
 
 ## Data Shapes
@@ -96,6 +96,15 @@ Legacy `GLOBAL` in saved data is auto-normalized to `HK`. Do not use `GLOBAL` in
 
 Older entries → `CHANGELOG.md`. Keep max 3 entries here.
 Before writing timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
+
+- 2026-04-03
+  Updated at: 2026-04-03 14:26 CST
+  Updated by: Codex
+  Type: UI
+  Summary:
+  - Fixed mobile settings action-row layout: share button now spans the full first row, with rename/delete on the second row, so the longer label no longer overlaps or compresses adjacent controls.
+  Cache: v19 → v20; asset: unchanged `20260403c`.
+  Files: `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
 
 - 2026-04-03
   Updated at: 2026-04-03 14:20 CST

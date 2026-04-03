@@ -208,6 +208,16 @@ Follow-up rule:
   - `Summary: Fixed issue introduced in the earlier 2026-04-02 Codex entry about share-link handling.`
 
 - 2026-04-03
+  Updated at: 2026-04-03 10:51 CST
+  Updated by: Claude Code
+  Type: Docs
+  Summary:
+  - Added transparency rules to `CLAUDE.md`: Claude must announce before and after every Gemini call — which model, why, and how the result was used or rejected.
+  Files:
+  - `CLAUDE.md`
+  - `PROJECT_CONTEXT.md`
+
+- 2026-04-03
   Updated at: 2026-04-03 10:50 CST
   Updated by: Claude Code
   Type: Docs, Infra

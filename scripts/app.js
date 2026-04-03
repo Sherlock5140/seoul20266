@@ -140,6 +140,53 @@
         .filter((value) => Number.isInteger(value) && value >= 0 && value < totalDays)
     )).sort((a, b) => a - b)
   );
+  const schedulesMatch = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || []);
+  const shouldRestoreTemplateMeta = (tripId, state, templateTrip) => {
+    if (!tripCatalog.trips[tripId] || !templateTrip) return false;
+    const normalizedSavedCountry = normalizeCountryCode(state?.meta?.country || '');
+    const normalizedTemplateCountry = normalizeCountryCode(templateTrip?.meta?.country || 'KR');
+    if (!normalizedSavedCountry || normalizedSavedCountry === normalizedTemplateCountry) return false;
+    const normalizedSavedTitle = String(state?.meta?.title || '').trim();
+    const normalizedTemplateTitle = String(templateTrip?.meta?.title || tripId).trim();
+    const titleMatchesTemplate = !normalizedSavedTitle || normalizedSavedTitle === normalizedTemplateTitle;
+    const notesEmpty = !String(state?.notes || '').trim();
+    const scheduleMatchesTemplate = !Array.isArray(state?.schedule)
+      || schedulesMatch(state.schedule, templateTrip?.schedule || []);
+    return titleMatchesTemplate && notesEmpty && scheduleMatchesTemplate;
+  };
+  const normalizeCatalogTripState = (tripId, state = {}) => {
+    const templateTrip = getTripTemplate(tripId);
+    if (!shouldRestoreTemplateMeta(tripId, state, templateTrip)) return state;
+    return {
+      ...state,
+      meta: {
+        ...state.meta,
+        title: templateTrip?.meta?.title || tripId,
+        country: normalizeCountryCode(templateTrip?.meta?.country || 'KR'),
+        schemaVersion: state?.meta?.schemaVersion || 1
+      }
+    };
+  };
+  const normalizeTripSummary = (summary) => {
+    const tripId = String(summary?.tripId || '').trim().toUpperCase();
+    const templateTrip = tripCatalog.trips[tripId];
+    if (!templateTrip) return summary;
+    const normalizedSummaryCountry = normalizeCountryCode(summary?.country || '');
+    const normalizedTemplateCountry = normalizeCountryCode(templateTrip?.meta?.country || 'KR');
+    const normalizedSummaryTitle = String(summary?.title || '').trim();
+    const normalizedTemplateTitle = String(templateTrip?.meta?.title || tripId).trim();
+    const titleMatchesTemplate = !normalizedSummaryTitle || normalizedSummaryTitle === normalizedTemplateTitle;
+    const updatedAtEmpty = !String(summary?.updatedAt || '').trim();
+    if (normalizedSummaryCountry === normalizedTemplateCountry || !titleMatchesTemplate || !updatedAtEmpty) {
+      return summary;
+    }
+    return {
+      ...summary,
+      title: normalizedTemplateTitle,
+      country: normalizedTemplateCountry,
+      source: 'catalog'
+    };
+  };
   const cloneScheduleForView = (sourceSchedule = [], dayIndexes = []) => {
     const safeSchedule = Array.isArray(sourceSchedule) ? sourceSchedule : [];
     const normalizedIndexes = normalizeDayIndexes(dayIndexes, safeSchedule.length);
@@ -189,7 +236,7 @@
       const initialTripId = sharedTripId || resolveTripId(requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
       const activeTripId = ref(initialTripId);
       const template = getTripTemplate(activeTripId.value);
-      const savedTripData = sharedTripSnapshot || loadTripState(activeTripId.value);
+      const savedTripData = sharedTripSnapshot || normalizeCatalogTripState(activeTripId.value, loadTripState(activeTripId.value));
       const isShareMode = ref(Boolean(SHARE_VIEW_ENABLED && (requestedTripId || sharedTripSnapshot?.tripId)));
       const isReadOnlyMode = computed(() => isShareMode.value);
 
@@ -198,7 +245,7 @@
       localCurrencyInput.value = getLocalCurrencyDefaultAmount(countrySetting.value);
       const schedule = ref(cloneScheduleForView(savedTripData.schedule || template.schedule, (isShareMode.value && !sharedTripSnapshot) ? requestedShareDayIndexes : []));
       const userNotes = ref(savedTripData.notes || '');
-      const tripSummaries = ref(listTrips(tripCatalog.trips));
+      const tripSummaries = ref(listTrips(tripCatalog.trips).map(normalizeTripSummary));
       const tripManagerNotice = ref({ tone: '', text: '' });
       const showCreateTripForm = ref(false);
       const newTripTitle = ref('');
@@ -254,12 +301,9 @@
         }
         return `目前選擇：${shareSelectionSummary.value}`;
       });
-      const shareDayGridStyle = computed(() => {
+      const shareDayGridCols = computed(() => {
         const totalDays = shareDayOptions.value.length;
-        if (totalDays > 0 && totalDays <= 3) {
-          return { gridTemplateColumns: `repeat(${totalDays}, minmax(0, 1fr))` };
-        }
-        return null;
+        return (totalDays > 0 && totalDays <= 3) ? String(totalDays) : null;
       });
       const shareModeDaySummary = computed(() => {
         if (!isShareMode.value) return '';
@@ -384,7 +428,7 @@
       }, 600);
 
       const refreshTripSummaries = () => {
-        tripSummaries.value = listTrips(tripCatalog.trips);
+        tripSummaries.value = listTrips(tripCatalog.trips).map(normalizeTripSummary);
       };
 
       const setTripNotice = (tone, text) => {
@@ -447,7 +491,6 @@
         });
       };
 
-      const schedulesMatch = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || []);
       const getShareCacheKey = (tripId, dayIndexes = []) => `${tripId}::${formatDaySelectionParam(dayIndexes) || 'all'}`;
 
       const canUseDirectTripShare = (tripId, state, templateTrip) => {
@@ -482,7 +525,7 @@
                   country: countrySetting.value
                 }
               }
-            : loadTripState(tripId);
+            : normalizeCatalogTripState(tripId, loadTripState(tripId));
           const sourceSchedule = sourceState.schedule || sourceTemplate.schedule || createBlankSchedule();
           const filteredDayIndexes = normalizeDayIndexes(dayIndexes, sourceSchedule.length);
           if (canUseDirectTripShare(tripId, sourceState, sourceTemplate)) {
@@ -659,7 +702,7 @@
         isApplyingTripState = true;
         invalidateShareLink(tripId);
         const nextTemplate = getTripTemplate(tripId);
-        const nextSaved = loadTripState(tripId);
+        const nextSaved = normalizeCatalogTripState(tripId, loadTripState(tripId));
         activeTripId.value = tripId;
         setActiveTripId(tripId);
         currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
@@ -1315,7 +1358,7 @@
         shareLinkValue,
         shareStatusLabel,
         shareDayOptions,
-        shareDayGridStyle,
+        shareDayGridCols,
         shareSelectedDays,
         shareSelectionSummary,
         shareSelectionStateLabel,

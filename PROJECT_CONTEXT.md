@@ -64,8 +64,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v25`
-- Asset query version: `20260403g`
+- SW cache: `travel-guide-v26`
+- Asset query version: `20260403h`
 
 ## Data Shapes
 
@@ -95,8 +95,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-03 | Codex | Bug Fix/Logic | Built-in trip state now auto-normalizes template-equivalent local metadata before UI/share logic runs, so stale country values no longer break Hong Kong sharing or display while keeping the same shared-template logic for future trips. Cache v25→v26; asset 20260403g→h. Files: `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`
+
+- 2026-04-03 | Claude Code | Maintenance | Updated PROJECT_CONTEXT.md update log. Files: `PROJECT_CONTEXT.md`
+
 - 2026-04-03 | Codex | UI/UX | Share-day layout now adapts to trip length, so short itineraries like Hong Kong (3 days) use the same linked-share logic but render without awkward gaps or misleading “whole trip” presentation. Cache v24→v25; asset 20260403f→g. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`
-
-- 2026-04-03 | Claude Code | [Type: PENDING_USER_INPUT] | [Summary: PENDING_USER_INPUT]. Cache [PENDING_USER_INPUT]; asset [PENDING_USER_INPUT]. Files: [PENDING_USER_INPUT]
-
-- 2026-04-03 | Codex | UX | Selected-day share CTA now clearly behaves as copy-first: button text emphasizes copying/pasting, success state shows `已複製可貼上`, and no longer feels like a native share action. Cache v23→v24; asset 20260403e→f. Files: `scripts/app.js`, `index.html`, `sw.js`, `SEOUL20266_UI_STYLE_GUIDE.md`, `PROJECT_CONTEXT.md`

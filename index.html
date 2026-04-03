@@ -490,6 +490,9 @@
             grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
             gap: 0.72rem;
         }
+        .share-day-grid[data-cols="1"] { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .share-day-grid[data-cols="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .share-day-grid[data-cols="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         .share-day-chip {
             background: linear-gradient(180deg, rgba(252,252,250,0.98) 0%, rgba(238,239,235,0.95) 100%);
             border: 1px solid rgba(214,216,212,0.92);
@@ -953,7 +956,8 @@
                 justify-content: center;
                 align-self: flex-start;
             }
-            .share-day-grid {
+            .share-day-grid,
+            .share-day-grid[data-cols="3"] {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
             .share-day-chip {
@@ -1276,7 +1280,7 @@
                                                 全選
                                             </button>
                                         </div>
-                                        <div class="share-day-grid" :style="shareDayGridStyle">
+                                        <div class="share-day-grid" :data-cols="shareDayGridCols">
                                             <button
                                                 v-for="day in shareDayOptions"
                                                 :key="day.index"
@@ -1461,6 +1465,6 @@
     <script src="./services/rates.js?v=20260402k"></script>
     <script src="./services/map.js?v=20260402k"></script>
     <script src="./data/seoul-2026.js?v=20260402k"></script>
-    <script src="./scripts/app.js?v=20260403g"></script>
+    <script src="./scripts/app.js?v=20260403h"></script>
 </body>
 </html>

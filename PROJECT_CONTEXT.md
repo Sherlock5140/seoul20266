@@ -27,28 +27,34 @@ Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 | `data/seoul-2026.js` | Built-in trips catalog (Seoul + HK) |
 | `sw.js` | Service worker cache shell |
 
-## Code Navigation (app.js key locations)
+## Code Navigation（Grep 前先查這裡）
 
-| Area | Line | What's there |
-|------|------|--------------|
-| Share URL build | ~451 | `buildShareUrl(tripId, {useCache, dayIndexes})` |
-| Share copy | ~548 | `copyShareLink(tripId, {dayIndexes})` |
-| Trip apply | ~627 | `applyTripState(tripId)` |
-| Trip switch | ~683 | `switchTrip(tripId)` |
-| Trip create | ~691 | `createTrip()` |
-| Trip delete | ~788 | `deleteTrip(trip)` |
-| Event copy | ~599 | `copyEventLocation(location)` |
-| Close settings | ~960 | `closeSettings()` |
-| Focus event | ~1009 | `focusEvent(id)` |
+**index.html**
 
-## index.html key sections
+| 區域 | 行號 |
+|------|------|
+| App root (#app) | 1063 |
+| Header JSX (.glass-header) | 1070 |
+| Main content (#timeline-container) | 1104 |
+| Notebook Modal | 1201 |
+| Settings Modal | 1217 |
+| Trip selector | 1327 |
+| Rates Modal | 1405 |
+| Rate display card | 1419 |
 
-| Section | Line |
-|---------|------|
-| Map div | ~1056 |
-| Settings modal | ~1086 |
-| Share link panel | ~1197 |
-| Create trip form | ~1215 |
+**services/**
+
+| 函式 | 行號 |
+|------|------|
+| `createMapService()` | map.js:2 |
+| `initMap()` | map.js:174 |
+| `ensureMarkers()` | map.js:82 |
+| `loadTripState()` | storage.js:61 |
+| `saveTripState()`（高風險）| storage.js:135 |
+| `getStoredRateState()` | rates.js:45 |
+| `fetchRatesOnce()` | rates.js:101 |
+
+> 每次修改後若行號位移，更新此表格。
 
 ## Country Model
 
@@ -95,8 +101,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-05 | Claude Code | Doc | Inserted a new log entry. Files: PROJECT_CONTEXT.md
+
+- 2026-04-05 | Claude Code | Doc | Added a new entry to the update log. Files: PROJECT_CONTEXT.md
+
 - 2026-04-05 | Claude Code | Doc | Updated PROJECT_CONTEXT.md update log. Files: PROJECT_CONTEXT.md
-
-- 2026-04-04 | Claude Code | Maintenance | Inserted new entry in PROJECT_CONTEXT.md update log. Files: PROJECT_CONTEXT.md
-
-- 2026-04-04 | Codex | UI/UX, Rates | Added a Korea-only cash-rate source card inside the exchange modal that links to Creatrip's local cash-rate page, while keeping the app's own calculator for internal conversions. The rate modal layout was also tightened so the new source block reads as part of the same flow. Cache v31→v32; asset 20260404a. Files: `index.html`, `scripts/app.js`, `services/rates.js`, `sw.js`, `PROJECT_CONTEXT.md`

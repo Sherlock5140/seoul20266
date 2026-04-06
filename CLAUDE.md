@@ -36,10 +36,10 @@
 - Vue：Composition API（`setup()`）；Options API 不適用本專案
 - Tailwind：utility-first；自訂 CSS 僅用於動畫、複雜漸層等 utility 無法表達的場合
 - 命名：camelCase 變數與函式、PascalCase 元件檔名
-- SW：UI/邏輯修改皆 bump `CACHE_NAME`，遞增規則：
-  - Patch（`v43→v44`）：UI 微調、typo、文案
-  - Minor（`v43→v50`）：功能增減、bugfix
-  - Major（`v43→v100`）：架構變更、資料格式異動
+- SW：UI/邏輯修改皆 bump `CACHE_NAME`，格式 `travel-guide-vN-YYYYMMDD-HHMM`
+  - Patch（`v34→v35`）：UI 微調、typo、文案
+  - Minor（`v34→v40`）：功能增減、bugfix
+  - Major（`v34→v100`）：架構變更、資料格式異動
 - Commit：`feat/fix/chore/ui:` 前綴格式
 
 ---

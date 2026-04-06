@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v34';
+const CACHE_NAME = 'travel-guide-v34-20260406-1200';
 const CDN_CACHE  = 'cdn-assets-v2';
 
 const APP_SHELL = [

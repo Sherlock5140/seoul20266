@@ -28,7 +28,10 @@
 - Key function 行號查 `PROJECT_CONTEXT.md` Code Navigation 表格（最高回報槓桿點）
 - 跨檔呼叫時追蹤完整呼叫鏈，不限於初始 Grep 行號範圍
 - Context ≥ 60% → `/compact`
-- Context ≥ 85% → `/clear`（先口頭摘要本輪關鍵決定再開新 session）
+- Context ≥ 85% → `/clear`，移交摘要需包含：
+  - 本輪改了哪些檔案（路徑 + 行號）
+  - 未完成任務
+  - 當前 SW 版本號
 - 不相關新任務 → `/clear` 開新 session
 
 ---
@@ -38,9 +41,9 @@
 - Tailwind：utility-first；自訂 CSS 僅用於動畫、複雜漸層等 utility 無法表達的場合
 - 命名：camelCase 變數與函式、PascalCase 元件檔名
 - SW：UI/邏輯修改皆 bump `CACHE_NAME`，格式 `travel-guide-vN-YYYYMMDD-HHMM`
-  - Patch（`v34→v35`）：UI 微調、typo、文案
-  - Minor（`v34→v40`）：功能增減、bugfix
-  - Major（`v34→v100`）：架構變更、資料格式異動
+  - Patch（`v40→v41`）：UI 微調、typo、文案
+  - Minor（`v40→v50`）：功能增減、bugfix
+  - Major（`v40→v100`）：架構變更、資料格式異動
 - Commit：`feat/fix/chore/ui:` 前綴格式
 
 ---

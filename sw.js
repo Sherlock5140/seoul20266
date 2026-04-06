@@ -1,4 +1,6 @@
-const CACHE_NAME = 'travel-guide-v33';
+const CACHE_NAME = 'travel-guide-v34';
+const CDN_CACHE  = 'cdn-assets-v2';
+
 const APP_SHELL = [
   './',
   './index.html',
@@ -17,13 +19,32 @@ const APP_SHELL = [
   './data/seoul-2026.js?v=20260403k'
 ];
 
+// Versioned CDN URLs — safe to pre-cache at install time
+const CDN_RESOURCES = [
+  'https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+];
+
+// CDN hosts to intercept in fetch handler
+const CDN_HOSTS = ['unpkg.com', 'cdn.tailwindcss.com', 'cdnjs.cloudflare.com'];
+
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+    Promise.all([
+      // App shell — must succeed
+      caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)),
+      // CDN resources — fail silently per resource
+      caches.open(CDN_CACHE).then((cache) =>
+        Promise.all(
+          CDN_RESOURCES.map((url) =>
+            cache.add(url).catch((err) => console.warn('[SW] CDN pre-cache failed:', url, err))
+          )
+        )
+      )
+    ]).then(() => self.skipWaiting())
   );
 });
 
@@ -32,7 +53,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key !== CACHE_NAME && key !== CDN_CACHE)
           .map((key) => caches.delete(key))
       )
     ).then(() => self.clients.claim())
@@ -63,19 +84,33 @@ self.addEventListener('fetch', (event) => {
         .catch(() => (
           caches.match('./index.html')
             .then((cachedIndex) => cachedIndex || caches.match('./offline.html'))
-            .then((fallbackResponse) => fallbackResponse || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' }))
+            .then((fallback) => fallback || new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' }))
         ))
     );
     return;
   }
 
-  if (requestUrl.origin !== self.location.origin) {
+  // CDN hosts: cache-first, fetch and cache on miss
+  if (CDN_HOSTS.includes(requestUrl.hostname)) {
+    event.respondWith(
+      caches.open(CDN_CACHE).then((cache) =>
+        cache.match(request).then((cached) => {
+          if (cached) return cached;
+          return fetch(request).then((response) => {
+            if (response && response.ok) {
+              cache.put(request, response.clone())
+                .catch((err) => console.warn('[SW] CDN cache write failed', err));
+            }
+            return response;
+          });
+        })
+      )
+    );
     return;
   }
 
-  if (!APP_SHELL_PATHS.has(requestUrl.pathname)) {
-    return;
-  }
+  if (requestUrl.origin !== self.location.origin) return;
+  if (!APP_SHELL_PATHS.has(requestUrl.pathname)) return;
 
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
@@ -92,7 +127,6 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) return cachedResponse;
           return new Response('Service Unavailable', { status: 503, statusText: 'Service Unavailable' });
         });
-
       return cachedResponse || networkFetch;
     })
   );

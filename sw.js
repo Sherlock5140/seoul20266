@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v34-20260406-1200';
+const CACHE_NAME = 'travel-guide-v40-20260406-1400';
 const CDN_CACHE  = 'cdn-assets-v2';
 
 const APP_SHELL = [
@@ -26,8 +26,9 @@ const CDN_RESOURCES = [
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
 ];
 
-// CDN hosts to intercept in fetch handler
-const CDN_HOSTS = ['unpkg.com', 'cdn.tailwindcss.com', 'cdnjs.cloudflare.com'];
+// CDN hosts: versioned (cache-first) vs unversioned (stale-while-revalidate)
+const CDN_HOSTS_VERSIONED = ['unpkg.com', 'cdnjs.cloudflare.com'];
+const CDN_HOSTS_REVALIDATE = ['cdn.tailwindcss.com']; // unversioned URL → always revalidate
 
 const APP_SHELL_PATHS = new Set(APP_SHELL.map((path) => new URL(path, self.location.origin + self.location.pathname).pathname));
 
@@ -90,8 +91,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CDN hosts: cache-first, fetch and cache on miss
-  if (CDN_HOSTS.includes(requestUrl.hostname)) {
+  // Versioned CDN (unpkg, cdnjs): cache-first, fetch on miss
+  if (CDN_HOSTS_VERSIONED.includes(requestUrl.hostname)) {
     event.respondWith(
       caches.open(CDN_CACHE).then((cache) =>
         cache.match(request).then((cached) => {
@@ -103,6 +104,25 @@ self.addEventListener('fetch', (event) => {
             }
             return response;
           });
+        })
+      )
+    );
+    return;
+  }
+
+  // Unversioned CDN (Tailwind): stale-while-revalidate — serve cache instantly, update in background
+  if (CDN_HOSTS_REVALIDATE.includes(requestUrl.hostname)) {
+    event.respondWith(
+      caches.open(CDN_CACHE).then((cache) =>
+        cache.match(request).then((cached) => {
+          const networkFetch = fetch(request).then((response) => {
+            if (response && response.ok) {
+              cache.put(request, response.clone())
+                .catch((err) => console.warn('[SW] Tailwind cache update failed', err));
+            }
+            return response;
+          }).catch(() => cached);
+          return cached || networkFetch;
         })
       )
     );

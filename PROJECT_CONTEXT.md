@@ -101,6 +101,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-04-07 | Claude Code | Update Log | Added new entry as requested. Files: PROJECT_CONTEXT.md
+- 2026-04-07 | Gemini | Update Log | Insert new update log entry. Files: PROJECT_CONTEXT.md
 - 2026-04-06 | Claude Code | Gemini | Cache vX→vY; asset old→new. Files: PROJECT_CONTEXT.md
-- 2026-04-06 | Claude Code | Doc | Insert new update log entry as per user request. Files: PROJECT_CONTEXT.md
-- 2026-04-06 | Claude Code | Update Log | Added new entry. Files: PROJECT_CONTEXT.md

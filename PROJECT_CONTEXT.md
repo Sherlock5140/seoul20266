@@ -70,8 +70,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v41-20260503-1517`
-- Asset query version: `20260503a` for `data/seoul-2026.js`; other shell assets keep existing query versions
+- SW cache: `travel-guide-v42-20260503-1530`
+- Asset query version: `20260503b` for `data/seoul-2026.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -101,6 +101,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-03 | Claude Code | Update | Added new update log entry as per Gemini CLI request. Files: PROJECT_CONTEXT.md
-- 2026-05-03 | Claude Code | Gemini CLI Request | Inserted new log entry as per user request. Files: PROJECT_CONTEXT.md
+- 2026-05-03 | Codex | Seoul Day 3 subway backup times | Added 18:30 and 18:50 Gimyujeong to Namchuncheon train options and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Seoul Day 3 booking update | Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-03 | Claude Code | Update | Added new update log entry as per Gemini CLI request. Files: PROJECT_CONTEXT.md

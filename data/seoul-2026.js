@@ -59,8 +59,8 @@
               { id: "d3-e7", time: "15:25", location: "交通：明洞辣炒雞排街 ➔ 金裕貞站", map_term: "Gimyujeong Station", category: "transport", note: "🚕 / 🚇 前往金裕貞鐵道自行車報到點\n⚠️ 16:10 前抵達搭乘區集合", tags: ["死線"], coords: [37.8164, 127.7135] },
               { id: "d3-e8", time: "15:50", location: "金裕貞鐵道自行車報到緩衝", category: "alert", note: "🚻 換實體票，16:10 前抵達搭乘區集合\n✅ 預約：金裕貞鐵道自行車 / 김유정 레일바이크｜2人座 x 1", coords: [37.8164, 127.7135] },
               { id: "d3-e9", time: "16:30", location: "金裕貞鐵道自行車（第8次）", category: "activity", note: "✅ 已預約完成\n🕒 場次：16:30 第8次\n💺 車型：2人座 x 1\n💰 金額：40,000 韓元\n🕒 體驗：約 1.5 小時（騎行 + 火車 + 接駁車）", coords: [37.8164, 127.7135] },
-              { id: "d3-e10", time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 京春線 [金裕貞] ➔ [南春川]（1站）", coords: [37.8164, 127.7135] },
-              { id: "d3-e11", time: "18:25", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ 出站休息候車", coords: [37.8638, 127.7239] },
+              { id: "d3-e10", time: "18:26", location: "地鐵移動：金裕貞站 ➔ 南春川站", category: "transport", note: "🚇 京春線 [金裕貞] ➔ [南春川]（1站）\n✅ 推薦兩班（車程 5 分鐘 / 票價 1,550 韓元）\nA. 18:26 出發步行進站 ➔ 18:30 發車 ➔ 18:35 抵達南春川\nB. 18:46 出發步行進站 ➔ 18:50 發車 ➔ 18:55 抵達南春川\n⚠️ 回程 ITX 19:06，建議優先搭 18:30 班次，18:50 為壓線備援", tags: ["關鍵"], coords: [37.8164, 127.7135] },
+              { id: "d3-e11", time: "18:35", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ A 班 18:35 抵達，可保留約 31 分鐘候車\n⚠️ B 班 18:55 抵達，距 19:06 ITX 僅約 11 分鐘，僅作備援", coords: [37.8638, 127.7239] },
               { id: "d3-e12", time: "19:06", location: "回程首爾（ITX-Cheongchun 2092）", category: "transport", note: "🚄 南春川 19:06 ➔ 龍山 20:20\n💺 座位：6號車 6A / 6B\n💰 票價：19,600 韓元 / 2人", coords: [37.5298, 126.9647] }
             ]
           },

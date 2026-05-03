@@ -46,22 +46,22 @@
           },
           {
             date: "06/03 (三) Day 3",
-            title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車(1.5h) 👥 2人",
+            title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車16:30場 👥 2人",
             lunch: "明洞辣炒雞排", lunchId: "d3-e6", tea: "馬鈴薯麵包 (外帶)", teaId: "d3-e5", dinner: "_______", dinnerId: null,
-            notice: "====== ⚠️ 行前準備確認（2人主行程） ======\n1. [火車] 5/4 早上 07:00 開搶 ITX（去：龍山 09:17 / 回：南春川 18:56）\n2. [預約] 完成「春川外國人觀光計程車」線上預約\n3. [體驗] 預約江村鐵路自行車（16:30 場次，2人座）\n4. [現金] 準備 100,000 韓元現金（車費、牧場門票與備用）\n5. [證件] 攜帶護照",
+            notice: "====== ✅ Day 3 訂票完成重點（2人主行程） ======\n1. [ITX 去程] 龍山 Yongsan 09:21 ➔ 春川 Chuncheon 10:40｜ITX-Cheongchun 2061｜6號車 7A/7B｜19,600 韓元/2人\n2. [預約完成] 春川外國人觀光計程車｜2026/06/03（三）11:00｜私人旅遊 1 輛 2 人｜3 小時出租車游｜始發/終點：春川站｜34,485 韓元\n3. [體驗完成] 金裕貞鐵道自行車 / 김유정 레일바이크｜16:30 第8次｜2人座 x 1｜40,000 韓元\n4. [ITX 回程] 南春川 Namchuncheon 19:06 ➔ 龍山 Yongsan 20:20｜ITX-Cheongchun 2092｜6號車 6A/6B｜19,600 韓元/2人\n5. [自費提醒] 觀光計程車不含個人物品、餐飲費、門票；請攜帶護照與備用現金",
             events: [
-              { id: "d3-e1", time: "09:17", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 搭乘 ITX-青春號出發（建議車上用餐）\n🕒 約 1 小時 15 分鐘\n💰 票價：單程 9,800 韓元/人", coords: [37.5298, 126.9647] },
+              { id: "d3-e1", time: "09:21", location: "龍山站 (Yongsan)", category: "transport", note: "🚄 ITX-Cheongchun 2061｜龍山 09:21 ➔ 春川 10:40\n💺 座位：6號車 7A / 7B\n💰 票價：19,600 韓元 / 2人\n🍙 建議車上用餐", coords: [37.5298, 126.9647] },
               { id: "d3-e2", time: "10:40", location: "抵達春川站 (Chuncheon)", category: "activity", note: "📍 前往 1 號出口「Travel Island」櫃檯核對護照與資料", coords: [37.8844, 127.7171] },
-              { id: "d3-e3", time: "11:00", location: "計程車包車啟動", category: "transport", note: "🚕 準時上車（控制 5 小時）\n💰 車資：若沿用目前方案，3小時 30,000 韓元＋超時每小時 20,000 韓元，5小時推估約 70,000 韓元/車；實際價格以預約時公告為準", coords: [37.8844, 127.7171] },
+              { id: "d3-e3", time: "11:00", location: "春川外國人觀光計程車啟動", category: "transport", note: "✅ 已付款完成\n🚕 方案：私人旅遊 / 1輛 / 2人\n🕒 內容：春川旅遊景點 3 小時出租車游（11:00-14:00）\n📍 始發站與終點站：春川站\n💰 價格：34,485 韓元\n⚠️ 不含：個人物品、餐飲費、門票", coords: [37.8844, 127.7171] },
               { id: "d3-e4", time: "11:40", location: "幸福草原牧場", category: "activity", note: "🕒 停留：1.5 小時", coords: [37.9472, 127.6703] },
               { id: "d3-e5", time: "13:35", location: "馬鈴薯麵包", category: "food", note: "🥡 外帶模式（Takeout Only），停留 25 分鐘", coords: [37.9255, 127.7812] },
               { id: "d3-e6", time: "14:20", location: "明洞辣炒雞排街", map_term: "Myeongdong Dakgalbi Street", category: "food", note: "🕒 停留：1 小時\n⚠️ 提醒：15:25 前務必上車離開", tags: ["死線"], coords: [37.8797, 127.7283] },
-              { id: "d3-e7", time: "15:45", location: "抵達金裕貞站 (Gimyujeong)", map_term: "Gimyujeong Station", category: "transport", note: "🛑 包車結束，現金支付司機費用", tags: ["現金"], coords: [37.8164, 127.7135] },
-              { id: "d3-e8", time: "15:45", location: "報到緩衝（45分鐘）", category: "alert", note: "🚻 換實體票，16:10 前抵達搭乘區集合", coords: [37.8164, 127.7135] },
-              { id: "d3-e9", time: "16:30", location: "江村鐵路自行車（夕陽場）", category: "activity", note: "🕒 體驗：約 1.5 小時（騎行 + 火車 + 接駁車）", coords: [37.8164, 127.7135] },
+              { id: "d3-e7", time: "15:25", location: "交通：明洞辣炒雞排街 ➔ 金裕貞站", map_term: "Gimyujeong Station", category: "transport", note: "🚕 / 🚇 前往金裕貞鐵道自行車報到點\n⚠️ 16:10 前抵達搭乘區集合", tags: ["死線"], coords: [37.8164, 127.7135] },
+              { id: "d3-e8", time: "15:50", location: "金裕貞鐵道自行車報到緩衝", category: "alert", note: "🚻 換實體票，16:10 前抵達搭乘區集合\n✅ 預約：金裕貞鐵道自行車 / 김유정 레일바이크｜2人座 x 1", coords: [37.8164, 127.7135] },
+              { id: "d3-e9", time: "16:30", location: "金裕貞鐵道自行車（第8次）", category: "activity", note: "✅ 已預約完成\n🕒 場次：16:30 第8次\n💺 車型：2人座 x 1\n💰 金額：40,000 韓元\n🕒 體驗：約 1.5 小時（騎行 + 火車 + 接駁車）", coords: [37.8164, 127.7135] },
               { id: "d3-e10", time: "18:15", location: "地鐵移動", category: "transport", note: "🚇 京春線 [金裕貞] ➔ [南春川]（1站）", coords: [37.8164, 127.7135] },
               { id: "d3-e11", time: "18:25", location: "抵達南春川站", map_term: "Namchuncheon Station", category: "transport", note: "☕ 出站休息候車", coords: [37.8638, 127.7239] },
-              { id: "d3-e12", time: "18:56", location: "回程首爾（ITX-青春號）", category: "transport", note: "🚄 【Plan A】南春川 18:56 發 ➔ 20:11 抵達龍山\n🚄 【Plan B】南春川 19:56 發 ➔ 21:14 抵達龍山\n💰 票價：單程 9,800 韓元/人", coords: [37.5298, 126.9647] }
+              { id: "d3-e12", time: "19:06", location: "回程首爾（ITX-Cheongchun 2092）", category: "transport", note: "🚄 南春川 19:06 ➔ 龍山 20:20\n💺 座位：6號車 6A / 6B\n💰 票價：19,600 韓元 / 2人", coords: [37.5298, 126.9647] }
             ]
           },
           {

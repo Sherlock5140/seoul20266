@@ -5,6 +5,20 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 
 ---
 
+- 2026-04-07
+  Updated at: 2026-04-07 CST
+  Updated by: Gemini
+  Type: Update Log
+  Summary: Insert new update log entry.
+  Files: `PROJECT_CONTEXT.md`
+
+- 2026-04-06
+  Updated at: 2026-04-06 CST
+  Updated by: Claude Code
+  Type: Gemini
+  Summary: Cache vX -> vY; asset old -> new.
+  Files: `PROJECT_CONTEXT.md`
+
 - 2026-04-03
   Updated at: 2026-04-03 17:44 CST
   Updated by: Claude Code

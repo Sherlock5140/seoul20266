@@ -6,7 +6,7 @@ Read this file before editing code, trip data, SW cache versions, or country/map
 Primary AI editors: Claude Code, Codex, Gemini. This is the shared handoff log.
 UI source of truth: `SEOUL20266_UI_STYLE_GUIDE.md` — **only read for UI/layout/modal/share-mode tasks**.
 
-Last updated: 2026-04-03 | Stack: HTML + Vue 3 CDN + Tailwind CDN + Leaflet + SW. No build step.
+Last updated: 2026-05-03 | Stack: HTML + Vue 3 CDN + Tailwind CDN + Leaflet + SW. No build step.
 
 ## App Summary
 
@@ -70,8 +70,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v33`
-- Asset query version: `20260404b`
+- SW cache: `travel-guide-v41-20260503-1517`
+- Asset query version: `20260503a` for `data/seoul-2026.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -101,6 +101,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Codex | Seoul Day 3 booking update | Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-04-07 | Claude Code | Gemini update | Added new entry to update log as per user request. Files: PROJECT_CONTEXT.md
 - 2026-04-07 | Claude Code | Update Log | Added new entry as requested. Files: PROJECT_CONTEXT.md
-- 2026-04-07 | Gemini | Update Log | Insert new update log entry. Files: PROJECT_CONTEXT.md
-- 2026-04-06 | Claude Code | Gemini | Cache vX→vY; asset old→new. Files: PROJECT_CONTEXT.md

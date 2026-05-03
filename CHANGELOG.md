@@ -7,6 +7,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 
 - 2026-05-03
   Updated at: 2026-05-03 CST
+  Updated by: Codex
+  Type: Data
+  Summary: Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
   Updated by: Claude Code
   Type: Update
   Summary: Added new update log entry as per Gemini CLI request.

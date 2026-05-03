@@ -24,7 +24,9 @@ Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 | `services/storage.js` | localStorage read/write, trip index (189 lines) |
 | `services/map.js` | Leaflet map + external map links |
 | `services/rates.js` | Exchange-rate storage and refresh |
-| `data/seoul-2026.js` | Built-in trips catalog (Seoul + HK) |
+| `data/trip-catalog.js` | Built-in trip catalog registry |
+| `data/seoul-2026.js` | Seoul built-in trip only |
+| `data/hongkong-2026.js` | Hong Kong built-in trip only |
 | `sw.js` | Service worker cache shell |
 
 ## Code Navigation（Grep 前先查這裡）
@@ -70,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v43-20260503-1542`
-- Asset query version: `20260503c` for `data/seoul-2026.js`, `scripts/app.js`, and `services/storage.js`; other shell assets keep existing query versions
+- SW cache: `travel-guide-v44-20260503-1550`
+- Asset query version: `20260503d` for trip data files; `20260503c` for `scripts/app.js` and `services/storage.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -84,7 +86,7 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 1. No `GLOBAL` country code. New country → update `scripts/config.js` first.
 2. Changed frontend JS/CSS → update `index.html` asset version AND `sw.js` cache version + shell list.
 3. Keep localStorage backward compatibility unless user explicitly asks to break it.
-4. Don't assume `data/seoul-2026.js` only contains Seoul.
+4. Keep each built-in trip in its own data file; register it through `data/trip-catalog.js`.
 5. UI/modal/map/share/cache/data change → update this file.
 6. One log entry per session/commit. Max 3 entries here; older → `CHANGELOG.md`.
 7. **Timestamp:** run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'` before writing — never guess.
@@ -101,6 +103,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Codex | Split built-in trip data | Moved Hong Kong into its own data file and added a shared trip catalog registry so each travel data file stays independent. Files: data/trip-catalog.js, data/seoul-2026.js, data/hongkong-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Built-in trip data refresh | Added Seoul catalog version sync so stale localStorage copies refresh from the built-in schedule and bumped app/storage/data cache. Files: data/seoul-2026.js, scripts/app.js, services/storage.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Seoul Day 3 subway backup times | Added 18:30 and 18:50 Gimyujeong to Namchuncheon train options and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | Seoul Day 3 booking update | Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

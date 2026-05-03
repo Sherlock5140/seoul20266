@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v43-20260503-1542';
+const CACHE_NAME = 'travel-guide-v44-20260503-1550';
 const CDN_CACHE  = 'cdn-assets-v2';
 
 const APP_SHELL = [
@@ -16,7 +16,9 @@ const APP_SHELL = [
   './services/storage.js?v=20260503c',
   './services/rates.js?v=20260404b',
   './services/map.js?v=20260402k',
-  './data/seoul-2026.js?v=20260503c'
+  './data/trip-catalog.js?v=20260503d',
+  './data/seoul-2026.js?v=20260503d',
+  './data/hongkong-2026.js?v=20260503d'
 ];
 
 // Versioned CDN URLs — safe to pre-cache at install time

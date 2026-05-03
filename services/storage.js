@@ -1,4 +1,4 @@
-(function attachSeoul2026Storage(global) {
+(function attachTravelGuideStorage(global) {
   const normalizeCountryCode = (countryCode) => {
     if (countryCode === 'GLOBAL') return 'HK';
     return countryCode || 'KR';
@@ -179,7 +179,7 @@
     return fallbackTripId;
   };
 
-  global.Seoul2026Storage = {
+  const storage = {
     createTripState,
     deleteTripState,
     getActiveTripId,
@@ -188,4 +188,6 @@
     saveTripState,
     setActiveTripId
   };
+  global.TravelGuideStorage = storage;
+  global.Seoul2026Storage = storage;
 })(window);

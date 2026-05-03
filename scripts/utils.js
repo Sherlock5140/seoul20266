@@ -1,4 +1,4 @@
-(function attachSeoul2026Utils(global) {
+(function attachTravelGuideUtils(global) {
   const clone = (value) => JSON.parse(JSON.stringify(value));
 
   const escapeHtml = (text) => {
@@ -147,7 +147,7 @@
     return new TextDecoder().decode(result);
   };
 
-  global.Seoul2026Utils = {
+  const utils = {
     clone,
     escapeHtml,
     debounce,
@@ -157,4 +157,6 @@
     compressToBase64Url,
     decompressFromBase64Url
   };
+  global.TravelGuideUtils = utils;
+  global.Seoul2026Utils = utils;
 })(window);

@@ -1,4 +1,4 @@
-(function attachSeoul2026Config(global) {
+(function attachTravelGuideConfig(global) {
   const hostname = window.location.hostname;
   const isLocalPreview = hostname === 'localhost'
     || hostname === '127.0.0.1'
@@ -6,7 +6,7 @@
     || /^10\./.test(hostname)
     || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
 
-  global.Seoul2026Config = {
+  const config = {
     APP_NAME: 'Travel Guide',
     IS_LOCAL_PREVIEW: isLocalPreview,
     DEBUG_ENABLED: isLocalPreview || new URLSearchParams(window.location.search).get('debug') === '1',
@@ -80,4 +80,6 @@
     REGEX_NEWLINE: /\n/g,
     REGEX_KEYWORDS: /(死線|風險|關鍵動作|Plan A|Plan B|SOP)/g
   };
+  global.TravelGuideConfig = config;
+  global.Seoul2026Config = config;
 })(window);

@@ -1,7 +1,7 @@
-(async function bootSeoul2026App(global) {
+(async function bootTravelGuideApp(global) {
   const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
-  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, COUNTRY_CODE_ALIASES, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.Seoul2026Config;
-  const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml, compressToBase64Url, decompressFromBase64Url } = global.Seoul2026Utils;
+  const { APP_NAME, DEBUG_ENABLED, APP_VERSION, CATEGORY_CONFIG, COUNTRY_CONFIG, COUNTRY_CODE_ALIASES, DOUBLE_TAP_THRESHOLD_MS, IS_LOCAL_PREVIEW, REGEX_NEWLINE, REGEX_KEYWORDS } = global.TravelGuideConfig;
+  const { clone, copyText, debounce, decodeBase64Url, encodeBase64Url, escapeHtml, compressToBase64Url, decompressFromBase64Url } = global.TravelGuideUtils;
   const {
     createTripState,
     deleteTripState,
@@ -10,10 +10,10 @@
     loadTripState,
     saveTripState,
     setActiveTripId
-  } = global.Seoul2026Storage;
-  const { formatConvertedValue, getStoredRateState, persistRateDirection, persistRates, refreshRates } = global.Seoul2026Rates;
-  const { createMapService } = global.Seoul2026Map;
-  const tripCatalog = global.Seoul2026TripData;
+  } = global.TravelGuideStorage;
+  const { formatConvertedValue, getStoredRateState, persistRateDirection, persistRates, refreshRates } = global.TravelGuideRates;
+  const { createMapService } = global.TravelGuideMap;
+  const tripCatalog = global.TravelGuideTripData;
 
   const showDebugOverlay = (payload) => {
     if (!DEBUG_ENABLED) return;

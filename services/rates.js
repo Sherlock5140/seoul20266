@@ -1,4 +1,4 @@
-(function attachSeoul2026Rates(global) {
+(function attachTravelGuideRates(global) {
   const RATE_KEYS = {
     direction: 'travelguide_rate_direction',
     exchangeRates: 'travelguide_exchange_rates',
@@ -139,11 +139,13 @@
     throw lastError;
   };
 
-  global.Seoul2026Rates = {
+  const rates = {
     formatConvertedValue,
     getStoredRateState,
     persistRateDirection,
     persistRates,
     refreshRates
   };
+  global.TravelGuideRates = rates;
+  global.Seoul2026Rates = rates;
 })(window);

@@ -1,4 +1,4 @@
-(function attachSeoul2026Map(global) {
+(function attachTravelGuideMap(global) {
   const createMapService = ({
     categoryConfig,
     escapeHtml,
@@ -372,5 +372,7 @@
     };
   };
 
-  global.Seoul2026Map = { createMapService };
+  const mapApi = { createMapService };
+  global.TravelGuideMap = mapApi;
+  global.Seoul2026Map = mapApi;
 })(window);

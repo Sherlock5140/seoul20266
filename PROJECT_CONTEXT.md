@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v44-20260503-1550`
-- Asset query version: `20260503d` for trip data files; `20260503c` for `scripts/app.js` and `services/storage.js`; other shell assets keep existing query versions
+- SW cache: `travel-guide-v45-20260503-1557`
+- Asset query version: `20260503e` for Seoul trip data, `20260503d` for other trip data files; `20260503c` for `scripts/app.js` and `services/storage.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -103,6 +103,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Codex | Seoul Day 2 exchange option | Added Myeongdong Central exchange as the priority 14:00-15:30 gap option and bumped Seoul data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Split built-in trip data | Moved Hong Kong into its own data file and added a shared trip catalog registry so each travel data file stays independent. Files: data/trip-catalog.js, data/seoul-2026.js, data/hongkong-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Built-in trip data refresh | Added Seoul catalog version sync so stale localStorage copies refresh from the built-in schedule and bumped app/storage/data cache. Files: data/seoul-2026.js, scripts/app.js, services/storage.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | Seoul Day 3 subway backup times | Added 18:30 and 18:50 Gimyujeong to Namchuncheon train options and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

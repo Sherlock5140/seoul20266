@@ -9,6 +9,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Updated at: 2026-05-03 CST
   Updated by: Codex
   Type: Data
+  Summary: Added 18:30 and 18:50 Gimyujeong to Namchuncheon train options and bumped data cache.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
+  Type: Data
   Summary: Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 

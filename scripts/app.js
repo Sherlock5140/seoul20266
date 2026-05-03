@@ -141,6 +141,11 @@
     )).sort((a, b) => a - b)
   );
   const schedulesMatch = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || []);
+  const getTemplateCatalogVersion = (tripId) => String(getTripTemplate(tripId)?.meta?.catalogVersion || '');
+  const withCatalogVersion = (tripId, meta = {}) => {
+    const catalogVersion = getTemplateCatalogVersion(tripId);
+    return catalogVersion ? { ...meta, catalogVersion } : meta;
+  };
   const shouldRestoreTemplateMeta = (tripId, state, templateTrip) => {
     if (!tripCatalog.trips[tripId] || !templateTrip) return false;
     const normalizedSavedCountry = normalizeCountryCode(state?.meta?.country || '');
@@ -156,14 +161,32 @@
   };
   const normalizeCatalogTripState = (tripId, state = {}) => {
     const templateTrip = getTripTemplate(tripId);
-    if (!shouldRestoreTemplateMeta(tripId, state, templateTrip)) return state;
+    const templateCatalogVersion = String(templateTrip?.meta?.catalogVersion || '');
+    const savedCatalogVersion = String(state?.meta?.catalogVersion || '');
+    const shouldRefreshSchedule = Boolean(
+      tripCatalog.trips[tripId]
+      && templateCatalogVersion
+      && savedCatalogVersion !== templateCatalogVersion
+    );
+    const nextState = shouldRefreshSchedule
+      ? {
+          ...state,
+          schedule: clone(templateTrip?.schedule || createBlankSchedule()),
+          meta: {
+            ...state.meta,
+            catalogVersion: templateCatalogVersion
+          }
+        }
+      : state;
+    if (!shouldRestoreTemplateMeta(tripId, nextState, templateTrip)) return nextState;
     return {
-      ...state,
+      ...nextState,
       meta: {
-        ...state.meta,
+        ...nextState.meta,
         title: templateTrip?.meta?.title || tripId,
         country: normalizeCountryCode(templateTrip?.meta?.country || 'KR'),
-        schemaVersion: state?.meta?.schemaVersion || 1
+        schemaVersion: nextState?.meta?.schemaVersion || 1,
+        catalogVersion: templateCatalogVersion || nextState?.meta?.catalogVersion || ''
       }
     };
   };
@@ -228,7 +251,13 @@
       const initialTripId = sharedTripId || resolveTripId(requestedTripId || getActiveTripId(tripCatalog.defaultTripId));
       const activeTripId = ref(initialTripId);
       const template = getTripTemplate(activeTripId.value);
-      const savedTripData = sharedTripSnapshot || normalizeCatalogTripState(activeTripId.value, loadTripState(activeTripId.value));
+      const storedTripData = loadTripState(activeTripId.value);
+      const savedTripData = sharedTripSnapshot || normalizeCatalogTripState(activeTripId.value, storedTripData);
+      const shouldPersistInitialCatalogRefresh = Boolean(
+        !sharedTripSnapshot
+        && savedTripData.meta?.catalogVersion
+        && storedTripData.meta?.catalogVersion !== savedTripData.meta.catalogVersion
+      );
       const isShareMode = ref(Boolean(SHARE_VIEW_ENABLED && (requestedTripId || sharedTripSnapshot?.tripId)));
       const isReadOnlyMode = computed(() => isShareMode.value);
 
@@ -407,10 +436,10 @@
             tripId: activeTripId.value,
             notes: userNotes.value,
             schedule: stripScheduleShareMeta(schedule.value),
-            meta: {
+            meta: withCatalogVersion(activeTripId.value, {
               title: currentTripTitle.value,
               country: countrySetting.value
-            }
+            })
           });
           if (!didPersist) throw new Error('Trip state persistence failed');
           saveStatus.value = 'Saved';
@@ -523,10 +552,10 @@
             ? {
                 tripId,
                 schedule: stripScheduleShareMeta(schedule.value),
-                meta: {
+                meta: withCatalogVersion(tripId, {
                   title: currentTripTitle.value,
                   country: countrySetting.value
-                }
+                })
               }
             : normalizeCatalogTripState(tripId, loadTripState(tripId));
           const sourceSchedule = sourceState.schedule || sourceTemplate.schedule || createBlankSchedule();
@@ -551,7 +580,8 @@
             meta: {
               title: sourceState.meta?.title || sourceTemplate.meta?.title || tripId,
               country: sourceState.meta?.country || sourceTemplate.meta?.country || 'KR',
-              schemaVersion: sourceState.meta?.schemaVersion || 1
+              schemaVersion: sourceState.meta?.schemaVersion || 1,
+              catalogVersion: sourceState.meta?.catalogVersion || sourceTemplate.meta?.catalogVersion || ''
             }
           };
 
@@ -705,7 +735,12 @@
         isApplyingTripState = true;
         invalidateShareLink(tripId);
         const nextTemplate = getTripTemplate(tripId);
-        const nextSaved = normalizeCatalogTripState(tripId, loadTripState(tripId));
+        const nextStored = loadTripState(tripId);
+        const nextSaved = normalizeCatalogTripState(tripId, nextStored);
+        const shouldPersistCatalogRefresh = Boolean(
+          nextSaved.meta?.catalogVersion
+          && nextStored.meta?.catalogVersion !== nextSaved.meta.catalogVersion
+        );
         activeTripId.value = tripId;
         setActiveTripId(tripId);
         currentTripTitle.value = nextSaved.meta.title || nextTemplate.meta.title;
@@ -726,6 +761,7 @@
           mapService.renderMarkers();
           resetMap();
           isApplyingTripState = false;
+          if (shouldPersistCatalogRefresh) persistTrip();
           warmShareLink(tripId);
         });
       };
@@ -840,11 +876,11 @@
           tripId,
           notes: existing.notes || '',
           schedule: clone(existing.schedule ?? templateTrip.schedule ?? createBlankSchedule()),
-          meta: {
+          meta: withCatalogVersion(tripId, {
             title,
             country: existing.meta?.country || templateTrip.meta?.country || 'KR',
             schemaVersion: existing.meta?.schemaVersion || templateTrip.meta?.schemaVersion || 1
-          }
+          })
         });
         if (!renamed) {
           setTripNotice('error', '更新名稱失敗，請確認儲存權限');
@@ -1217,7 +1253,7 @@
         try {
           validateSchedule();
           isHydrating = false;
-          if (!isReadOnlyMode.value && (!savedTripData.schedule || !savedTripData.meta.title)) {
+          if (!isReadOnlyMode.value && (shouldPersistInitialCatalogRefresh || !savedTripData.schedule || !savedTripData.meta.title)) {
             persistTrip();
           }
           refreshTripSummaries();

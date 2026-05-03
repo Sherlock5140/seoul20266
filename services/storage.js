@@ -55,7 +55,8 @@
   const normalizeTripMeta = (tripId, meta = {}) => ({
     title: meta?.title || tripId,
     country: normalizeCountryCode(meta?.country),
-    schemaVersion: meta?.schemaVersion || 1
+    schemaVersion: meta?.schemaVersion || 1,
+    catalogVersion: meta?.catalogVersion || ''
   });
 
   const loadTripState = (tripId) => {
@@ -71,7 +72,8 @@
       meta: {
         title: stored?.meta?.title || '',
         country: normalizeCountryCode(stored?.meta?.country || ''),
-        schemaVersion: stored?.meta?.schemaVersion || 1
+        schemaVersion: stored?.meta?.schemaVersion || 1,
+        catalogVersion: stored?.meta?.catalogVersion || ''
       }
     };
   };

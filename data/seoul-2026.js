@@ -7,6 +7,7 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
+          catalogVersion: '20260503c',
           dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 航司通知更新版｜Day6冷麵整合版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',

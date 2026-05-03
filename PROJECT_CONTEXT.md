@@ -101,6 +101,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Claude Code | Update | Added new update log entry as per Gemini CLI request. Files: PROJECT_CONTEXT.md
 - 2026-05-03 | Claude Code | Gemini CLI Request | Inserted new log entry as per user request. Files: PROJECT_CONTEXT.md
 - 2026-05-03 | Codex | Seoul Day 3 booking update | Corrected 06/03 ITX, Chuncheon taxi, rail bike booking times/prices and bumped data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-04-07 | Claude Code | Gemini update | Added new entry to update log as per user request. Files: PROJECT_CONTEXT.md

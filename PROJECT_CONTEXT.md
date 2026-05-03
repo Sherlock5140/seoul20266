@@ -18,15 +18,15 @@ Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Single-page UI (1262 lines) |
+| `index.html` | Single-page UI (1547 lines) |
 | `scripts/config.js` | Country config, labels, map provider, currency (83 lines) |
-| `scripts/app.js` | Vue app logic (1056 lines) — see Code Nav below |
-| `services/storage.js` | localStorage read/write, trip index (189 lines) |
-| `services/map.js` | Leaflet map + external map links |
-| `services/rates.js` | Exchange-rate storage and refresh |
-| `data/trip-catalog.js` | Built-in trip catalog registry |
-| `data/seoul-2026.js` | Seoul built-in trip only |
-| `data/hongkong-2026.js` | Hong Kong built-in trip only |
+| `scripts/app.js` | Vue app logic (1481 lines) — see Code Nav below |
+| `services/storage.js` | localStorage read/write, trip index (191 lines) |
+| `services/map.js` | Leaflet map + external map links (376 lines) |
+| `services/rates.js` | Exchange-rate storage and refresh (149 lines) |
+| `data/trip-catalog.js` | Built-in trip catalog registry (15 lines) |
+| `data/seoul-2026.js` | Seoul built-in trip only (162 lines) |
+| `data/hongkong-2026.js` | Hong Kong built-in trip only (92 lines) |
 | `sw.js` | Service worker cache shell |
 
 ## Code Navigation（Grep 前先查這裡）
@@ -35,22 +35,22 @@ Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
 
 | 區域 | 行號 |
 |------|------|
-| App root (#app) | 1063 |
-| Header JSX (.glass-header) | 1070 |
-| Main content (#timeline-container) | 1104 |
-| Notebook Modal | 1201 |
-| Settings Modal | 1217 |
-| Trip selector | 1327 |
-| Rates Modal | 1405 |
-| Rate display card | 1419 |
+| App root (#app) | 1081 |
+| Header JSX (.glass-header) | 1088 |
+| Main content (#timeline-container) | 1122 |
+| Notebook Modal | 1238 |
+| Settings Modal | 1254 |
+| Trip selector | 1303 |
+| Rates Modal | 1442 |
+| Rate display card | 1459 |
 
 **services/**
 
 | 函式 | 行號 |
 |------|------|
 | `createMapService()` | map.js:2 |
-| `initMap()` | map.js:174 |
-| `ensureMarkers()` | map.js:82 |
+| `initMap()` | map.js:204 |
+| `ensureMarkers()` | map.js:113 |
 | `loadTripState()` | storage.js:61 |
 | `saveTripState()`（高風險）| storage.js:135 |
 | `getStoredRateState()` | rates.js:45 |
@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v46-20260503-1604`
-- Asset query version: `20260503f` for Seoul trip data and `scripts/app.js`; `20260503d` for other trip data files; `20260503c` for `services/storage.js`; other shell assets keep existing query versions
+- SW cache: `travel-guide-v47-20260503-1619`
+- Asset query version: `20260503g` for `services/map.js`; `20260503f` for Seoul trip data and `scripts/app.js`; `20260503d` for other trip data files; `20260503c` for `services/storage.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Codex | App audit fixes | Verified data/cache integrity, refreshed code navigation, and taught map markers to include future `spots[].coords` points. Files: services/map.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Area spots UI | Added optional event `spots` UI for area-based itinerary cards and converted Seongsu shopping/dinner planning into compact spot lists. Files: data/seoul-2026.js, scripts/app.js, index.html, sw.js, PROJECT_CONTEXT.md, SEOUL20266_UI_STYLE_GUIDE.md, CHANGELOG.md
 - 2026-05-03 | Codex | Seoul Day 2 exchange option | Added Myeongdong Central exchange as the priority 14:00-15:30 gap option and bumped Seoul data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | Split built-in trip data | Moved Hong Kong into its own data file and added a shared trip catalog registry so each travel data file stays independent. Files: data/trip-catalog.js, data/seoul-2026.js, data/hongkong-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

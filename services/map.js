@@ -31,7 +31,38 @@
       })
       .map(([, marker]) => marker);
     const isAirportEvent = (event) => /機場|airport/i.test(`${event?.location || ''} ${event?.note || ''}`);
-    const getMapEvents = () => (getDisplayEvents?.() || []).filter((event) => event.coords);
+    const hasValidCoords = (coords) => Array.isArray(coords)
+      && coords.length === 2
+      && coords.every((value) => typeof value === 'number' && Number.isFinite(value));
+    const getEventMapPoints = (event) => {
+      const points = [];
+      if (hasValidCoords(event?.coords)) {
+        points.push({
+          id: event.id,
+          parentEventId: event.id,
+          coords: event.coords,
+          category: event.category,
+          location: event.location,
+          note: event.note
+        });
+      }
+      (event?.spots || []).forEach((spot, index) => {
+        if (!hasValidCoords(spot?.coords)) return;
+        points.push({
+          id: `${event.id}::spot-${index}`,
+          parentEventId: event.id,
+          coords: spot.coords,
+          category: spot.type || event.category,
+          location: spot.name,
+          note: spot.note
+        });
+      });
+      return points;
+    };
+    const getMapEvents = () => (getDisplayEvents?.() || []).flatMap(getEventMapPoints);
+    const getScheduleMapPoints = () => (getSchedule?.() || []).flatMap((day) => (
+      (day.events || []).flatMap(getEventMapPoints)
+    ));
     const getDistanceInKm = (fromCoords, toCoords) => {
       if (!Array.isArray(fromCoords) || !Array.isArray(toCoords)) return 0;
       const [fromLat, fromLng] = fromCoords;
@@ -83,39 +114,38 @@
       if (!map) return;
 
       const scheduleKeys = new Set();
-      getSchedule().forEach((day) => {
-        day.events.forEach((event) => {
-          const markerKey = getMarkerKey(event.id);
-          scheduleKeys.add(markerKey);
-          if (!event.coords || markersMap.has(markerKey)) return;
+      getScheduleMapPoints().forEach((event) => {
+        const markerKey = getMarkerKey(event.id);
+        scheduleKeys.add(markerKey);
+        if (!event.coords || markersMap.has(markerKey)) return;
 
-          const config = categoryConfig[event.category] || categoryConfig.default;
-          const iconHtml = `<div class="custom-marker-pin" style="background-color: ${config.markerColor};"><div class="marker-icon-inner"></div></div>`;
-          const icon = L.divIcon({
-            className: 'custom-marker',
-            html: iconHtml,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -36]
-          });
-
-          const marker = L.marker(event.coords, { icon });
-          marker.eventId = event.id;
-          marker.tripScopedId = markerKey;
-          marker.bindPopup(`
-            <div class="font-sans p-1 min-w-[120px]">
-              <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${escapeHtml(event.category)}</div>
-              <div class="font-bold text-sm leading-tight text-[#2F2F2D]">${escapeHtml(event.location)}</div>
-            </div>
-          `, {
-            closeButton: false,
-            className: 'rounded-xl shadow-lg border-none',
-            offset: [0, -5],
-            autoPan: false
-          });
-          marker.on('click', () => focusEvent(event.id));
-          markersMap.set(markerKey, marker);
+        const config = categoryConfig[event.category] || categoryConfig.default;
+        const iconHtml = `<div class="custom-marker-pin" style="background-color: ${config.markerColor};"><div class="marker-icon-inner"></div></div>`;
+        const icon = L.divIcon({
+          className: 'custom-marker',
+          html: iconHtml,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -36]
         });
+
+        const marker = L.marker(event.coords, { icon });
+        marker.eventId = event.id;
+        marker.parentEventId = event.parentEventId || event.id;
+        marker.tripScopedId = markerKey;
+        marker.bindPopup(`
+          <div class="font-sans p-1 min-w-[120px]">
+            <div class="text-[9px] uppercase font-bold text-gray-400 mb-1 tracking-widest">${escapeHtml(event.category)}</div>
+            <div class="font-bold text-sm leading-tight text-[#2F2F2D]">${escapeHtml(event.location)}</div>
+          </div>
+        `, {
+          closeButton: false,
+          className: 'rounded-xl shadow-lg border-none',
+          offset: [0, -5],
+          autoPan: false
+        });
+        marker.on('click', () => focusEvent(marker.parentEventId));
+        markersMap.set(markerKey, marker);
       });
 
       markersMap.forEach((marker, markerKey) => {
@@ -238,29 +268,31 @@
 
     const highlightEvent = (eventId, event) => {
       if (!map) return;
-      const targetMarker = markersMap.get(getMarkerKey(eventId));
+      const targetMarkers = Array.from(markersMap.values()).filter((marker) => marker.parentEventId === eventId);
+      const targetMarker = markersMap.get(getMarkerKey(eventId)) || targetMarkers[0];
       if (targetMarker && !map.hasLayer(targetMarker)) {
         targetMarker.addTo(map);
       }
       markersMap.forEach((marker, markerId) => {
         const icon = marker.getElement();
         if (!icon) return;
-        if (event && event.coords && markerId === getMarkerKey(eventId)) {
+        if (event && marker.parentEventId === eventId) {
           icon.classList.add('active');
-          marker.openPopup();
+          if (marker === targetMarker) marker.openPopup();
         } else {
           icon.classList.remove('active');
           marker.closePopup();
         }
       });
-      if (event?.coords) {
+      const targetCoords = event?.coords || event?.spots?.find((spot) => hasValidCoords(spot?.coords))?.coords;
+      if (targetCoords) {
         const targetZoom = Math.max(map.getZoom() || 0, 16);
         // Push pin tip to ~65% from top so the popup (opens ~80px above) fits within the map.
         // subtract([0, D]) shifts center north → pin tip lands D px south of center.
         const mapEl = document.getElementById('map');
         const mapH = mapEl ? mapEl.getBoundingClientRect().height : (window.innerWidth < 768 ? 280 : 500);
         const offsetPx = Math.round(0.15 * mapH);
-        const targetPoint = map.project(event.coords, targetZoom).subtract([0, offsetPx]);
+        const targetPoint = map.project(targetCoords, targetZoom).subtract([0, offsetPx]);
         map.flyTo(map.unproject(targetPoint, targetZoom), targetZoom, { animate: true, duration: 1.2, easeLinearity: 0.25 });
       }
     };

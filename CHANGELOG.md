@@ -8,6 +8,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex
+  Type: Data Architecture
+  Summary: Moved Hong Kong into its own data file and added a shared trip catalog registry so each travel data file stays independent.
+  Files: `data/trip-catalog.js`, `data/seoul-2026.js`, `data/hongkong-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
   Type: Data, Cache, UX
   Summary: Added Seoul catalog version sync so stale localStorage copies refresh from the built-in schedule and bumped app/storage/data cache.
   Files: `data/seoul-2026.js`, `scripts/app.js`, `services/storage.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`

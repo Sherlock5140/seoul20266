@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v45-20260503-1557';
+const CACHE_NAME = 'travel-guide-v46-20260503-1604';
 const CDN_CACHE  = 'cdn-assets-v2';
 
 const APP_SHELL = [
@@ -12,12 +12,12 @@ const APP_SHELL = [
   './icon-512.png',
   './scripts/config.js?v=20260402k',
   './scripts/utils.js?v=20260402k',
-  './scripts/app.js?v=20260503c',
+  './scripts/app.js?v=20260503f',
   './services/storage.js?v=20260503c',
   './services/rates.js?v=20260404b',
   './services/map.js?v=20260402k',
   './data/trip-catalog.js?v=20260503d',
-  './data/seoul-2026.js?v=20260503e',
+  './data/seoul-2026.js?v=20260503f',
   './data/hongkong-2026.js?v=20260503d'
 ];
 

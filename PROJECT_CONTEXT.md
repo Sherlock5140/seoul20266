@@ -72,14 +72,15 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v45-20260503-1557`
-- Asset query version: `20260503e` for Seoul trip data, `20260503d` for other trip data files; `20260503c` for `scripts/app.js` and `services/storage.js`; other shell assets keep existing query versions
+- SW cache: `travel-guide-v46-20260503-1604`
+- Asset query version: `20260503f` for Seoul trip data and `scripts/app.js`; `20260503d` for other trip data files; `20260503c` for `services/storage.js`; other shell assets keep existing query versions
 
 ## Data Shapes
 
 **Trip:** `tripId`, `meta.title`, `meta.country`, `schedule[]`
 **Day:** `date`, `title`, `lunch/lunchId`, `tea/teaId`, `dinner/dinnerId`, `notice?`, `events[]`
-**Event:** `id`, `time`, `location`, `map_term?`, `category`, `note`, `tags?`, `coords?`
+**Event:** `id`, `time`, `location`, `map_term?`, `category`, `note`, `tags?`, `coords?`, `spots?`
+**Spot:** `name`, `type?`, `priority?`, `note?`, `coords?`
 
 ## Rules
 
@@ -103,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
+- 2026-05-03 | Codex | Area spots UI | Added optional event `spots` UI for area-based itinerary cards and converted Seongsu shopping/dinner planning into compact spot lists. Files: data/seoul-2026.js, scripts/app.js, index.html, sw.js, PROJECT_CONTEXT.md, SEOUL20266_UI_STYLE_GUIDE.md, CHANGELOG.md
 - 2026-05-03 | Codex | Seoul Day 2 exchange option | Added Myeongdong Central exchange as the priority 14:00-15:30 gap option and bumped Seoul data cache. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-03 | Codex | Split built-in trip data | Moved Hong Kong into its own data file and added a shared trip catalog registry so each travel data file stays independent. Files: data/trip-catalog.js, data/seoul-2026.js, data/hongkong-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | Built-in trip data refresh | Added Seoul catalog version sync so stale localStorage copies refresh from the built-in schedule and bumped app/storage/data cache. Files: data/seoul-2026.js, scripts/app.js, services/storage.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

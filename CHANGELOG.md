@@ -8,6 +8,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex
+  Type: Data, Cache, UX
+  Summary: Added Seoul catalog version sync so stale localStorage copies refresh from the built-in schedule and bumped app/storage/data cache.
+  Files: `data/seoul-2026.js`, `scripts/app.js`, `services/storage.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
   Type: Data
   Summary: Added 18:30 and 18:50 Gimyujeong to Namchuncheon train options and bumped data cache.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`

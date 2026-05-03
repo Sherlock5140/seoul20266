@@ -237,6 +237,18 @@ Header 必須符合：
 - day title 與 crowd badge 次之
 - 摘要要易讀，不可壓太窄
 
+### Area Spots
+
+區域型行程（例如聖水洞、弘大、明洞、加山 Outlet）可以在單一 timeline event 內使用 `spots` 清單。
+
+規則：
+
+- 外層 event 仍代表時間與區域中心，避免把一個區域拆成過多時間卡片
+- `spots` 用緊湊清單呈現店家、候補點或餐廳方案
+- priority chip 可標示 `優先`、`候補`、`Plan A`、`Plan B`
+- 沒有 `spots` 的既有單點行程維持原本 UI
+- 不要為未確認店家硬塞精準座標；可先使用區域中心與候補說明
+
 ### Settings Modal
 
 來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L1029) 之後。
@@ -412,6 +424,7 @@ UI 上的 `地圖區域`：
   - better desktop readable width
   - mobile sheet proportions instead of desktop shrinkage
 - Share settings and normal settings should still feel like the same product, but with different interaction permissions.
+- Timeline cards now support optional `spots` for area-based itinerary planning; this should stay compact and subordinate to the main event card.
 
 ## 15. Update Notes
 

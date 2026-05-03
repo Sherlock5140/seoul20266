@@ -6,7 +6,7 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
-          catalogVersion: '20260503e',
+          catalogVersion: '20260503f',
           dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 航司通知更新版｜Day6冷麵整合版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',
@@ -93,8 +93,15 @@
               { id: "d5-e5", time: "14:10", location: "交通：夢碳 ➔ 新羅免稅店首爾店", category: "transport", note: "🚕 【首選】計程車：約 15-25 分鐘 / 8,000-12,000 韓元\n🚇 【備案】地鐵＋接駁車\n   1. 先搭地鐵前往 3號線 [東國大入口站 / Dongguk University]\n   2. 由 5 號出口出站\n   3. 步行前往新羅酒店正門（Hotel Shilla main gate）\n   4. 轉搭新羅酒店接駁車前往免稅店\n   5. 全程時間需另加出站步行、等車與接駁時間，依現場狀況浮動\n💡 建議：若是 4 人同行且有明確購物時段，仍以計程車最省事", coords: [37.5562, 127.0084] },
               { id: "d5-e6", time: "14:40", location: "新羅免稅店首爾店 / 彈性購物（4 人）", category: "shopping", note: "🕒 預估停留：約 2 小時", coords: [37.5562, 127.0084] },
               { id: "d5-e7", time: "16:40", location: "交通：新羅免稅店 ➔ 聖水", category: "transport", note: "🚕 【首選】計程車：約 20-30 分鐘 / 12,000-16,000 韓元\n🚇 【備案】3號線 [東國大入口] ➔ [乙支路3街]，轉 2號線 ➔ [聖水]\n🕒 地鐵總時間約 35-40 分鐘（含轉乘步行）", coords: [37.5445, 127.0560] },
-              { id: "d5-e8", time: "17:10", location: "聖水洞逛街（4 人）", category: "shopping", note: "🕒 可用時間約 1 小時 20 分（晚餐前）", coords: [37.5445, 127.0560] },
-              { id: "d5-e9", time: "18:30", location: "晚餐決策：【Plan A / B 二選一】", category: "food", note: "🍽️ 【Plan A】烤黨 聖水店\n🥣 【Plan B】聖水馬鈴薯排骨湯\n🕒 預估停留：約 1.5 小時", coords: [37.5428, 127.0543] },
+              { id: "d5-e8", time: "17:10", location: "聖水洞逛街（4 人）", category: "shopping", note: "🕒 可用時間約 1 小時 20 分（晚餐前）\n💡 區域型行程：店家可依現場距離與體力排序，不需硬塞成多個時間點", coords: [37.5445, 127.0560], spots: [
+                { name: "聖水主街 / 品牌快閃區", type: "shopping", priority: "優先", note: "先逛主區，作為晚餐前主要動線" },
+                { name: "選物店候補", type: "shopping", priority: "候補", note: "依現場距離補入實際店名" },
+                { name: "咖啡甜點候補", type: "food", priority: "候補", note: "若逛街節奏提前，作為短休息點" }
+              ] },
+              { id: "d5-e9", time: "18:30", location: "晚餐決策：【Plan A / B 二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5428, 127.0543], spots: [
+                { name: "烤黨 聖水店", type: "food", priority: "Plan A", note: "燒肉優先方案" },
+                { name: "聖水馬鈴薯排骨湯", type: "food", priority: "Plan B", note: "排骨湯備案" }
+              ] },
               { id: "d5-e10", time: "20:00", location: "晚餐結束後於聖水周邊短暫整理 / 補逛", category: "shopping", note: "🕒 約 30-40 分鐘", coords: [37.5445, 127.0560] },
               { id: "d5-e11", time: "20:40", location: "交通：聖水 ➔ 龍山 / 弘大（各自回防）", category: "transport", note: "🚇 主團【首選】2號線 [聖水] ➔ [往十里]，轉 京義中央線 ➔ [龍山]\n🕒 主團約 35-45 分鐘（含轉乘與步行）\n🚕 主團【備案】計程車：若路況順暢再考慮\n🚇 隊友【首選】2號線 [聖水] ➔ [弘大入口] 直達\n🕒 隊友約 35-40 分鐘\n💡 原則：週五晚間跨江回程，地鐵時間最穩", coords: [37.5293, 126.9654] }
             ]

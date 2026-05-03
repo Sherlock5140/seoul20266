@@ -1002,6 +1002,10 @@
         if (tag === '現金') return 'bg-s-green/20 text-s-green';
         return 'bg-m-border text-m-sub';
       };
+      const getSpotPriorityClass = (priority) => {
+        const normalized = String(priority || '').toLowerCase();
+        return /優先|plan a|必/.test(normalized) ? 'is-primary' : '';
+      };
       const extractCrowdBadge = (title) => {
         const match = String(title || '').match(/(👥\s*.+)$/);
         return match ? match[1] : '';
@@ -1419,6 +1423,7 @@
         copyText,
         copyEventLocation,
         copiedEventId,
+        getSpotPriorityClass,
         shareLoading,
         shareCopied,
         shareLinkValue,

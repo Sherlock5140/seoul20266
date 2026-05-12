@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v52-20260512-1338`
-- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512d` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
+- SW cache: `travel-guide-v53-20260512-1341`
+- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512e` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-12 | Codex | Day 6 route rewrite | Rebuilt Seoul Day 6 around Anguk/Ikseondong, supermarket shopping, and an early Hongdae dinner with teammate airport-exit timing aligned to Nabi Hostel luggage pickup and AREX transfer. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-12 | Codex | Day 6 bakery timing follow-up | Moved the temporary Artist Bakery dine-in reservation to 09:30 and aligned the related transport and post-bakery timing so the Day 6 sequence stays internally consistent. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-12 | Codex | Day 6 transit wording follow-up | Replaced the Artist Bakery to Chicken Restaurant transfer note with the explicit Anguk to Jongno 3-ga subway step and updated the event time to 11:30 so the written timing matches the requested Day 6 flow. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-12 | Codex | Day 6 dinner note trim | Removed the Hongdae dinner fallback warning sentence from the Day 6 event note and bumped the Seoul data cache version. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

@@ -33,6 +33,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Hid the detailed cold-noodle planning inside Seoul Day 6 while keeping the time slot and airport-transfer logic visible, and bumped the Seoul data cache version.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-12
+  Updated at: 2026-05-12 13:22 CST
+  Updated by: Codex
+  Type: Day 6 route rewrite
+  Summary: Rebuilt Seoul Day 6 around Anguk/Ikseondong, supermarket shopping, and an early Hongdae dinner with teammate airport-exit timing aligned to Nabi Hostel luggage pickup and AREX transfer.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex

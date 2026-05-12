@@ -61,6 +61,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Removed the Hongdae dinner fallback warning sentence from the Day 6 event note and bumped the Seoul data cache version.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-12
+  Updated at: 2026-05-12 18:16 CST
+  Updated by: Codex
+  Type: Full itinerary check
+  Summary: Updated the Seoul trip label to the 20260331 final correction version, added the climate-card first-use reminder to Day 2's first transit event, restored the Day 2 gap options to the final A-D structure, and corrected Day 8's title to final-shopping 5.5h plus Gimpo check-in return 3h.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex

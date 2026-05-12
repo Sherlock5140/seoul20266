@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v57-20260512-1827`
-- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512i` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
+- SW cache: `travel-guide-v58-20260512-1831`
+- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512j` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -105,5 +105,5 @@ Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
 - 2026-05-12 | Codex | Day 6 structure rewrite | Rebuilt Day 6 around Anguk plus Chicken Restaurant, supermarket transfer and shopping as separate blocks, Hongdae shopping plus dinner, and explicit 17:16/17:31 AREX airport departure plans with tax-refund and check-in reminders. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-12 | Codex | Full itinerary check | Updated the Seoul trip label to the 20260331 final correction version, added the climate-card first-use reminder to Day 2's first transit event, restored the Day 2 gap options to the final A-D structure, and corrected Day 8's title to final-shopping 5.5h plus Gimpo check-in return 3h. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-12 | Codex | Day 4 airport transfer update | Updated the teammate Incheon T2 to Hongdae transfer options with revised AREX and airport-bus durations, fare, and recommendation wording. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-12 | Codex | Day 5 dinner priority update | Switched the Seongsu dinner summary and decision card so potato back-bone soup is the primary choice after the Day 5 lunch barbecue, with the grill place kept as backup. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

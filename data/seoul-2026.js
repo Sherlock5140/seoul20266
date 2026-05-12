@@ -6,7 +6,7 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
-          catalogVersion: '20260512i',
+          catalogVersion: '20260512j',
           dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 全面校正最終版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',
@@ -84,7 +84,7 @@
           {
             date: "06/05 (五) Day 5",
             title: "夢碳(2h)＋新羅免稅店(2h)＋聖水洞(3.5h) 👥 4人",
-            lunch: "夢碳 (燒肉)", lunchId: "d5-e4", tea: "_______", teaId: null, dinner: "烤黨 / 馬鈴薯排骨湯（二選一）", dinnerId: "d5-e9",
+            lunch: "夢碳 (燒肉)", lunchId: "d5-e4", tea: "_______", teaId: null, dinner: "聖水馬鈴薯排骨湯", dinnerId: "d5-e9",
             events: [
               { id: "d5-e1", time: "10:00", location: "交通：各自出發 ➔ 夢碳 (Mongtan / 몽탄)", category: "transport", note: "🚌 主團：由龍山出發，藍色巴士 100 / 150 / 151 等，約 11 分鐘 ➔ [三角地站] 下車\n🚇 隊友：由弘大出發，2號線 [弘大入口] ➔ [合井]，轉 6號線 ➔ [三角地] 周邊步行會合", coords: [37.5372, 126.9698] },
               { id: "d5-e2", time: "10:40", location: "主團抵達現場準備候位", category: "alert", note: "⚠️ 11:00 開放現場機台登記\n📋 主團操作機台，直接登記 4 位用餐", tags: ["關鍵"], coords: [37.5372, 126.9698] },
@@ -98,9 +98,9 @@
                 { name: "選物店候補", type: "shopping", priority: "候補", note: "依現場距離補入實際店名" },
                 { name: "咖啡甜點候補", type: "food", priority: "候補", note: "若逛街節奏提前，作為短休息點" }
               ] },
-              { id: "d5-e9", time: "18:30", location: "晚餐決策：【Plan A / B 二選一】", category: "food", note: "🕒 預估停留：約 1.5 小時", coords: [37.5428, 127.0543], spots: [
-                { name: "烤黨 聖水店", type: "food", priority: "Plan A", note: "燒肉優先方案" },
-                { name: "聖水馬鈴薯排骨湯", type: "food", priority: "Plan B", note: "排骨湯備案" }
+              { id: "d5-e9", time: "18:30", location: "晚餐決策：【優先排骨湯 / 備選烤肉】", category: "food", note: "🕒 預估停留：約 1.5 小時\n💡 因中午已安排夢碳燒肉，晚餐優先改選聖水馬鈴薯排骨湯", coords: [37.5428, 127.0543], spots: [
+                { name: "聖水馬鈴薯排骨湯", type: "food", priority: "Plan A", note: "中午已吃烤肉，晚餐優先改選排骨湯" },
+                { name: "烤黨 聖水店", type: "food", priority: "Plan B", note: "若現場更想吃燒肉，再改回烤肉備案" }
               ] },
               { id: "d5-e10", time: "20:00", location: "晚餐結束後於聖水周邊短暫整理 / 補逛", category: "shopping", note: "🕒 約 30-40 分鐘", coords: [37.5445, 127.0560] },
               { id: "d5-e11", time: "20:40", location: "交通：聖水 ➔ 龍山 / 弘大（各自回防）", category: "transport", note: "🚇 主團【首選】2號線 [聖水] ➔ [往十里]，轉 京義中央線 ➔ [龍山]\n🕒 主團約 35-45 分鐘（含轉乘與步行）\n🚕 主團【備案】計程車：若路況順暢再考慮\n🚇 隊友【首選】2號線 [聖水] ➔ [弘大入口] 直達\n🕒 隊友約 35-40 分鐘\n💡 原則：週五晚間跨江回程，地鐵時間最穩", coords: [37.5293, 126.9654] }

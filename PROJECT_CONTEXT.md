@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v48-20260503-1626`
-- Asset query version: `20260503h` for core app/config/service/catalog files; `20260503f` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
+- SW cache: `travel-guide-v51-20260512-1335`
+- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512c` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-03 | Codex | Namespace cleanup | Introduced generic `TravelGuide*` globals with `Seoul2026*` compatibility aliases and bumped core cache assets. Files: scripts/config.js, scripts/utils.js, scripts/app.js, services/storage.js, services/rates.js, services/map.js, data/trip-catalog.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | App audit fixes | Verified data/cache integrity, refreshed code navigation, and taught map markers to include future `spots[].coords` points. Files: services/map.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-03 | Codex | Area spots UI | Added optional event `spots` UI for area-based itinerary cards and converted Seongsu shopping/dinner planning into compact spot lists. Files: data/seoul-2026.js, scripts/app.js, index.html, sw.js, PROJECT_CONTEXT.md, SEOUL20266_UI_STYLE_GUIDE.md, CHANGELOG.md
+- 2026-05-12 | Codex | Day 6 privacy follow-up | Hid the detailed cold-noodle planning inside Seoul Day 6 while keeping the time slot and airport-transfer logic visible, and bumped the Seoul data cache version. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-12 | Codex | Day 6 route rewrite | Rebuilt Seoul Day 6 around Anguk/Ikseondong, supermarket shopping, and an early Hongdae dinner with teammate airport-exit timing aligned to Nabi Hostel luggage pickup and AREX transfer. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-12 | Codex | Day 6 bakery timing follow-up | Moved the temporary Artist Bakery dine-in reservation to 09:30 and aligned the related transport and post-bakery timing so the Day 6 sequence stays internally consistent. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

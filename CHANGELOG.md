@@ -8,6 +8,27 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex
+  Type: Namespace cleanup
+  Summary: Introduced generic `TravelGuide*` globals with `Seoul2026*` compatibility aliases and bumped core cache assets.
+  Files: `scripts/config.js`, `scripts/utils.js`, `scripts/app.js`, `services/storage.js`, `services/rates.js`, `services/map.js`, `data/trip-catalog.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
+  Type: App audit fixes
+  Summary: Verified data/cache integrity, refreshed code navigation, and taught map markers to include future `spots[].coords` points.
+  Files: `services/map.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
+  Type: Area spots UI
+  Summary: Added optional event `spots` UI for area-based itinerary cards and converted Seongsu shopping/dinner planning into compact spot lists.
+  Files: `data/seoul-2026.js`, `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `SEOUL20266_UI_STYLE_GUIDE.md`, `CHANGELOG.md`
+
+- 2026-05-03
+  Updated at: 2026-05-03 CST
+  Updated by: Codex
   Type: Data
   Summary: Added Myeongdong Central exchange as the priority 14:00-15:30 gap option and bumped Seoul data cache.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`

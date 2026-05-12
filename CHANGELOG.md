@@ -75,6 +75,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Updated the teammate Incheon T2 to Hongdae transfer options with revised AREX and airport-bus durations, fare, and recommendation wording.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-12
+  Updated at: 2026-05-12 20:03 CST
+  Updated by: Codex
+  Type: Day 6 Yongsan shopping rewrite
+  Summary: Reframed Day 6 afternoon shopping around Yongsan Station as the primary souvenir and restock stop, moved Seoul Station Lotte Mart to backup status, and updated the Hongdae transfer copy to match that priority.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex

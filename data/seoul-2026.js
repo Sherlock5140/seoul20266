@@ -6,8 +6,8 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
-          catalogVersion: '20260512f',
-          dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 航司通知更新版｜Day6安國雞林超市弘大版)】',
+          catalogVersion: '20260512h',
+          dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 全面校正最終版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',
           pass: '氣候同行卡 7 日券（售價 20,000 韓元）｜Day 2-8 使用',
@@ -35,9 +35,9 @@
             title: "龍理團路(1.5h)＋加山Outlet(4h) 👥 2人",
             lunch: "龍理團路早午餐", lunchId: "d2-e2", tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
             events: [
-              { id: "d2-e1", time: "10:00", location: "交通：飯店 ➔ 龍理團路", category: "transport", note: "🚇 【首選】4號線 [新龍山] ➔ [三角地]（1站 / 約3分鐘）\n🚌 【備案】藍色巴士 100 / 150 / 151 等", coords: [37.5312, 126.9705] },
+              { id: "d2-e1", time: "10:00", location: "交通：飯店 ➔ 龍理團路", category: "transport", note: "🎫 氣候同行卡 7 日券第一次使用提醒：Day 2-8 使用，售價 20,000 韓元；不可搭新盆唐線、廣域/機場巴士，離開首爾區域下車可能需補票\n🚇 【首選】4號線 [新龍山] ➔ [三角地]（1站 / 約3分鐘）\n🚌 【備案】藍色巴士 100 / 150 / 151 等", coords: [37.5312, 126.9705] },
               { id: "d2-e2", time: "上午", location: "早午餐名店【三選一】（位於三角地站周邊）", category: "food", note: "🕒 預估停留：約 1.5 小時（含候位與用餐）\n❶ Dotori (橡實)\n❷ SAM SAM SAM\n❸ Teddy Beurre House", coords: [37.5312, 126.9705] },
-              { id: "d2-e3", time: "14:00", location: "【空窗期決策：14:00-15:30】", category: "alert", note: "💡 優先選：前往明洞中央區換匯\n💡 選項 B（需整理物品）：回飯店（15:30 出發前往加山）\n💡 選項 C（無須回防）：前往 Amore Pacific 總部（15:40 前離開）\n💡 選項 D（提早購物）：直接前往 Outlet\n💡 選項 E（車站商圈）：Emart 龍山店 / iPark Mall / 新羅愛寶客免稅店（15:40 前離開）", coords: [37.5293, 126.9654] },
+              { id: "d2-e3", time: "14:00", location: "【空窗期決策：14:00-15:30】", category: "alert", note: "💡 選項 A（需整理物品）：回飯店（15:30 出發前往加山）\n💡 選項 B（無須回防）：前往 Amore Pacific 總部（15:40 前離開）\n💡 選項 C（提早購物）：直接前往 Outlet\n💡 選項 D（車站商圈）：Emart 龍山店 / iPark Mall / 新羅愛寶客免稅店（15:40 前離開）", coords: [37.5293, 126.9654] },
               { id: "d2-e4", time: "16:00", location: "交通：龍山區域 ➔ 加山數碼園區 (Gasan)", category: "transport", note: "🚇 【首選】1號線 [龍山] ➔ [加山數碼園區] 直達\n🕒 全程約 35-40 分鐘（含步行與候車）\n🚕 【不建議】計程車：下班前路況不穩，效率通常不如地鐵", coords: [37.4815, 126.8826] },
               { id: "d2-e5", time: "16:40", location: "【Mario Outlet】(馬里奧 Outlet) 1/2/3館", category: "shopping", note: "🕒 平日（週二）至 21:00 結束營業\n====== 🛍️ 購物動線 ======\n❶ [16:40-17:50] 2館 (Leisure)：機能服飾\n❷ [17:50-19:20] 3館 (Mario Mall)：潮流服飾\n❸ [19:20-20:00] 決策與複驗結帳\n❹ [20:00-20:30] 晚餐（_______）", tags: ["戰力全開"], coords: [37.4784, 126.8887] },
               { id: "d2-e6", time: "20:30", location: "交通：加山數碼園區 ➔ 九樹 ROKAUS 龍山", category: "transport", note: "🚇 【首選】1號線 [加山數碼園區] ➔ [龍山] 直達（車程約 20 分鐘，總時間約 35 分鐘）", coords: [37.5293, 126.9654] },
@@ -151,7 +151,7 @@
           },
           {
             date: "06/08 (一) Day 8",
-            title: "龍山最後掃貨(4h)＋金浦機場(3h) 👥 2人",
+            title: "龍山最後掃貨(5.5h)＋金浦機場報到返程(3h) 👥 2人",
             lunch: "_______", lunchId: null, tea: "_______", teaId: null, dinner: "_______", dinnerId: null,
             events: [
               { id: "d8-e1", time: "10:00", location: "整理行李 & 準備 Check-out", category: "hotel", note: "", coords: [37.5293, 126.9654] },

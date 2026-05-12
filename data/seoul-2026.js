@@ -6,7 +6,7 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
-          catalogVersion: '20260512c',
+          catalogVersion: '20260512d',
           dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 航司通知更新版｜Day6安國超市弘大版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',
@@ -115,7 +115,7 @@
               { id: "d6-e1", time: "09:00", location: "Catchtable 遠端取號（Artist Bakery）", category: "alert", note: "💡 若可預約，前一週預定 09:30 內用時段", coords: null },
               { id: "d6-e2", time: "09:00", location: "交通：龍山 / 弘大 ➔ 安國站", category: "transport", note: "🚇 主團：4號線 [新龍山] ➔ [忠武路]，轉 3號線 ➔ [安國]\n🚇 隊友：2號線 [弘大入口] ➔ [乙支路3街]，轉 3號線 ➔ [安國]\n🕒 時間：主團約 25 分鐘；隊友約 25-30 分鐘（含轉乘與步行）\n💡 建議：安國站集合後再一起步行前往 Artist Bakery", coords: [37.5766, 126.9854] },
               { id: "d6-e3", time: "09:30", location: "【Artist Bakery】（內用）", map_term: "Artist Bakery", category: "food", note: "📍 安國站 1 號出口\n🕒 預估停留：約 1 小時\n💡 備註：前一週預定 09:30 內用時段，現場依入座與取餐狀況微調", coords: [37.5768, 126.9850] },
-              { id: "d6-e4", time: "10:30", location: "交通：Artist Bakery ➔ 雞林食堂 本店", category: "transport", note: "🚶 步行或短程移動至鐘路3街 / 益善洞周邊\n🕒 預估 10-20 分鐘", coords: [37.5744, 126.9905] },
+              { id: "d6-e4", time: "11:30", location: "交通：Artist Bakery ➔ 雞林食堂 本店", category: "transport", note: "🚇 地鐵：3號線 [安國] ➔ [鐘路3街]\n🕒 車程約 1 站 / 2 分鐘，含進出站與步行約 10-15 分鐘\n🚶 出站後步行前往雞林食堂 本店（계림식당）", coords: [37.5744, 126.9905] },
               { id: "d6-e5", time: "11:30-13:30", location: "午餐：雞林食堂 本店（계림식당）", category: "food", note: "🕒 預估停留：約 1.5 小時（含移動、候位與用餐）\n🕒 當日營業時間：週六 11:30–21:45\n⚠️ 休息時間：15:30–16:30\n⚠️ 最後點餐：20:30\n💡 目標：12:00 前後入座，避開過晚用餐影響下午採買與弘大晚餐銜接", coords: [37.5709, 126.9907] },
               { id: "d6-e6", time: "13:30", location: "前往大型超市採買【A / B 二選一】", category: "shopping", note: "🕒 採買時間：約 1 - 1.5 小時（含找商品、比價、結帳與簡單整理）", coords: [37.5559, 126.9723], spots: [
                 { name: "A. 首爾站樂天超市", type: "shopping", priority: "首選", note: "🚇 1號線 [鐘路3街] ➔ [首爾站]\n🕒 移動：約 10-15 分鐘 + 站內步行\n🛒 採買：約 1 - 1.5 小時\n定位：觀光客採買最方便，伴手禮、零食、泡麵、即食品項完整\n風險：週六人潮多、結帳排隊時間較長，攜帶行李或大包戰利品會較累", coords: [37.5545, 126.9707] },

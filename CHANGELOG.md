@@ -26,6 +26,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Added optional event `spots` UI for area-based itinerary cards and converted Seongsu shopping/dinner planning into compact spot lists.
   Files: `data/seoul-2026.js`, `scripts/app.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `SEOUL20266_UI_STYLE_GUIDE.md`, `CHANGELOG.md`
 
+- 2026-05-12
+  Updated at: 2026-05-12 12:59 CST
+  Updated by: Codex
+  Type: Day 6 privacy follow-up
+  Summary: Hid the detailed cold-noodle planning inside Seoul Day 6 while keeping the time slot and airport-transfer logic visible, and bumped the Seoul data cache version.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex

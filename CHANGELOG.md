@@ -40,6 +40,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Rebuilt Seoul Day 6 around Anguk/Ikseondong, supermarket shopping, and an early Hongdae dinner with teammate airport-exit timing aligned to Nabi Hostel luggage pickup and AREX transfer.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-12
+  Updated at: 2026-05-12 13:35 CST
+  Updated by: Codex
+  Type: Day 6 bakery timing follow-up
+  Summary: Moved the temporary Artist Bakery dine-in reservation to 09:30 and aligned the related transport and post-bakery timing so the Day 6 sequence stays internally consistent.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 - 2026-05-03
   Updated at: 2026-05-03 CST
   Updated by: Codex

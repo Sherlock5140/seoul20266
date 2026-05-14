@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-guide-v64-20260514-1658';
+const CACHE_NAME = 'travel-guide-v65-20260514-1701';
 const CDN_CACHE  = 'cdn-assets-v2';
 
 const APP_SHELL = [
@@ -17,7 +17,7 @@ const APP_SHELL = [
   './services/rates.js?v=20260503h',
   './services/map.js?v=20260503h',
   './data/trip-catalog.js?v=20260503h',
-  './data/seoul-2026.js?v=20260514d',
+  './data/seoul-2026.js?v=20260514e',
   './data/hongkong-2026.js?v=20260503d'
 ];
 

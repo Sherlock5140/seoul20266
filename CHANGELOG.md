@@ -96,6 +96,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Expanded Day 4 with detailed Incheon T2 transfer reference times, moved the evening flow to Sinchon dinner plus Emart restock, and shortened the late Hongdae block to match the updated 4-person route.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-14
+  Updated at: 2026-05-14 16:47 CST
+  Updated by: Codex
+  Type: Day 4 arrival timing follow-up
+  Summary: Retimed the teammate Incheon-to-Hongdae guidance to the 12:34/12:35 reference departures, shifted Hongdae arrival to 13:45, and aligned the luggage-drop and Mangwon meetup notes to the later arrival window.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 
 - 2026-05-12
   Updated at: 2026-05-12 13:22 CST

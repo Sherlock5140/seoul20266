@@ -72,7 +72,7 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v65-20260514-1701`
+- SW cache: `travel-guide-v66-20260514-1702`
 - Asset query version: `20260503h` for core app/config/service/catalog files; `20260514e` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
 
 ## Data Shapes
@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-14 | Codex | Day 4 Hongdae wording follow-up | Reworded the late-evening Day 4 stop from generic Hongdae shopping to the more precise Hongdae main street plus Yeonnam-dong shopping area, and clarified the suggested split between main-street restocking and Yeonnam-dong strolling. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-14 | Codex | Day 3 title follow-up | Renamed the Seoul Day 3 header to present the Chuncheon outing as a full-day trip built around round-trip ITX, the sightseeing taxi block, and the rail-bike segment without changing the booked timings. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-14 | Codex | Day 4 loot-drop wording follow-up | Revised the late Day 4 Hongdae note so heavy Emart purchases now route teammates back to Nabi Hostel first for luggage drop, with the main group continuing the Hongdae main-street or Yeonnam-dong segment based on remaining time. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-14 | Codex | Day meta wrap fix | Switched the day summary from balanced wrapping to a more natural wrap strategy and slightly relaxed the desktop summary sizing so longer itinerary titles stop spilling into an unnecessary extra line. Files: index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

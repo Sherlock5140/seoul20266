@@ -103,6 +103,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Retimed the teammate Incheon-to-Hongdae guidance to the 12:34/12:35 reference departures, shifted Hongdae arrival to 13:45, and aligned the luggage-drop and Mangwon meetup notes to the later arrival window.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-14
+  Updated at: 2026-05-14 16:55 CST
+  Updated by: Codex
+  Type: Day 4 Hongdae wording follow-up
+  Summary: Reworded the late-evening Day 4 stop from generic Hongdae shopping to the more precise Hongdae main street plus Yeonnam-dong shopping area, and clarified the suggested split between main-street restocking and Yeonnam-dong strolling.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 
 - 2026-05-12
   Updated at: 2026-05-12 13:22 CST

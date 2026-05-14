@@ -72,8 +72,8 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 
 ## Current Versions
 
-- SW cache: `travel-guide-v60-20260512-2016`
-- Asset query version: `20260503h` for core app/config/service/catalog files; `20260512l` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
+- SW cache: `travel-guide-v61-20260514-1643`
+- Asset query version: `20260503h` for core app/config/service/catalog files; `20260514a` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
 
 ## Data Shapes
 
@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-12 | Codex | Day 6 structure rewrite | Rebuilt Day 6 around Anguk plus Chicken Restaurant, supermarket transfer and shopping as separate blocks, Hongdae shopping plus dinner, and explicit 17:16/17:31 AREX airport departure plans with tax-refund and check-in reminders. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-12 | Codex | Day 6 Yongsan shopping rewrite | Reframed Day 6 afternoon shopping around Yongsan Station as the primary souvenir and restock stop, moved Seoul Station Lotte Mart to backup status, and updated the Hongdae transfer copy to match that priority. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-12 | Codex | Day 6 Yongsan copy trim | Removed the extra “定位：主選採買點” wording from the Yongsan Emart primary shopping note while keeping the rest of the shopping guidance intact. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-14 | Codex | Day 4 Shinchon shopping follow-up | Expanded Day 4 with detailed Incheon T2 transfer reference times, moved the evening flow to Sinchon dinner plus Emart restock, and shortened the late Hongdae block to match the updated 4-person route. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md

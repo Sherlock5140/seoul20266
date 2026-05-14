@@ -6,7 +6,7 @@
           title: 'Seoul Travel Guide',
           displayName: 'SEOUL',
           country: 'KR',
-          catalogVersion: '20260514c',
+          catalogVersion: '20260514d',
           dateRange: '【2026 首爾 8 天 7 夜｜最終定案完全體行程 (20260331 全面校正最終版)】',
           hotel: '九樹 ROKAUS 精品飯店首爾龍山',
           hotelAccess: 'Check-in 15:00 / Check-out 11:00｜龍山站 1 號出口步行約 3 分鐘，備援新龍山站',
@@ -46,7 +46,7 @@
           },
           {
             date: "06/03 (三) Day 3",
-            title: "草原牧場(1.5h)＋雞排午餐(1h)＋鐵道自行車16:30場 👥 2人",
+            title: "春川一日遊：ITX往返(2.5h)＋觀光計程車(5h)＋鐵道自行車(1.5h) 👥 2人",
             lunch: "明洞辣炒雞排", lunchId: "d3-e6", tea: "馬鈴薯麵包 (外帶)", teaId: "d3-e5", dinner: "_______", dinnerId: null,
             notice: "====== ✅ Day 3 訂票完成重點（2人主行程） ======\n1. [ITX 去程] 龍山 Yongsan 09:21 ➔ 春川 Chuncheon 10:40｜ITX-Cheongchun 2061｜6號車 7A/7B｜19,600 韓元/2人\n2. [預約完成] 春川外國人觀光計程車｜2026/06/03（三）11:00｜私人旅遊 1 輛 2 人｜3 小時出租車游｜始發/終點：春川站｜34,485 韓元\n3. [體驗完成] 金裕貞鐵道自行車 / 김유정 레일바이크｜16:30 第8次｜2人座 x 1｜40,000 韓元\n4. [ITX 回程] 南春川 Namchuncheon 19:06 ➔ 龍山 Yongsan 20:20｜ITX-Cheongchun 2092｜6號車 6A/6B｜19,600 韓元/2人\n5. [自費提醒] 觀光計程車不含個人物品、餐飲費、門票；請攜帶護照與備用現金",
             events: [

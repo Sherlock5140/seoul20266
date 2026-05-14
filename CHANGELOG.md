@@ -83,6 +83,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
 - 2026-05-12
+  Updated at: 2026-05-12 20:16 CST
+  Updated by: Codex
+  Type: Day 6 Yongsan copy trim
+  Summary: Removed the extra “定位：主選採買點” wording from the Yongsan Emart primary shopping note while keeping the rest of the shopping guidance intact.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
+- 2026-05-12
   Updated at: 2026-05-12 13:22 CST
   Updated by: Codex
   Type: Day 6 structure rewrite

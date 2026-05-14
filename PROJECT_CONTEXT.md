@@ -104,6 +104,6 @@ Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
 Older entries → `CHANGELOG.md`. Max 3 here.
 Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
 
-- 2026-05-14 | Codex | Day 4 loot-drop wording follow-up | Revised the late Day 4 Hongdae note so heavy Emart purchases now route teammates back to Nabi Hostel first for luggage drop, with the main group continuing the Hongdae main-street or Yeonnam-dong segment based on remaining time. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-14 | Codex | Day meta wrap fix | Switched the day summary from balanced wrapping to a more natural wrap strategy and slightly relaxed the desktop summary sizing so longer itinerary titles stop spilling into an unnecessary extra line. Files: index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
 - 2026-05-14 | Codex | Day 4 Emart detail trim | Replaced the Sinchon Emart intro note with a shorter, cleaner store card that keeps only destination, station-exit distance, B1 floor, and closing time. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
+- 2026-05-14 | Codex | CODEX itinerary workflow update | Moved the itinerary-edit workflow into CODEX.md, changed the read order to treat PROJECT_CONTEXT.md as primary with AGENTS.md only as needed, and documented the rule that plain schedule edits should stay in the relevant data file unless structure, UI, or deployment scope is affected. Files: CODEX.md, CLAUDE.md, PROJECT_CONTEXT.md

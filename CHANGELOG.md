@@ -117,6 +117,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Renamed the Seoul Day 3 header to present the Chuncheon outing as a full-day trip built around round-trip ITX, the sightseeing taxi block, and the rail-bike segment without changing the booked timings.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-14
+  Updated at: 2026-05-14 17:01 CST
+  Updated by: Codex
+  Type: Day 4 loot-drop wording follow-up
+  Summary: Revised the late Day 4 Hongdae note so heavy Emart purchases now route teammates back to Nabi Hostel first for luggage drop, with the main group continuing the Hongdae main-street or Yeonnam-dong segment based on remaining time.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 
 - 2026-05-12
   Updated at: 2026-05-12 13:22 CST

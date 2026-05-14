@@ -46,8 +46,6 @@
   - Major（`v40→v100`）：架構變更、資料格式異動
 - Commit：`feat/fix/chore/ui:` 前綴格式
 
----
-
 ## 高風險區域（修改前需使用者確認）
 - `services/storage.js:135` `saveTripState()` — 寫入 localStorage，格式錯誤會清除行程
 - `services/storage.js:61` `loadTripState()` — 讀取邏輯，改錯會讓行程消失

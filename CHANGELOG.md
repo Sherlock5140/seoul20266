@@ -110,6 +110,13 @@ For recent entries see the Update Log section in `PROJECT_CONTEXT.md`.
   Summary: Reworded the late-evening Day 4 stop from generic Hongdae shopping to the more precise Hongdae main street plus Yeonnam-dong shopping area, and clarified the suggested split between main-street restocking and Yeonnam-dong strolling.
   Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
 
+- 2026-05-14
+  Updated at: 2026-05-14 16:58 CST
+  Updated by: Codex
+  Type: Day 3 title follow-up
+  Summary: Renamed the Seoul Day 3 header to present the Chuncheon outing as a full-day trip built around round-trip ITX, the sightseeing taxi block, and the rail-bike segment without changing the booked timings.
+  Files: `data/seoul-2026.js`, `index.html`, `sw.js`, `PROJECT_CONTEXT.md`, `CHANGELOG.md`
+
 
 - 2026-05-12
   Updated at: 2026-05-12 13:22 CST

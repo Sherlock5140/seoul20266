@@ -6,6 +6,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 cd "$repo_root"
 
+command -v rg >/dev/null 2>&1 || {
+  echo "FAIL: ripgrep (rg) is required for AI Agent system validation." >&2
+  exit 2
+}
+
 secret_mode="${1:---tracked}"
 shift || true
 

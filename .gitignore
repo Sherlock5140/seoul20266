@@ -1,6 +1,22 @@
 backups/
 .DS_Store
-.claude/
+
+# Keep Claude's local settings private; track only approved Skill discovery shims.
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/audit-travel-app/
+!.claude/skills/change-travel-app/
+!.claude/skills/edit-itinerary-data/
+!.claude/skills/maintain-agent-docs/
+.claude/skills/audit-travel-app/*
+!.claude/skills/audit-travel-app/SKILL.md
+.claude/skills/change-travel-app/*
+!.claude/skills/change-travel-app/SKILL.md
+.claude/skills/edit-itinerary-data/*
+!.claude/skills/edit-itinerary-data/SKILL.md
+.claude/skills/maintain-agent-docs/*
+!.claude/skills/maintain-agent-docs/SKILL.md
 
 # Local/generated work that must not be published with the Travel Guide app.
 /.tmp/

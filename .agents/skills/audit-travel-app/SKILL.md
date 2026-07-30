@@ -13,7 +13,7 @@ description: Run an evidence-based Travel Guide audit covering selected or full 
 
 ## Workflow
 
-1. Read `PROJECT_CONTEXT.md` and the guides covering the requested audit scope. `REVIEW_PROMPT.md` is only a compatibility entry for tools that cannot invoke this skill.
+1. Read only the guides covering the requested audit scope. `REVIEW_PROMPT.md` is only a compatibility entry for tools that cannot invoke this skill.
 2. For a full audit, read the travel, engineering, and UI guides. Do not load bundled review files unless explicitly requested.
 3. Split independent read-heavy areas among read-only subagents when useful. Keep requirements, severity decisions, and final integration in the main agent.
 4. Collect reproducible code, command, test, console, or visual evidence before confirming a finding.

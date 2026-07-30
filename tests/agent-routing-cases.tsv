@@ -1,0 +1,31 @@
+id|category|scope|mode|skills|context|external|clarify|prompt
+travel-wording|direct|travel-app|change|edit-itinerary-data|project-context+travel-data|no|no|把首爾第二天晚餐文字改得更清楚
+travel-meal-link|indirect|travel-app|diagnose|edit-itinerary-data|project-context+travel-data|no|yes|這間早餐為什麼沒有出現在當天餐食清單
+travel-coordinate-missing|incomplete|travel-app|change|edit-itinerary-data|project-context+travel-data|no|yes|幫我修正其中一個景點座標
+travel-data-negative-runtime|negative|travel-app|change|edit-itinerary-data|project-context+travel-data|no|yes|只改行程文字，不要修改 JavaScript 或畫面
+travel-schema|cross-scope|travel-app|change|edit-itinerary-data+change-travel-app|project-context+travel-data+engineering|no|yes|新增旅程國家欄位並同步所有讀取端
+travel-share|direct|travel-app|change|change-travel-app|project-context+engineering|no|no|修正分享按鈕產生錯誤連結
+travel-ui|direct|travel-app|change|change-travel-app|project-context+engineering+ui|no|no|改善手機版行程彈窗溢位
+travel-cache-diagnose|indirect|travel-app|diagnose|change-travel-app|project-context+engineering|no|no|Travel Guide 更新後仍看到舊版內容，找出原因
+travel-audit|direct|travel-app|review|audit-travel-app|project-context+scoped-guides|no|no|完整檢查 Travel Guide 的 PWA 與無障礙
+travel-audit-no-fix|negative|travel-app|review|audit-travel-app|project-context+scoped-guides|no|no|只列出 Travel Guide 安全問題，不要修正任何檔案
+travel-fix-after-audit|boundary|travel-app|change|audit-travel-app+change-travel-app|project-context+scoped-guides|no|yes|修正稽核已確認且在指定範圍內的分享漏洞
+travel-deploy|boundary|travel-app+external|release|connector|project-context+engineering+release-config|yes|yes|把已驗證的 Travel App 部署到正式環境
+travel-commit|boundary|travel-app+external|release|git-release|project-context+changed-scope-guide|yes|yes|提交並推送目前 Travel App 修改
+travel-deck|direct|travel-artifact|change|artifact|travel-source+travel-data|no|no|把這個 repository 的首爾行程製作成簡報
+travel-pdf|indirect|travel-artifact|change|artifact|travel-source|no|no|將現有香港行程整理成可列印 PDF
+travel-artifact-no-app|negative|travel-artifact|change|artifact|travel-source|no|no|只製作行程簡報，不要修改 Travel App
+travel-update-and-deck|cross-scope|travel-app+travel-artifact|change|edit-itinerary-data+artifact|project-context+travel-data+travel-source|no|yes|先更新第三天行程，驗證後再製作簡報
+general-deck|direct|general-artifact|change|artifact|task-local|no|yes|製作一份與旅遊專案無關的公司策略簡報
+general-sheet|indirect|general-artifact|change|artifact|task-local|no|yes|把這份銷售資料整理成可編輯試算表
+external-github-review|direct|external|review|connector|external-service|no|yes|讀取 GitHub PR 並摘要審查意見
+external-slack-post|boundary|external|release|connector|external-service|yes|yes|把核准的發布摘要傳送到 Slack
+external-calendar-incomplete|incomplete|external|release|connector|external-service|yes|yes|幫我安排會議
+governance-router|direct|governance|change|maintain-agent-docs|governance-files|no|no|優化 AGENTS 的 Scope Router
+governance-skill-trigger|indirect|governance|diagnose|maintain-agent-docs|governance-files|no|yes|為什麼修改行程時選錯 Skill
+governance-no-release|negative|governance|change|maintain-agent-docs|governance-files|no|yes|更新 Agent 文件但不要提交或推送
+governance-upload|boundary|governance+external|release|maintain-agent-docs+github-release|governance-files|yes|no|驗證 Agent 文件後提交並建立 PR
+general-trip-research|negative|external|review|none|task-local+authoritative-sources|no|yes|查詢一般機票價格，不要修改這個 Travel App
+general-code|direct|general|change|none|task-local|no|yes|在另一個明確指定的資料夾修正一次性 Python 腳本
+general-unknown|incomplete|general|diagnose|none|task-local|no|yes|幫我改善這個東西
+mixed-external-artifact|cross-scope|external+general-artifact|change|connector+artifact|external-service+task-local|no|yes|讀取已授權雲端資料並產生本機簡報，不要上傳成品

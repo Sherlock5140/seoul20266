@@ -48,6 +48,22 @@ Claude and Gemini load their native adapters, which import this file. Codex load
 
 Do not load generated review bundles, side-project output, unrelated task guides, or every Skill body.
 
+## Task Dispatch Contract
+
+Use this execution path for every task:
+
+| Stage | Required decision or evidence |
+|-------|-------------------------------|
+| User request | Identify the objective, deliverables, constraints, and whether the request authorizes inspection, change, or external state |
+| `AGENTS.md` classification | Select the scope row, task mode, affected files or service, and any privacy or release boundary |
+| Model adapter | Apply only the automatically loaded tool-specific adapter; never load another model's adapter or duplicate workspace routing |
+| Skill selection | Match metadata first, select the smallest sufficient Skill set, and state the order for mixed deliverables |
+| Task execution | Follow the selected workflow, keep one writer per file or artifact, and stop before any ungranted scope or external action |
+| Project validation | Run the routed checks plus deterministic governance/security gates; distinguish PASS, FAIL, and NOT RUN |
+| Result handoff | Report outcome, evidence, changed state, residual risk, and the exact release or follow-up still requiring authorization |
+
+Do not skip classification because a familiar Skill is available, and do not treat successful execution as release authorization.
+
 ## Task Modes
 
 - **Review / report / status:** inspect and report only; do not modify files or external state.
@@ -90,6 +106,8 @@ Every delegated task must state its objective/mode, required context or skills, 
 
 - Support findings with current file locations plus reproducible code, command, test, or visual evidence. Label unverified conclusions as inferences.
 - Report what was validated and what was not. Never claim a check passed when it was not run.
+- Complete a task only when the requested outcome exists, applicable validations pass or are explicitly marked `NOT RUN`, no related failure remains, and no unauthorized external state changed.
+- Stop and request direction when completion requires new authority, broader scope, credentials, a destructive action, or an external write not already granted by the user.
 - A failure introduced by, or directly related to, the current change blocks completion.
 - Disclose unrelated pre-existing failures without expanding scope automatically.
 - If the same fix approach fails twice, stop repeating it and re-diagnose.
@@ -104,8 +122,10 @@ Every delegated task must state its objective/mode, required context or skills, 
 - Before recording a log date/time, run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`.
 - Use allowlisted file staging in mixed worktrees. Never use `git add .` or upload generated outputs, local scans, secrets, personal paths, or side projects by accident.
 - Treat tracked repository content as public. Never persist private connector, email, calendar, contact, reservation, or credential data in tracked files; use an approved private/output destination or sanitized data.
+- Never persist passwords, decryption secrets, private keys, recovery codes, session tokens, or credential values in Git. Encryption workflows may use a public recipient key; private key material must remain outside the repository and outside task logs.
 - Keep generated artifacts in their requested or designated output location; do not treat artifact creation as app release authorization.
 - Before committing, inspect active Git hooks when external writes are not authorized. If a hook pushes, publishes, edits files, or invokes an external service, stop and report it; do not bypass or run it without explicit authorization.
+- Repository hooks must be deterministic and local-only. A commit hook must not push, publish, call an external AI/service, or edit tracked files after the commit; use an explicitly authorized Release / sync workflow for those actions.
 
 ## Self-Improvement
 

@@ -11,5 +11,8 @@
 /SECURITY.md @Sherlock5140
 /.agents/ @Sherlock5140
 /.claude/skills/ @Sherlock5140
+/.githooks/ @Sherlock5140
 /.github/ @Sherlock5140
-/scripts/validate-agent-docs.sh @Sherlock5140
+/scripts/check-repository-secrets.sh @Sherlock5140
+/scripts/validate-agent-*.sh @Sherlock5140
+/tests/agent-routing-cases.tsv @Sherlock5140

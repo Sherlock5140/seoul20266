@@ -2,6 +2,7 @@ backups/
 .DS_Store
 
 # Keep Claude's local settings private; track only approved Skill discovery shims.
+/CLAUDE.local.md
 .claude/*
 !.claude/skills/
 .claude/skills/*
@@ -36,3 +37,20 @@ codex-security*.json
 .env
 .env.*
 !.env.example
+
+# Private key and local credential containers must never enter Git.
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_ed25519
+id_ecdsa
+age-identity*
+*.agekey
+.npmrc
+.netrc
+credentials*.json
+service-account*.json

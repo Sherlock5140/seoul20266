@@ -25,6 +25,13 @@ required_files=(
   REVIEW_PROMPT.md
   SECURITY.md
   CHANGELOG.md
+  .githooks/pre-commit
+  .githooks/pre-push
+  .github/workflows/agent-governance.yml
+  scripts/check-repository-secrets.sh
+  scripts/validate-agent-routing-fixtures.sh
+  scripts/validate-agent-system.sh
+  tests/agent-routing-cases.tsv
 )
 
 required_project_skills=(
@@ -107,6 +114,11 @@ for skill_dir in .agents/skills/*; do
     fail "skill is not routed in AGENTS.md or active PROJECT_CONTEXT.md: $folder_name"
   fi
   rg -Fq "\$$folder_name" "$metadata_file" || fail "default prompt does not name the skill: $folder_name"
+  rg -Fq 'allow_implicit_invocation: true' "$metadata_file" \
+    || fail "project Skill must explicitly allow implicit invocation: $folder_name"
+  if rg -Fq 'allow_implicit_invocation: false' "$metadata_file"; then
+    fail "project Skill disables implicit invocation: $folder_name"
+  fi
 
   shim_file=".claude/skills/$folder_name/SKILL.md"
   test -f "$shim_file" || {
@@ -145,7 +157,7 @@ test "$skill_count" -gt 0 || fail "no canonical project skills found"
 shim_count="$(find .claude/skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l | tr -d ' ')"
 test "$shim_count" -eq "$skill_count" || fail "Claude shim set does not match canonical skills"
 
-for private_path in .claude/settings.json .claude/settings.local.json .claude/launch.json .claude/worktrees; do
+for private_path in CLAUDE.local.md .claude/settings.json .claude/settings.local.json .claude/launch.json .claude/worktrees; do
   git check-ignore -q "$private_path" || fail "Claude local path is not ignored: $private_path"
 done
 
@@ -158,6 +170,10 @@ for route_term in 'Travel Guide app' 'Travel-derived artifact' 'General artifact
 done
 rg -Fq 'Read each routed guide or reference at most once' AGENTS.md \
   || fail "AGENTS.md is missing the single-pass guide-loading rule"
+for dispatch_stage in 'User request' '`AGENTS.md` classification' 'Model adapter' 'Skill selection' 'Task execution' 'Project validation' 'Result handoff'; do
+  rg -Fq "| $dispatch_stage |" AGENTS.md \
+    || fail "AGENTS.md Task Dispatch Contract is missing: $dispatch_stage"
+done
 rg -Fq 'let that selected Skill load each guide once' PROJECT_CONTEXT.md \
   || fail "PROJECT_CONTEXT.md does not delegate guide loading to the selected Skill"
 
@@ -188,9 +204,17 @@ if rg -n '\.claude/skills' .agents/skills/*/SKILL.md; then
   fail "canonical Skill must not depend on a Claude discovery shim"
 fi
 
-if rg -Fq 'allow_implicit_invocation: false' .agents/skills/maintain-agent-docs/agents/openai.yaml; then
-  fail "maintain-agent-docs must remain available for implicit routing"
+if rg -n '(git[[:space:]]+push|curl[[:space:]]|wget[[:space:]]|gemini([[:space:]]|$)|claude([[:space:]]|$)|codex([[:space:]]|$))' .githooks; then
+  fail "tracked Git hooks must remain local-only and deterministic"
 fi
+rg -Fq './scripts/validate-agent-system.sh --staged' .githooks/pre-commit \
+  || fail "pre-commit hook does not run the staged Agent system gate"
+rg -Fq 'refs/heads/main|refs/heads/master' .githooks/pre-push \
+  || fail "pre-push hook does not block protected branches"
+rg -Fq './scripts/validate-agent-system.sh --range' .github/workflows/agent-governance.yml \
+  || fail "Agent governance CI does not validate the pull-request range"
+test ! -e scripts/update-log.sh \
+  || fail "obsolete external-AI post-commit log updater must not be restored"
 
 rg -Fq 'slide decks, documents, or other artifacts' .agents/skills/change-travel-app/SKILL.md \
   || fail "change-travel-app is missing its artifact negative trigger"
@@ -230,20 +254,6 @@ for runtime_file in sw.js index.html; do
   rg -Fq "data/hongkong-2026.js?v=$hongkong_query" "$runtime_file" \
     || fail "PROJECT_CONTEXT.md Hong Kong query does not match $runtime_file"
 done
-
-security_scan_paths=(
-  "${agent_paths[@]}"
-  .github
-  scripts/validate-agent-docs.sh
-)
-
-if rg -q '(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|(AKIA|ASIA)[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[0-9A-Za-z-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|sk[-_][A-Za-z0-9_-]{16,})' "${security_scan_paths[@]}"; then
-  fail "possible secret found in governed files"
-fi
-
-if ! git diff --check || ! git diff --cached --check; then
-  fail "git diff check failed"
-fi
 
 if test "$failures" -ne 0; then
   echo "Agent documentation validation failed with $failures issue(s)." >&2

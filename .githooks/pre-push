@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/master)
+      echo "Direct pushes to protected branches are blocked by .githooks/pre-push." >&2
+      echo "Use an explicitly authorized feature-branch and pull-request workflow." >&2
+      exit 1
+      ;;
+  esac
+done
+
+exit 0

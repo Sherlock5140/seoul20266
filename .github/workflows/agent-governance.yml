@@ -1,0 +1,37 @@
+name: AI Agent governance
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: agent-governance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate pull request
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./scripts/validate-agent-system.sh --range "$BASE_SHA" "$HEAD_SHA"
+
+      - name: Validate main
+        if: github.event_name == 'push'
+        run: ./scripts/validate-agent-system.sh --tracked

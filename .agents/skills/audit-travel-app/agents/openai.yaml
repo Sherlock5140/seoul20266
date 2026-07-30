@@ -2,3 +2,6 @@ interface:
   display_name: "Audit Travel App"
   short_description: "Audit the app with evidence and scope"
   default_prompt: "Use $audit-travel-app to run an evidence-based, read-only audit of the Travel Guide app."
+
+policy:
+  allow_implicit_invocation: true

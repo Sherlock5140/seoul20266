@@ -35,3 +35,5 @@ Select only categories in scope:
 ## Output
 
 Report scope and mode, validations performed, release readiness, findings ordered by severity, a PASS/FAIL/NOT RUN ledger, priority fixes, needs-verification items, and residual risks.
+
+Mark the audited scope `READY` only when every applicable check was completed and no blocking finding remains. Use `NOT READY` for a confirmed blocker and `INDETERMINATE` when material checks are `NOT RUN` or inconclusive.

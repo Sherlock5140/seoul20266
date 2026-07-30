@@ -1,9 +1,31 @@
 # Security checks
 
-This repository includes a report-only Codex Security workflow at
-`.github/workflows/codex-security.yml`. Same-repository pull requests are
-scanned only after the required package variable and API-key secret are
-configured. Current enablement has not been verified.
+This repository has two complementary security layers:
+
+- `.github/workflows/agent-governance.yml` runs deterministic Agent-document,
+  routing-contract, diff, shell, and high-confidence secret checks without an
+  external AI service.
+- `.github/workflows/codex-security.yml` is an optional report-only semantic
+  security scan. Same-repository pull requests are scanned only after its
+  package variable and API-key secret are configured. Current enablement has
+  not been verified.
+
+Run the deterministic gate locally with:
+
+```bash
+./scripts/validate-agent-system.sh --worktree
+```
+
+The tracked `.githooks/pre-commit` runs the staged form of the same gate.
+Install the tracked hook path explicitly with:
+
+```bash
+git config --local core.hooksPath .githooks
+```
+
+The tracked hook is local-only: it does not push, publish, call an external AI
+service, or edit files. Commit, push, PR, and deployment remain separately
+authorized release actions.
 
 ## Enable the workflow
 
@@ -56,6 +78,16 @@ This repository is public. Do not commit credentials, private reservations,
 contact details, nonpublic travel notes, local scan results, or generated work
 artifacts. Secret and variable names may be documented; their values must stay
 in GitHub secret storage and must not be printed in logs.
+
+Passwords, decryption secrets, private keys, recovery codes, session tokens,
+and credential values must never be committed. A public encryption recipient
+key may be tracked when needed; its corresponding private identity must remain
+outside Git, task logs, generated artifacts, and repository backups.
+
+`scripts/check-repository-secrets.sh` is a high-confidence safeguard, not a
+complete credential classifier. Keep GitHub push protection or an equivalent
+secret-scanning control enabled, and review staged filenames before every
+release.
 
 Changing or deleting a public file does not remove it from Git history. Treat
 previously committed sensitive data as exposed and use a private, sanitized

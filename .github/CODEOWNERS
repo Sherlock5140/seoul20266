@@ -1,0 +1,14 @@
+# Agent governance and executable workflow changes require maintainer review.
+/AGENTS.md @Sherlock5140
+/PROJECT_CONTEXT.md @Sherlock5140
+/CLAUDE.md @Sherlock5140
+/CODEX.md @Sherlock5140
+/GEMINI.md @Sherlock5140
+/TRAVEL_DATA_GUIDE.md @Sherlock5140
+/ENGINEERING_GUIDE.md @Sherlock5140
+/SEOUL20266_UI_STYLE_GUIDE.md @Sherlock5140
+/REVIEW_PROMPT.md @Sherlock5140
+/SECURITY.md @Sherlock5140
+/.agents/ @Sherlock5140
+/.github/ @Sherlock5140
+/scripts/validate-agent-docs.sh @Sherlock5140

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Edit Itinerary Data"
+  short_description: "Safely edit trip content and data"
+  default_prompt: "Use $edit-itinerary-data to make a scoped itinerary change and validate data integrity."

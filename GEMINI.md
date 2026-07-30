@@ -1,40 +1,11 @@
-# Gemini Project Entry
+@AGENTS.md
 
-This file is the Gemini-specific entry point for this repository.
+# Gemini CLI Adapter
 
-Before making any analysis or edits:
-1. Read `AGENTS.md`
-2. Read `PROJECT_CONTEXT.md`
-3. If the task touches UI, layout, modal behavior, responsive logic, header controls, share mode, or visual bug fixes, also read `SEOUL20266_UI_STYLE_GUIDE.md`
+Shared governance comes from the imported `AGENTS.md`. Current routes and versions come from `PROJECT_CONTEXT.md`.
 
-Project facts:
-- This is a static PWA travel itinerary app.
-- Do not assume React, Next.js, TypeScript, or a build step.
-- Use `PROJECT_CONTEXT.md` as the shared source of truth for architecture, recent changes, and update-log rules.
-
-Gemini-specific note:
-- If Gemini does not automatically load repo context, manually add `AGENTS.md`, `PROJECT_CONTEXT.md`, and `SEOUL20266_UI_STYLE_GUIDE.md` to context first.
-
-Collaboration rules:
-- Claude Code, Codex, and Gemini must all use the same shared rules in `PROJECT_CONTEXT.md`.
-- Do not overwrite another editor's update-log entry.
-- If you discover a problem in an older change, add a new follow-up entry instead of rewriting history.
-- After any meaningful code, UI, trip-data, map, cache, share, or docs change, update `PROJECT_CONTEXT.md`.
-- If UI rules changed, also update `SEOUL20266_UI_STYLE_GUIDE.md`.
-
-Update-log rules:
-- Before writing `Updated at`, run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`.
-- Never guess the time.
-- Write one update-log entry per work session or commit.
-- List the files that actually changed.
-
-Token saving:
-- Do not read `SEOUL20266_UI_STYLE_GUIDE.md` unless the task is UI-related.
-- Do not auto-load `FULL_APP_REVIEW_BUNDLE.md`, `COMPLETE_APP_REVIEW_BUNDLE.md`, or `MULTI_TRIP_REVIEW_BUNDLE.md` unless a full bundled review is explicitly needed.
-
-Suggested task order:
-1. Read entry docs
-2. Inspect the relevant code
-3. Make changes
-4. Update `PROJECT_CONTEXT.md`
-5. Update `SEOUL20266_UI_STYLE_GUIDE.md` if needed
+- Use `/memory show` to confirm active context and `/memory refresh` after instruction files change.
+- If imports are unavailable, attach `AGENTS.md` and `PROJECT_CONTEXT.md` before acting.
+- Canonical project skills live under `.agents/skills/`. When the router selects one, read its complete `SKILL.md`.
+- Keep tool-specific settings and personal preferences outside shared project contracts.
+- Report changed files, evidence, validations performed, checks not run, risks, external-state changes, and remaining work.

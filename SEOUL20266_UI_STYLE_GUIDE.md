@@ -1,14 +1,14 @@
-# Seoul20266 UI Style Guide
+# Travel Guide UI Style Guide
 
 這份文件不是單純的視覺備忘錄。
 
-它是給 Claude Code 與 Codex 使用的 UI / interaction / bug-fix 說明書，用來回答三件事：
+它是給 Claude Code、Codex 與 Gemini 使用的 UI / interaction / bug-fix 說明書，用來回答三件事：
 
 1. 這個 app 的畫面應該長什麼樣
 2. 這個 app 的 UI 應該怎麼運作
 3. 當 UI 跑掉、比例怪、功能錯位時，應該先檢查哪裡
 
-如果另一個 AI 要修這個專案的 UI、互動、版面比例、modal、header、map 面板、trip 切換、share mode，它不能只看畫面，必須同時讀這份文件與 `PROJECT_CONTEXT.md`。
+如果另一個 AI 要修這個專案的 UI、互動、版面比例、modal、header、map 面板、trip 切換、share mode，它不能只看畫面，必須先讀 `PROJECT_CONTEXT.md`，再同時使用本檔與 `ENGINEERING_GUIDE.md`。
 
 ## 1. 文件定位
 
@@ -28,11 +28,11 @@
 - localStorage schema 全文說明
 - service worker 技術細節
 
-那些內容請回頭看 `PROJECT_CONTEXT.md`。
+旅遊內容與資料結構請看 `TRAVEL_DATA_GUIDE.md`；匯率、storage、share、map runtime 與 service worker 請看 `ENGINEERING_GUIDE.md`。`PROJECT_CONTEXT.md` 只負責路由與近期狀態。
 
 ## 2. AI 使用規則
 
-如果你是 Claude Code 或 Codex，遇到以下任務時要先讀這份檔案：
+任何 AI editor 遇到以下任務時要先讀這份檔案：
 
 - UI 跑版
 - 桌機 / 手機比例不對
@@ -42,10 +42,7 @@
 - map 與 itinerary panel 的比例怪異
 - 想做視覺優化，但不能破壞現有產品語言
 
-如果任務涉及 UI 改動，完成後要同步更新：
-
-- `PROJECT_CONTEXT.md`
-- 本檔案中對應的「Recent UI Logic Changes」或「Update Notes」
+如果任務涉及 UI 改動，使用 `$change-travel-app`；只有 UI 規則或可觀察互動契約改變時才更新本檔。
 
 ## 3. Source Of Truth
 
@@ -93,7 +90,7 @@ UI 真正來源檔案如下：
 
 ## 5. 色彩系統
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L56)。
+來源定位：`rg -n 'tailwind.config|m-bg|typo-accent|s-pin' index.html`。
 
 ### 基礎色
 
@@ -124,7 +121,7 @@ UI 真正來源檔案如下：
 
 ## 6. 字體語言
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L46) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L48)。
+來源定位：`rg -n 'fontFamily|Nanum Pen Script|Avenir Next' index.html`。
 
 - 主字體：`Avenir Next`, `SF Pro Display`, `Segoe UI`, `Noto Sans TC`, `sans-serif`
 - 展示字：同主字體
@@ -186,7 +183,7 @@ Header 必須符合：
 
 ## 8. 材質感
 
-重點樣式可看 [`index.html`](/Users/peter/Documents/New%20project/index.html#L93), [`index.html`](/Users/peter/Documents/New%20project/index.html#L112), [`index.html`](/Users/peter/Documents/New%20project/index.html#L350) 附近。
+來源定位：`rg -n 'glass-header|backdrop-filter|box-shadow|card-hover' index.html`。
 
 ### 視覺質地
 
@@ -206,7 +203,7 @@ Header 必須符合：
 
 ### Header
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L832) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L862)。
+來源定位：`rg -n '<!-- Header -->|glass-header|header-toolbar|notes-button' index.html`。
 
 規則：
 
@@ -218,7 +215,7 @@ Header 必須符合：
 
 ### Day Tabs
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L864) 到 [`index.html`](/Users/peter/Documents/New%20project/index.html#L866)。
+來源定位：`rg -n 'day-tab-row|day-tab|selectDay' index.html`。
 
 規則：
 
@@ -229,7 +226,7 @@ Header 必須符合：
 
 ### Day Meta Card
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L870) 之後。
+來源定位：`rg -n 'day-meta-shell|currentDay = computed' index.html scripts/app.js`。
 
 規則：
 
@@ -243,15 +240,13 @@ Header 必須符合：
 
 規則：
 
-- 外層 event 仍代表時間與區域中心，避免把一個區域拆成過多時間卡片
-- `spots` 用緊湊清單呈現店家、候補點或餐廳方案
-- priority chip 可標示 `優先`、`候補`、`Plan A`、`Plan B`
-- 沒有 `spots` 的既有單點行程維持原本 UI
-- 不要為未確認店家硬塞精準座標；可先使用區域中心與候補說明
+- `spots` 必須緊湊並從屬於主要 event，不可搶走時間與地點層級。
+- priority chip 可以區分主要與候補方案。
+- 沒有 `spots` 的單點行程維持原本 UI。
 
 ### Settings Modal
 
-來源大致在 [`index.html`](/Users/peter/Documents/New%20project/index.html#L1029) 之後。
+來源定位：`rg -n 'Settings Modal|settings-shell|settings-current-card' index.html`。
 
 規則：
 
@@ -269,12 +264,8 @@ Header 必須符合：
 - 明確顯示唯讀狀態
 - 讓使用者知道目前連結固定在某個 trip
 - 主操作是複製分享連結，而不是編輯
-- 一般分享應優先使用可連動更新的 direct share URL
-- 若使用者只想分享某幾天，應使用 `days=` 參數式分享，而不是手動複製或拆資料
-- `分享所選日期` 這顆按鈕要以「先複製成功」為優先，不可先走原生分享導致使用者貼上時沒有內容
 - 若主行為是複製連結，按鈕文案與成功狀態都必須明確寫成「複製」或「可直接貼上」，不可讓使用者誤認為它會直接開系統分享
 - 分享按鈕按下後要立刻有可見回饋，不可卡住數秒像沒反應
-- 如果分享連結需要壓縮或組裝較大的 payload，必須先讓 loading 狀態成功渲染，再執行重工作
 - 成功後按鈕應短暫顯示 `已複製` 或等價成功狀態，而不只靠遠處通知訊息
 - 若自動複製失敗，畫面仍必須直接顯示可手動複製的分享連結，不能只留下失敗提示
 
@@ -334,17 +325,11 @@ UI 上的 `地圖區域`：
 - 是唯讀視圖
 - 不應讓使用者誤以為能改資料
 - 但可以複製 share link
-- 若 URL 含 `days=1,3,5` 這類參數，畫面只顯示指定日期，且 Day tab 要維持原本的日序編號
-- 分享互動若偏慢，優先檢查 `scripts/app.js` 的 share URL 生成、快取、預熱與 clipboard 流程，而不是先調 CSS
+- 指定日期的分享畫面只顯示目標日期，Day tab 仍維持原本日序編號
 
 ### Airport Marker Logic
 
-地圖邏輯目前已修正成：
-
-- 有座標的機場事件也要顯示 marker
-- 但 fitBounds 可以優先用非機場點位，避免畫面被拉太遠
-
-如果之後機場又消失，先查 `services/map.js`，不要先改 trip data。
+有座標的機場事件應顯示 marker，但主要行程點仍需保持可讀的地圖縮放範圍。實作契約見 `ENGINEERING_GUIDE.md`。
 
 ## 12. 常見 Bug 排查指南
 
@@ -410,35 +395,4 @@ UI 上的 `地圖區域`：
 2. 優先修結構，不要只靠單點字級補救
 3. 桌機與手機都要檢查
 4. 保持這個 app 的 calm / soft / sheet-based 語言
-5. 改完後要同步更新 `PROJECT_CONTEXT.md`
-6. 如果規則本身變了，也要更新本檔
-
-## 14. Recent UI Logic Changes
-
-- Header controls and `Notes` button were enlarged so they are easier to tap on both desktop and mobile.
-- Settings modal was changed from a tiny-content layout to a larger content-scale layout.
-- Settings content now aims for:
-  - larger typography
-  - larger form controls
-  - larger action buttons
-  - better desktop readable width
-  - mobile sheet proportions instead of desktop shrinkage
-- Share settings and normal settings should still feel like the same product, but with different interaction permissions.
-- Timeline cards now support optional `spots` for area-based itinerary planning; this should stay compact and subordinate to the main event card.
-
-## 15. Update Notes
-
-Whenever Claude Code or Codex changes:
-
-- header layout
-- modal proportions
-- settings flow
-- share mode UI
-- map presentation
-- trip management UI
-
-update this file with:
-
-1. what changed
-2. which rule changed
-3. whether the change was desktop only, mobile only, or both
+5. 完成後依 `AGENTS.md` 更新近期狀態；只有規則本身改變時才更新本檔

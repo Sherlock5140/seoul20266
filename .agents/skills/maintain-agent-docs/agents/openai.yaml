@@ -1,0 +1,6 @@
+interface:
+  display_name: "Maintain Agent Docs"
+  short_description: "Improve agent docs without policy drift"
+  default_prompt: "Use $maintain-agent-docs to review and safely improve this repository agent instructions and skills."
+policy:
+  allow_implicit_invocation: false

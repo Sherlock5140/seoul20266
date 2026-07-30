@@ -1,109 +1,76 @@
 # PROJECT_CONTEXT
 
-## Start Here For Any AI
+## Current State
 
-Read this file before editing code, trip data, SW cache versions, or country/map/currency behavior.
-Primary AI editors: Claude Code, Codex, Gemini. This is the shared handoff log.
-UI source of truth: `SEOUL20266_UI_STYLE_GUIDE.md` — **only read for UI/layout/modal/share-mode tasks**.
+This file is the compact current-state, scope, routing, version, and recent-handoff source for the root Travel Guide PWA.
 
-Last updated: 2026-05-03 | Stack: HTML + Vue 3 CDN + Tailwind CDN + Leaflet + SW. No build step.
+Primary AI editors: Claude Code, Codex, Gemini.
 
-## App Summary
+Last updated: 2026-07-30 | Stack: HTML + Vue 3 CDN + Tailwind CDN + Leaflet + Service Worker. No build step.
 
-Local-first multi-trip travel itinerary PWA.
-Features: day timeline + map markers, trip switching, localStorage persistence, share-link (full/day-filtered/snapshot), exchange-rate calculator, offline shell.
-Built-in trips: `SEOUL_2026`, `HONGKONG_2026`
+The app is a local-first multi-trip itinerary PWA with day timelines, map markers, trip switching, localStorage persistence, direct/day-filtered/snapshot sharing, exchange-rate conversion, and an offline shell.
 
-## Architecture
+Built-in trips: `SEOUL_2026`, `HONGKONG_2026`.
 
-| File | Purpose |
-|------|---------|
-| `index.html` | Single-page UI (1547 lines) |
-| `scripts/config.js` | Country config, labels, map provider, currency (83 lines) |
-| `scripts/app.js` | Vue app logic (1481 lines) — see Code Nav below |
-| `services/storage.js` | localStorage read/write, trip index (191 lines) |
-| `services/map.js` | Leaflet map + external map links (376 lines) |
-| `services/rates.js` | Exchange-rate storage and refresh (149 lines) |
-| `data/trip-catalog.js` | Built-in trip catalog registry (15 lines) |
-| `data/seoul-2026.js` | Seoul built-in trip only (162 lines) |
-| `data/hongkong-2026.js` | Hong Kong built-in trip only (92 lines) |
-| `sw.js` | Service worker cache shell |
+The root runtime excludes nested side projects, temporary worktrees, generated media/output, and skill-packaging artifacts unless a task explicitly places them in scope.
 
-## Code Navigation（Grep 前先查這裡）
+## Document and Skill Router
 
-**index.html**
+Read only the rows that match the task. A skill supplies workflow but never expands authorization.
 
-| 區域 | 行號 |
-|------|------|
-| App root (#app) | 1081 |
-| Header JSX (.glass-header) | 1088 |
-| Main content (#timeline-container) | 1122 |
-| Notebook Modal | 1238 |
-| Settings Modal | 1254 |
-| Trip selector | 1303 |
-| Rates Modal | 1442 |
-| Rate display card | 1459 |
+| Task | Required guide | Skill |
+|------|----------------|-------|
+| Itinerary wording, Day/event content, meals, routes, coordinates | `TRAVEL_DATA_GUIDE.md` | `$edit-itinerary-data` |
+| New trip, catalog, country, or travel data shape | `TRAVEL_DATA_GUIDE.md` + `ENGINEERING_GUIDE.md` | `$edit-itinerary-data`, then `$change-travel-app` if consumers change |
+| JavaScript, storage, share, map, rates, cache, service worker | `ENGINEERING_GUIDE.md` | `$change-travel-app` |
+| UI, layout, modal, responsive, share-mode presentation, visual bug | `ENGINEERING_GUIDE.md` + `SEOUL20266_UI_STYLE_GUIDE.md` | `$change-travel-app` |
+| Targeted or full app review, readiness, security, accessibility | Guides covering the requested scope | `$audit-travel-app` |
+| Agent instructions, adapters, routing, delegation, skills | `AGENTS.md` + affected documents | `$maintain-agent-docs` |
+| Feature explanation, architecture orientation, read-only status | This file; add a task guide only for requested detail | None |
+| Commit, push, GitHub Pages, deploy, publish, release | `ENGINEERING_GUIDE.md` + the repository release configuration | None; follow the explicit Release / sync authorization |
+| Security workflow setup | `SECURITY.md` | Use the exact requested setup or audit workflow |
+| Historical changes | `CHANGELOG.md` | None |
 
-**services/**
+Canonical project skills live under `.agents/skills/`. Tool adapters must use this router when their native skill discovery path differs.
 
-| 函式 | 行號 |
-|------|------|
-| `createMapService()` | map.js:2 |
-| `initMap()` | map.js:204 |
-| `ensureMarkers()` | map.js:113 |
-| `loadTripState()` | storage.js:61 |
-| `saveTripState()`（高風險）| storage.js:135 |
-| `getStoredRateState()` | rates.js:45 |
-| `fetchRatesOnce()` | rates.js:101 |
+## Ownership Boundaries
 
-> 每次修改後若行號位移，更新此表格。
+| Topic | Owning document |
+|-------|-----------------|
+| Authorization, task modes, quality, delegation, skill protocol | `AGENTS.md` |
+| Current state, routes, versions, recent handoff | `PROJECT_CONTEXT.md` |
+| Travel semantics, IDs, schema, meals, routes, coordinates | `TRAVEL_DATA_GUIDE.md` |
+| Runtime, compatibility, fallback, validation, cache/deployment | `ENGINEERING_GUIDE.md` |
+| Observable UI, responsive, visual, interaction contract | `SEOUL20266_UI_STYLE_GUIDE.md` |
+| Tool-specific operation | `CLAUDE.md`, `CODEX.md`, `GEMINI.md` |
+| Repeatable procedure | `.agents/skills/*/SKILL.md` |
+| History | `CHANGELOG.md` |
 
-## Country Model
-
-| Code | Country | Map | Currency |
-|------|---------|-----|----------|
-| `KR` | Korea | NAVER Map | KRW |
-| `HK` | Hong Kong | Google Maps | HKD |
-| `JP` | Japan | Google Maps | JPY |
-| `TH` | Thailand | Google Maps | THB |
-| `INTL` | Generic | Google Maps | — |
-
-Legacy `GLOBAL` → auto-normalized to `HK`. Never use `GLOBAL` in new data.
+Cross-domain documents may reference an observable dependency, but the owning document contains the full normative rule.
 
 ## Current Versions
 
 - SW cache: `travel-guide-v67-20260514-1707`
-- Asset query version: `20260503h` for core app/config/service/catalog files; `20260514f` for Seoul trip data; `20260503d` for Hong Kong trip data; other shell assets keep existing query versions
+- Core app/config/service/catalog query: `20260503h`
+- Seoul trip data query: `20260514f`
+- Hong Kong trip data query: `20260503d`
 
-## Data Shapes
+Version and app-shell synchronization rules live in `ENGINEERING_GUIDE.md`.
 
-**Trip:** `tripId`, `meta.title`, `meta.country`, `schedule[]`
-**Day:** `date`, `title`, `lunch/lunchId`, `tea/teaId`, `dinner/dinnerId`, `notice?`, `events[]`
-**Event:** `id`, `time`, `location`, `map_term?`, `category`, `note`, `tags?`, `coords?`, `spots?`
-**Spot:** `name`, `type?`, `priority?`, `note?`, `coords?`
+## Exposure Boundary
 
-## Rules
+The GitHub origin is public. Treat committed runtime data and repository documentation as world-readable.
 
-1. No `GLOBAL` country code. New country → update `scripts/config.js` first.
-2. Changed frontend JS/CSS → update `index.html` asset version AND `sw.js` cache version + shell list.
-3. Keep localStorage backward compatibility unless user explicitly asks to break it.
-4. Keep each built-in trip in its own data file; register it through `data/trip-catalog.js`.
-5. UI/modal/map/share/cache/data change → update this file.
-6. One log entry per session/commit. Max 3 entries here; older → `CHANGELOG.md`.
-7. **Timestamp:** run `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'` before writing — never guess.
-8. Never overwrite another editor's entry; add a follow-up entry for corrections.
-
-## Debugging Shortcuts
-
-- Share/sync → `app.js` line ~451 (build), `storage.js` (normalization), `sw.js` (cache)
-- Map/country → `meta.country`, `COUNTRY_CONFIG` in `config.js`, `services/map.js`
-- Rates → `services/rates.js`; confirm country maps to expected currency
+- Do not add nonpublic reservations, credentials, contact details, private notes, scan evidence, or generated working files.
+- Keep secrets in approved secret stores and reference only their variable names.
+- Use explicit file staging; never upload side-project or generated-output directories with a root-app change.
+- A private backup or public-data sanitization requires a separate verified repository/privacy decision.
 
 ## Update Log
 
-Older entries → `CHANGELOG.md`. Max 3 here.
-Timestamp: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`
+Older entries → `CHANGELOG.md`. Keep at most three entries.
+Timestamp source: `TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M CST'`; compact entries use `YYYY-MM-DD`.
 
-- 2026-05-14 | Codex | Day meta wrap fix | Switched the day summary from balanced wrapping to a more natural wrap strategy and slightly relaxed the desktop summary sizing so longer itinerary titles stop spilling into an unnecessary extra line. Files: index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-14 | Codex | Day 4 Emart detail trim | Replaced the Sinchon Emart intro note with a shorter, cleaner store card that keeps only destination, station-exit distance, B1 floor, and closing time. Files: data/seoul-2026.js, index.html, sw.js, PROJECT_CONTEXT.md, CHANGELOG.md
-- 2026-05-14 | Codex | CODEX itinerary workflow update | Moved the itinerary-edit workflow into CODEX.md, changed the read order to treat PROJECT_CONTEXT.md as primary with AGENTS.md only as needed, and documented the rule that plain schedule edits should stay in the relevant data file unless structure, UI, or deployment scope is affected. Files: CODEX.md, CLAUDE.md, PROJECT_CONTEXT.md
+- 2026-07-30 | Codex | Agent governance and skill routing | Added instruction precedence, skill protocol, bounded delegation, self-improvement gates, four project Skills, deterministic doc validation, public-repository safeguards, protected governance ownership, and removal of stale generated review bundles. Files: AGENTS.md, PROJECT_CONTEXT.md, CLAUDE.md, CODEX.md, GEMINI.md, TRAVEL_DATA_GUIDE.md, ENGINEERING_GUIDE.md, REVIEW_PROMPT.md, SEOUL20266_UI_STYLE_GUIDE.md, SECURITY.md, .github/CODEOWNERS, .github/workflows/codex-security.yml, .agents/skills/, scripts/validate-agent-docs.sh, .gitignore, CHANGELOG.md
+- 2026-07-30 | Codex | Travel/engineering documentation split | Split itinerary-domain rules into TRAVEL_DATA_GUIDE.md and runtime/code rules into ENGINEERING_GUIDE.md; reduced PROJECT_CONTEXT.md to routing/current state and synchronized all AI entry, audit, UI, and history references. Files: AGENTS.md, PROJECT_CONTEXT.md, TRAVEL_DATA_GUIDE.md, ENGINEERING_GUIDE.md, CODEX.md, CLAUDE.md, GEMINI.md, REVIEW_PROMPT.md, SEOUL20266_UI_STYLE_GUIDE.md, CHANGELOG.md
+- 2026-07-30 | Codex | AI workflow docs optimization | Centralized task modes, evidence gates, stable code navigation, shared risk invariants, itinerary workflow, and scope-based validation; simplified tool-specific entry docs and separated audit from fix authorization. Files: AGENTS.md, PROJECT_CONTEXT.md, REVIEW_PROMPT.md, CLAUDE.md, CODEX.md, GEMINI.md, CHANGELOG.md

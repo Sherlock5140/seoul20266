@@ -1,3 +1,22 @@
 backups/
 .DS_Store
 .claude/
+
+# Local/generated work that must not be published with the Travel Guide app.
+/.tmp/
+/mac-mini-refurb-monitor/
+/pet-runs/
+/ppt_demo_build/
+/ppt_demo_output/
+/presentation_output/
+/skill_share_output/
+
+# Generated review and security output may contain source or finding details.
+/*_REVIEW_BUNDLE.md
+*.sarif
+codex-security*.json
+
+# Keep local environment values out of the public repository.
+.env
+.env.*
+!.env.example
